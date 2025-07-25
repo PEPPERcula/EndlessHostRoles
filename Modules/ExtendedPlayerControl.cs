@@ -1573,6 +1573,24 @@ internal static class ExtendedPlayerControl
         return isDoused;
     }
 
+    public static void RpcSetSpecificScanner(this PlayerControl target, PlayerControl seer, bool isActive)
+    {
+        var seerClientId = seer.GetClientId();
+        if (seerClientId == -1) return;
+        byte cnt = ++target.scannerCount;
+        if (AmongUsClient.Instance.ClientId == seerClientId)
+        {
+            target.SetScanner(isActive, cnt);
+            return;
+        }
+        MessageWriter messageWriter = AmongUsClient.Instance.StartRpcImmediately(target.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, seerClientId);
+        messageWriter.Write(isActive);
+        messageWriter.Write(cnt);
+        AmongUsClient.Instance.FinishRpcImmediately(messageWriter);
+
+        target.scannerCount = cnt;
+    }
+
     public static void RpcSetDousedPlayer(this PlayerControl player, PlayerControl target, bool isDoused)
     {
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetDousedPlayer, SendOption.Reliable);
