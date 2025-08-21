@@ -49,7 +49,7 @@ Share the download link with your friends: [bit.ly/downloadehr](https://bit.ly/d
 ## Want to become a beta tester?
 
 Join our Discord server and download the latest test build from the #test-builds channel.
-You do **NOT** need to pay, boost the server, donate, be a VIP, contributor or anything like that.
+You do **NOT** need to pay, boost the server, donate, be a VIP, Contributor or anything like that.
 In this mod and its discord server, everything is free.
 We don't want your money, we want your feedback.
 You can also report bugs and suggest features in the #bug-reports and #suggestions channels.
@@ -204,7 +204,7 @@ You can also report bugs and suggest features in the #bug-reports and #suggestio
 |                   |                 |                   |               |                |
 | 129               | 98              | 107               | 17            | 95             |
 
-## VIP and Moderator perks
+## VIP, Moderator, and Admin perks
 
 :heavy_check_mark:   Can always use the command<br>
 :x:   Can never use the command<br>
@@ -257,7 +257,7 @@ Source language: English
 - You can also press TAB to autocomplete commands.
 - Some hints and tips are displayed during the loading screen and ejection animations, which can help you discover new
   features.
-- EHR has 12 unique custom game modes, which can be played with any number of players, some even alone.
+- EHR has 13 unique custom game modes, which can be played with any number of players, some even alone.
 - You can make lobbies with more than 15 players on modded servers, just type /cs players 100 - for example - to set the
   player limit to 100.
 - I, the main developer of EHR, care about user feedback and suggestions, and I try to implement them as much as
@@ -384,14 +384,14 @@ Source language: English
 ### :star: [Town Of Host Re-Edited](https://github.com/Loonie-Toons/) :
 
 >
-> - Our repo is forked from TOHRE (from a long time ago)
+> - Our repository is forked from TOHRE (from a long time ago)
 > - Ported PhantomRolePatch.cs (partially broken)
 >
 
 ### :star: [Town Of Host Edited / Town Of Next](https://github.com/KARPED1EM/TownOfHostEdited) :
 
 >
-> - Our repo is a continuation of Town Of Host Edited
+> - Our repository is a continuation of Town Of Host Edited
 > - Town Of Next reference: Modify character limit for chat messages
 > - Town Of Next reference: Modify and apply cool animations on Main Menu
 >
@@ -399,7 +399,7 @@ Source language: English
 ### :star: [TOH](https://github.com/tukasa0001/TownOfHost) :
 
 >
-> - Our repo is based initially on TOH
+> - Our repository is based initially on TOH
 >
 
 ### :star: [TOHY](https://github.com/Yumenopai/TownOfHost_Y) :
@@ -515,7 +515,7 @@ Source language: English
 - PH_Gaming
 - TommyXL
 - Drakos
-- Peppercula
+- PEPPERcula
 
 ##### Special Thanks:
 
@@ -667,3 +667,4 @@ If you have any questions about this Privacy Policy or how your data is handled,
 ------------------------------------------------------------------------------------------------------------
 
 By using the Endless Host Roles mod, you agree to the terms outlined in this Privacy Policy.
+
