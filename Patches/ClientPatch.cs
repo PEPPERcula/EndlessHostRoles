@@ -79,6 +79,9 @@ internal static class RunLoginPatch
     public static void Prefix(ref bool canOnline)
     {
         if (DebugModeManager.AmDebugger) canOnline = true;
+
+        try { ModUpdater.ShowAvailableUpdate(); }
+        catch (System.Exception error) { Logger.Error(error.ToString(), "ModUpdater.ShowAvailableUpdate"); }
     }
 }
 
@@ -419,4 +422,5 @@ internal static class AuthTimeoutPatch
             };
         }
     }
+
 }
