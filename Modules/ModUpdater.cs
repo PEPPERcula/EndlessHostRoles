@@ -67,7 +67,7 @@ public static class ModUpdater
             FirstNotify = false;
             
             if (!string.IsNullOrEmpty(LatestTitleModName))
-                ShowPopupWithTwoButtons(string.Format(GetString("NewUpdateAvailable"), LatestTitleModName), GetString("updateButton"), onClickOnFirstButton: () => StartUpdate(downloadUrl, true));
+                ShowPopupWithTwoButtons(string.Format(GetString("NewUpdateAvailable"), LatestTitleModName), GetString("updateButton"), onClickOnFirstButton: () => StartUpdate(DownloadUrl, true));
         }
     }
 
@@ -376,3 +376,4 @@ public static class ModUpdater
         }
     }
 }
+
