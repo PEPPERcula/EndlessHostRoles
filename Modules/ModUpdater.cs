@@ -11,7 +11,6 @@ using Twitch;
 using UnityEngine;
 using static EHR.Translator;
 
-
 namespace EHR;
 
 [HarmonyPatch]
@@ -376,4 +375,5 @@ public static class ModUpdater
         }
     }
 }
+
 
