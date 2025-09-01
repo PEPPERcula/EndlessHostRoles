@@ -304,7 +304,7 @@ public static class RoomRush
         Utils.SendRPC(CustomRPC.RoomRushDataSync, 1);
 
         NameNotifyManager.Reset();
-        Utils.FlashColor(new(0f, 1f, 0f, 0.3f));
+        Utils.FlashColor(new(0f, 1f, 0f, 0.3f), 1.3f);
         StartNewRound(true);
         GameGoing = true;
         GameStartDateTime = DateTime.Now;
