@@ -293,6 +293,7 @@ public static class RoomRush
         for (var i = 3; i > 0; i--)
         {
             NameNotifyManager.Reset();
+            if (i == 3) CustomSoundsManager.RPCPlayCustomSoundAll("3-2-1-Go");
             aapc.NotifyPlayers(string.Format(Translator.GetString("RR_ReadyQM"), i));
             yield return new WaitForSeconds(1f);
         }
@@ -303,6 +304,7 @@ public static class RoomRush
         Utils.SendRPC(CustomRPC.RoomRushDataSync, 1);
 
         NameNotifyManager.Reset();
+        Utils.FlashColor(new(0f, 1f, 0f, 0.3f));
         StartNewRound(true);
         GameGoing = true;
         GameStartDateTime = DateTime.Now;
