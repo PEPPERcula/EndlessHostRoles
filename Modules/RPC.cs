@@ -1383,7 +1383,7 @@ internal static class RPC
         Logger.Msg(" Finished", "SyncCustomSettings");
     }
 
-    public static void PlaySoundRPC(byte playerID, Sounds sound)
+    public static void PlaySoundRPC(Sounds sound, byte PlayerID = byte.MaxValue)
     {
         if (AmongUsClient.Instance.AmHost) PlaySound(playerID, sound);
 
@@ -1513,7 +1513,7 @@ internal static class RPC
 
     public static void PlaySound(byte playerID, Sounds sound)
     {
-        if (PlayerControl.LocalPlayer.PlayerId == playerID)
+        if (PlayerControl.LocalPlayer.PlayerId == playerID || playerID == byte.MaxValue)
         {
             switch (sound)
             {
@@ -1674,3 +1674,4 @@ internal static class PlayerPhysicsRPCHandlerPatch
     }
 
 }
+
