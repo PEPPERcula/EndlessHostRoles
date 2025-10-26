@@ -1907,7 +1907,7 @@ internal static class ChatCommands
 
         if (args.Length < 1 || !int.TryParse(args[1], out int sound1)) return;
 
-        RPC.PlaySoundRPC(player.PlayerId, (Sounds)sound1);
+        RPC.PlaySoundRPC((Sounds)sound1, player.PlayerId);
     }
 
     private static void CSDCommand(PlayerControl player, string text, string[] args)
@@ -3765,3 +3765,4 @@ internal static class RpcSendChatPatch
         return false;
     }
 }
+
