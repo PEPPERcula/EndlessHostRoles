@@ -39,12 +39,12 @@ internal class Demolitionist : RoleBase
                 if ((DemolitionistKillerDiesOnMeetingCall.GetBool() || GameStates.IsInTask) && killer.IsAlive())
                 {
                     killer.Suicide(PlayerState.DeathReason.Demolished, target);
-                    RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+                    RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
                 }
             }
             else
             {
-                RPC.PlaySoundRPC(killer.PlayerId, Sounds.TaskComplete);
+                RPC.PlaySoundRPC(Sounds.TaskComplete, killer.PlayerId);
                 killer.SetKillCooldown(Main.AllPlayerKillCooldown[killer.PlayerId] - (DemolitionistVentTime.GetFloat() + 0.5f));
             }
         }, DemolitionistVentTime.GetFloat() + 0.5f, "DemolitionistCheck");
