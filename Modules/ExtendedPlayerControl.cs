@@ -816,7 +816,7 @@ internal static class ExtendedPlayerControl
         if (player.AmOwner)
         {
             FlashColor(new(1f, 0f, 0f, 0.3f));
-            if (Constants.ShouldPlaySfx()) RPC.PlaySound(player.PlayerId, Sounds.KillSound);
+            if (Constants.ShouldPlaySfx()) RPC.PlaySound(Sounds.KillSound, player.PlayerId);
         }
         else if (player.IsModdedClient())
         {
@@ -1838,7 +1838,7 @@ internal static class ExtendedPlayerControl
             Main.AllPlayerSpeed[killer.PlayerId] = tmpSpeed;
             ReportDeadBodyPatch.CanReport[killer.PlayerId] = true;
             killer.MarkDirtySettings();
-            RPC.PlaySoundRPC(killer.PlayerId, Sounds.TaskComplete);
+            RPC.PlaySoundRPC(Sounds.TaskComplete, killer.PlayerId);
         }, Options.TrapperBlockMoveTime.GetFloat(), "Trapper BlockMove");
 
         if (killer.IsLocalPlayer())
@@ -2290,4 +2290,5 @@ internal static class ExtendedPlayerControl
         if (pc.IsModdedClient() || pc.IsTrusted() || pc.FriendCode.GetDevUser().HasTag()) return false;
         return !Main.GamesPlayed.TryGetValue(pc.FriendCode, out int gamesPlayed) || gamesPlayed < 4;
     }
+
 }
