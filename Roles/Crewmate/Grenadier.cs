@@ -103,6 +103,7 @@ internal class Grenadier : RoleBase
 
         if (GrenadierBlinding.TryGetValue(playerId, out long gtime) && gtime + GrenadierSkillDuration.GetInt() < now)
         {
+            RPC.PlaySoundRPC(Sounds.TaskComplete, byte.MaxValue);
             GrenadierBlinding.Remove(playerId);
             player.RpcResetAbilityCooldown();
             player.Notify(string.Format(Translator.GetString("GrenadierSkillStop"), (int)player.GetAbilityUseLimit()));
@@ -111,6 +112,7 @@ internal class Grenadier : RoleBase
 
         if (MadGrenadierBlinding.TryGetValue(playerId, out long mgtime) && mgtime + GrenadierSkillDuration.GetInt() < now)
         {
+            RPC.PlaySoundRPC(Sounds.TaskComplete, byte.MaxValue);
             MadGrenadierBlinding.Remove(playerId);
             player.RpcResetAbilityCooldown();
             player.Notify(string.Format(Translator.GetString("GrenadierSkillStop"), (int)player.GetAbilityUseLimit()));
