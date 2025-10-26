@@ -220,8 +220,8 @@ internal static class SoloPVP
         if (killer.IsHost()) kcd += Math.Max(0.5f, Utils.CalculatePingDelay());
         killer.SetKillCooldown(kcd, target);
 
-        RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
-        RPC.PlaySoundRPC(target.PlayerId, Sounds.KillSound);
+        RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
+        RPC.PlaySoundRPC(Sounds.KillSound, target.PlayerId);
 
         Utils.NotifyRoles(SpecifySeer: killer, SpecifyTarget: target);
         Utils.NotifyRoles(SpecifySeer: target, SpecifyTarget: killer);
@@ -233,7 +233,7 @@ internal static class SoloPVP
         PlayerHP[pc.PlayerId] = PlayerHPMax[pc.PlayerId];
         LastHurt[pc.PlayerId] = Utils.TimeStamp;
         pc.ReviveFromTemporaryExile();
-        RPC.PlaySoundRPC(pc.PlayerId, Sounds.TaskComplete);
+        RPC.PlaySoundRPC(Sounds.TaskComplete, pc.PlayerId);
         SpawnMap.GetSpawnMap().RandomTeleport(pc);
         Utils.NotifyRoles(SpecifyTarget: pc, SendOption: SendOption.None);
     }
