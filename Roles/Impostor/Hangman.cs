@@ -80,7 +80,7 @@ public class Hangman : RoleBase
 
             if (target.Is(CustomRoles.Veteran) && Veteran.VeteranInProtect.ContainsKey(target.PlayerId)) return false;
 
-            RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+            RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
             killer.RpcRemoveAbilityUse();
             target.Data.IsDead = true;
             target.SetRealKiller(killer);
@@ -101,3 +101,4 @@ public class Hangman : RoleBase
         if (id.IsPlayerShifted()) hud.KillButton?.OverrideText(Translator.GetString("HangmanKillButtonTextDuringSS"));
     }
 }
+
