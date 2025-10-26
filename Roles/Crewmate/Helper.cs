@@ -30,7 +30,7 @@ public class Helper : RoleBase
     {
         var randomPlayer = Main.AllPlayerControls.Without(pc).Where(x => x.Is(Team.Crewmate)).Select(x => (pc: x, ts: x.GetTaskState())).Where(x => !x.ts.IsTaskFinished && x.ts.HasTasks).Select(x => x.pc).RandomElement();
         var incompleteTasks = randomPlayer.myTasks.FindAll((Predicate<PlayerTask>)(x => !x.IsComplete));
-        RPC.PlaySoundRPC(randomPlayer.PlayerId, Sounds.TaskUpdateSound);
+        RPC.PlaySoundRPC(Sounds.TaskUpdateSound, randomPlayer.PlayerId);
         randomPlayer.RpcCompleteTask(incompleteTasks[IRandom.Instance.Next(0, incompleteTasks.Count)].Id);
         randomPlayer.Notify(string.Format(Translator.GetString("HelperCompletedTaskForYou"), CustomRoles.Helper.ToColoredString()));
     }
