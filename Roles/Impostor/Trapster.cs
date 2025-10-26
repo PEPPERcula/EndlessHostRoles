@@ -78,7 +78,7 @@ internal class Trapster : RoleBase
                 byte killerID = KillerOfTrapsterBody[target.PlayerId];
 
                 reporter.Suicide(PlayerState.DeathReason.Trapped, Utils.GetPlayerById(killerID));
-                RPC.PlaySoundRPC(killerID, Sounds.KillSound);
+                RPC.PlaySoundRPC(Sounds.KillSound, killerID);
 
                 if (!TrapsterBody.Contains(reporter.PlayerId) && TrapConsecutiveBodies.GetBool())
                     TrapsterBody.Add(reporter.PlayerId);
@@ -90,7 +90,7 @@ internal class Trapster : RoleBase
             byte killerID2 = target.PlayerId;
 
             reporter.Suicide(PlayerState.DeathReason.Trapped, Utils.GetPlayerById(killerID2));
-            RPC.PlaySoundRPC(killerID2, Sounds.KillSound);
+            RPC.PlaySoundRPC(Sounds.KillSound, killerID2);
             return false;
         }
 
