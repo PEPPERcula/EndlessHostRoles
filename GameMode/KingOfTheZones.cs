@@ -791,7 +791,7 @@ public static class KingOfTheZones
                             player.ReviveFromTemporaryExile();
                             player.TP(RandomSpawn.SpawnMap.GetSpawnMap().Positions.ExceptBy(Zones, x => x.Key).RandomElement().Value);
                             LateTask.New(() => player.SetKillCooldown(GetKillCooldown(player)), 1.5f, log: false);
-                            RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
+                            RPC.PlaySoundRPC(Sounds.TaskComplete, player.PlayerId);
                             Utils.NotifyRoles(SpecifyTarget: player, SendOption: SendOption.None);
 
                             int spawnProtectionTime = SpawnProtectionTime.GetInt();
