@@ -23,7 +23,7 @@ internal class Minion : IGhostRole
         LateTask.New(() =>
         {
             if (BlindPlayers.Remove(target.PlayerId)) target.MarkDirtySettings();
-            RPC.PlaySoundRPC(target.PlayerId, Sounds.TaskComplete);
+            RPC.PlaySoundRPC(Sounds.TaskComplete, target.PlayerId);
         }, BlindDuration.GetFloat(), "Remove Minion Blindness");
     }
 
