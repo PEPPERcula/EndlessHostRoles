@@ -92,7 +92,7 @@ public class Chronomancer : RoleBase
         {
             IsRampaging = true;
             SendRPC();
-            RPC.PlaySoundRPC(killer.PlayerId, Sounds.ImpTransform);
+            RPC.PlaySoundRPC(Sounds.ImpTransform, killer.PlayerId);
             killer.ResetKillCooldown();
             killer.SyncSettings();
         }
@@ -123,7 +123,7 @@ public class Chronomancer : RoleBase
             {
                 ChargePercent = 0;
                 IsRampaging = false;
-                RPC.PlaySoundRPC(pc.PlayerId, Sounds.TaskComplete);
+                RPC.PlaySoundRPC(Sounds.TaskComplete, pc.PlayerId);
                 pc.ResetKillCooldown();
                 pc.SyncSettings();
                 pc.SetKillCooldown();
