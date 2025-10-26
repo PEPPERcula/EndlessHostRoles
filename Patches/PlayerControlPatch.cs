@@ -382,7 +382,7 @@ internal static class CheckMurderPatch
                     killer.SetKillCooldown();
                 }
 
-                RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+                RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
                 return false;
             }
 
