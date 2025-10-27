@@ -68,7 +68,7 @@ public class Vortex : RoleBase
             return IfTargetCannotBeTeleported.GetValue() == 1;
         }
 
-        RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+        RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
         LateTask.New(() => target.Suicide(PlayerState.DeathReason.Kill, killer), 0.2f, log: false);
         killer.SetKillCooldown();
         return false;
