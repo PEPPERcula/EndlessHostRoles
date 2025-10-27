@@ -155,7 +155,7 @@ public class Vampire : RoleBase
         if (target.IsAlive())
         {
             target.Suicide(IsPoisoner ? PlayerState.DeathReason.Poison : PlayerState.DeathReason.Bite, vampire);
-            RPC.PlaySoundRPC(vampire.PlayerId, Sounds.KillSound);
+            RPC.PlaySoundRPC(Sounds.KillSound, vampire.PlayerId);
 
             if (!meeting && vampire.IsAlive())
             {
@@ -195,4 +195,5 @@ public class Vampire : RoleBase
         public readonly byte VampireId = vampierId;
         public float KillTimer = killTimer;
     }
+
 }
