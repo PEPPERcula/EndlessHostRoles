@@ -139,7 +139,7 @@ public class Demon : RoleBase
 
         PlayerHealth[target.PlayerId] -= Damage.GetInt();
         SendRPC(target.PlayerId);
-        RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+        RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
         Utils.NotifyRoles(SpecifySeer: killer, SpecifyTarget: target);
 
         Logger.Info($"{killer.GetNameWithRole().RemoveHtmlTags()} attacked {target.GetNameWithRole().RemoveHtmlTags()}, did {Damage.GetInt()} damage", "Demon");
@@ -161,7 +161,7 @@ public class Demon : RoleBase
 
         DemonHealth[target.PlayerId] -= SelfDamage.GetInt();
         SendRPC(target.PlayerId);
-        RPC.PlaySoundRPC(target.PlayerId, Sounds.KillSound);
+        RPC.PlaySoundRPC(Sounds.KillSound, target.PlayerId);
         Utils.NotifyRoles(SpecifySeer: target, SpecifyTarget: killer);
 
         Logger.Info($"{killer.GetNameWithRole().RemoveHtmlTags()} attacked {target.GetNameWithRole().RemoveHtmlTags()}, did {SelfDamage.GetInt()} damage", "Demon");
