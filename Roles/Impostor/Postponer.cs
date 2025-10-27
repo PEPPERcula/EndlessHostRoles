@@ -40,7 +40,7 @@ public class Postponer : RoleBase
         
         if (target.Is(CustomRoles.Bait)) return true;
         
-        RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+        RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
         killer.RpcRemoveAbilityUse();
         target.Data.IsDead = true;
         target.SetRealKiller(killer);
