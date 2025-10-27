@@ -177,7 +177,7 @@ public class Spiritcaller : RoleBase
                 Main.AllPlayerSpeed[target.PlayerId] = Main.AllPlayerSpeed[target.PlayerId] - Main.MinSpeed + tmpSpeed;
                 ReportDeadBodyPatch.CanReport[target.PlayerId] = true;
                 target.MarkDirtySettings();
-                RPC.PlaySoundRPC(target.PlayerId, Sounds.TaskComplete);
+                RPC.PlaySoundRPC(Sounds.TaskComplete, target.PlayerId);
             }, SpiritFreezeTime.GetFloat(), "SpiritcallerFreezeTime");
 
             if (target.IsLocalPlayer())
@@ -199,4 +199,5 @@ public class Spiritcaller : RoleBase
     {
         ProtectTimeStamp = Utils.TimeStamp + (long)SpiritProtectTime.GetFloat();
     }
+
 }
