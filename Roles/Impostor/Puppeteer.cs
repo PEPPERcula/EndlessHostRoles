@@ -209,7 +209,7 @@ internal class Puppeteer : RoleBase
                         if (player.RpcCheckAndMurder(target, true))
                         {
                             byte puppeteerId = PuppeteerList[playerId];
-                            RPC.PlaySoundRPC(puppeteerId, Sounds.KillSound);
+                            RPC.PlaySoundRPC(Sounds.KillSound, puppeteerId);
                             PlayerControl puppeteer = Utils.GetPlayerById(puppeteerId);
                             target.SetRealKiller(puppeteer);
                             player.Kill(target);
