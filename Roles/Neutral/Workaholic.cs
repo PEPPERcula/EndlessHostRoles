@@ -75,7 +75,7 @@ internal class Workaholic : RoleBase
         if (CompletedTasksCount + 1 >= AllTasksCount && (!WorkaholicCannotWinAtDeath.GetBool() || player.IsAlive()))
         {
             Logger.Info("Workaholic Tasks Finished", "Workaholic");
-            RPC.PlaySoundRPC(player.PlayerId, Sounds.KillSound);
+            RPC.PlaySoundRPC(Sounds.KillSound, player.PlayerId);
             foreach (PlayerControl pc in Main.AllAlivePlayerControls.Where(pc => pc.PlayerId != player.PlayerId).ToArray()) pc.Suicide(pc.PlayerId == player.PlayerId ? PlayerState.DeathReason.Overtired : PlayerState.DeathReason.Ashamed, player);
 
             CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Workaholic);
