@@ -151,7 +151,7 @@ internal class Warlock : RoleBase
 
                 IsCursed = true;
                 killer.SetKillCooldown();
-                RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+                RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
                 killer.RPCPlayCustomSound("Line");
                 CursedPlayers[killer.PlayerId] = target;
                 WarlockTimer[killer.PlayerId] = 0f;
@@ -238,7 +238,7 @@ internal class Warlock : RoleBase
                         Logger.Info($"{targetw.GetNameWithRole().RemoveHtmlTags()} was killed", "Warlock");
                         cp.Kill(targetw);
                         pc.Notify(Translator.GetString("WarlockControlKill"));
-                        RPC.PlaySoundRPC(pc.PlayerId, Sounds.KillSound);
+                        RPC.PlaySoundRPC(Sounds.KillSound, pc.PlayerId);
 
                         if (FreezeAfterCurseKill.GetBool())
                         {
