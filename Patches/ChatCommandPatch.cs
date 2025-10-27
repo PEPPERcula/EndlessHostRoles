@@ -1681,6 +1681,7 @@ internal static class ChatCommands
                 _ => string.Format(GetString("MessengerMessage.3"), Utils.ColorString(team.GetColor(), GetString($"{team}")))
             };
 
+            RPC.PlaySoundRPC(Sounds.TaskUpdateSound, byte.MaxValue);
             Utils.SendMessage(message, title: string.Format(GetString("MessengerTitle"), player.PlayerId.ColoredPlayerName()));
             Messenger.Sent.Add(player.PlayerId);
         }
@@ -3765,4 +3766,5 @@ internal static class RpcSendChatPatch
         return false;
     }
 }
+
 
