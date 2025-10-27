@@ -313,7 +313,7 @@ public class Swooper : RoleBase
         if (!IsInvis) return true;
         if (!killer.RpcCheckAndMurder(target, true)) return false;
 
-        RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+        RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
         target.Suicide(PlayerState.DeathReason.Swooped, killer);
         killer.SetKillCooldown();
         return false;
@@ -324,3 +324,4 @@ public class Swooper : RoleBase
         return !IsThisRole(pc) || UsedRole != CustomRoles.Chameleon || pc.GetClosestVent()?.Id == ventId;
     }
 }
+
