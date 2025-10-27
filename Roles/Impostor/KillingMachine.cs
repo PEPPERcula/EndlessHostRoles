@@ -70,7 +70,7 @@ internal class KillingMachine : RoleBase
             {
                 target.Suicide(PlayerState.DeathReason.Kill, killer);
                 killer.SetKillCooldown();
-                RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+                RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
             }
             else
                 killer.Kill(target);
