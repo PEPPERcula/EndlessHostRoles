@@ -219,7 +219,7 @@ public class Pelican : RoleBase
             Main.AllPlayerSpeed[tar] = Main.RealOptionsData.GetFloat(FloatOptionNames.PlayerSpeedMod);
             ReportDeadBodyPatch.CanReport[tar] = true;
             target.MarkDirtySettings();
-            RPC.PlaySoundRPC(tar, Sounds.TaskComplete);
+            RPC.PlaySoundRPC(Sounds.TaskComplete, tar);
             LateTask.New(() => Utils.NotifyRoles(SpecifySeer: target, SpecifyTarget: player), 0.2f, log: false);
             Logger.Info($"{Utils.GetPlayerById(pc).GetRealName()} died, {target.GetRealName()} is back in-game", "Pelican");
         }
@@ -283,4 +283,5 @@ public class Pelican : RoleBase
     }
 
 }
+
 
