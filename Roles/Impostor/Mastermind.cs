@@ -130,7 +130,7 @@ public class Mastermind : RoleBase
                 ManipulatedPlayers.Remove(x.Key);
                 if (!TempKCDs.Remove(x.Key)) player.RpcChangeRoleBasis(player.GetCustomRole());
                 player.Suicide(realKiller: MastermindPC);
-                RPC.PlaySoundRPC(MastermindId, Sounds.KillSound);
+                RPC.PlaySoundRPC(Sounds.KillSound, MastermindId);
 
                 if (player.IsLocalPlayer())
                     Achievements.Type.OutOfTime.Complete();
