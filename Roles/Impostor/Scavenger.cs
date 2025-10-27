@@ -54,7 +54,7 @@ internal class Scavenger : RoleBase
                 if (target.Is(CustomRoles.Pelican)) Pelican.OnPelicanDied(target.PlayerId);
 
                 killer.SetKillCooldown();
-                RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+                RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
                 target.Notify(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Scavenger), Translator.GetString("KilledByScavenger")));
             }, dur, "Scavenger Kill");
 
