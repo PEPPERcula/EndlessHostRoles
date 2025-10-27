@@ -101,7 +101,7 @@ public class Thanos : RoleBase
 
         if (ActiveStone is Stone.Space)
         {
-            RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
+            RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
             ActiveStone = null;
             Utils.SendRPC(CustomRPC.SyncRoleData, ThanosId, 2);
             target.Data.IsDead = true;
