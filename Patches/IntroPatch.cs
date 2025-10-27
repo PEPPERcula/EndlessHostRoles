@@ -770,7 +770,7 @@ internal static class BeginCrewmatePatch
                     or CustomRoles.NoisemakerEHR
                     or CustomRoles.Markseeker
                     or CustomRoles.Soothsayer
-                    or CustomRoles.Phantasm
+                    or CustomRoles.Specter
                     or CustomRoles.SuperStar
                     or CustomRoles.Sunnyboy
                     => GetIntroSound(RoleTypes.Noisemaker),
@@ -1343,7 +1343,7 @@ internal static class IntroCutsceneDestroyPatch
             
             hud.SetRolePanelOpen(true);
             
-            if (Options.CurrentGameMode == CustomGameMode.Standard && !Utils.HasTasks(PlayerControl.LocalPlayer.Data, forRecompute: false))
+            if (Options.CurrentGameMode is CustomGameMode.Standard or CustomGameMode.HideAndSeek && !Utils.HasTasks(PlayerControl.LocalPlayer.Data, forRecompute: false))
                 hud.TaskPanel.open = false;
             
             if (!AmongUsClient.Instance.AmHost || !Lovers.PrivateChat.GetBool()) return;
@@ -1357,4 +1357,5 @@ internal static class IntroCutsceneDestroyPatch
                 PlayerControl.LocalPlayer.NetTransform.SnapTo(new(15.5f, 0.0f), (ushort)(PlayerControl.LocalPlayer.NetTransform.lastSequenceId + 8));
         }, 4f, "Airship Spawn FailSafe");
     }
+
 }
