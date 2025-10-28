@@ -340,8 +340,8 @@ public static class BedWars
         if (killerData.IsBuffedTeam(out var buffRatio))
             damage *= buffRatio;
 
-        RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
-        RPC.PlaySoundRPC(target.PlayerId, Sounds.KillSound);
+        RPC.PlaySoundRPC(Sounds.KillSound, killer.PlayerId);
+        RPC.PlaySoundRPC(Sounds.KillSound, target.PlayerId);
         
         targetData.Damage(target, damage, killer);
         Utils.NotifyRoles(SpecifySeer: killer, SpecifyTarget: target);
@@ -673,6 +673,7 @@ public static class BedWars
                         Logger.Info($"{enemy.GetRealName()} triggered trap for {data.Team} team", "BedWars");
                         upgrades.Remove(Upgrade.Trap);
 
+                        enemy.RPCPlayCustomSound("FlashBang");
                         Trapped.Add(enemy.PlayerId);
                         Main.AllPlayerSpeed[enemy.PlayerId] -= TrappedSpeedDecrease;
                         enemy.MarkDirtySettings();
@@ -680,6 +681,7 @@ public static class BedWars
                         LateTask.New(() =>
                         {
                             if (GameStates.IsEnded || !GameStates.InGame || GameStates.IsLobby || enemy == null) return;
+                            RPC.PlaySoundRPC(Sounds.TaskComplete, enemy.PlayerId);
                             Trapped.Remove(enemy.PlayerId);
                             Main.AllPlayerSpeed[enemy.PlayerId] = Main.RealOptionsData.GetFloat(FloatOptionNames.PlayerSpeedMod);
                             enemy.MarkDirtySettings();
@@ -779,7 +781,7 @@ public static class BedWars
 
             Health = MaxHealth;
             NameNotifyManager.Notifies.Remove(pc.PlayerId);
-            RPC.PlaySoundRPC(pc.PlayerId, Sounds.TaskComplete);
+            RPC.PlaySoundRPC(Sounds.TaskComplete, pc.PlayerId);
             pc.ReviveFromTemporaryExile();
             pc.RpcSetColor(Team.GetColorId());
             pc.TP(Base.SpawnPosition);
@@ -1564,9 +1566,11 @@ public static class BedWars
                     switch (selected.Key)
                     {
                         case Item.GoldenApple:
+                            pc.RPCPlayCustomSound("Bet");
                             data.Health = MaxHealth;
                             break;
                         case Item.TNT:
+                            pc.RPCPlayCustomSound("Line");
                             _ = new TNT(pos);
                             break;
                         case Item.InvisibilityPotion:
@@ -1747,6 +1751,8 @@ public static class BedWars
                 var str = string.Empty;
                 const int progressDisplayParts = 10;
 
+                RPC.PlaySoundRPC(Sounds.TaskUpdateSound, pc.PlayerId);
+
                 while (timer > 0f)
                 {
                     timer -= Time.deltaTime;
@@ -1787,6 +1793,7 @@ public static class BedWars
                 PlayerControl pc = id.GetPlayer();
                 if (pc == null || !pc.IsAlive()) continue;
 
+                CustomSoundsManager.RPCPlayCustomSoundAll("Gunfire");
                 pc.Notify(data.Team == team ? Translator.GetString("Bedwars.BedStatus.Broken") : string.Format(Translator.GetString("Bedwars.BedStatus.EnemyBroken"), team.GetName()));
             }
 
@@ -1815,6 +1822,7 @@ public static class BedWars
             if (pc == null || !pc.IsAlive()) continue;
 
             float distance = Vector2.Distance(pc.Pos(), position);
+            CustomSoundsManager.RPCPlayCustomSoundAll("Boom");
             if (distance <= TNTRange) data.Damage(pc, distance <= 1f ? TNTDamage : TNTDamage / distance);
         }
 
