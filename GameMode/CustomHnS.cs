@@ -89,6 +89,7 @@ internal static class CustomHnS
         LateTask.New(() =>
         {
             IsBlindTime = false;
+            RPC.PlaySoundRPC(Sounds.ImpTransform, byte.MaxValue);
             Utils.MarkEveryoneDirtySettingsV4();
 
             Main.AllAlivePlayerControls
@@ -435,6 +436,7 @@ internal static class CustomHnS
         // If the Troll is killed, they win
         if (target.Is(CustomRoles.Troll))
         {
+            CustomSoundsManager.RPCPlayCustomSoundAll("Congrats");
             CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Troll);
             CustomWinnerHolder.WinnerIds.Add(target.PlayerId);
             AddFoxesToWinners();
