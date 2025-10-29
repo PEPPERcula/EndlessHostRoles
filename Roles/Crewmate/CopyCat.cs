@@ -116,7 +116,7 @@ public class CopyCat : RoleBase
                 CustomRoles.Eraser => CustomRoles.NiceEraser,
                 CustomRoles.Visionary => CustomRoles.Oracle,
                 CustomRoles.Workaholic or CustomRoles.Pawn => CustomRoles.Snitch,
-                CustomRoles.Sunnyboy => new[] {CustomRoles.Doctor, CustomRoles.ScientistEHR}.RandomElement(),
+                CustomRoles.Sunnyboy or CustomRoles.Fabricator => new[] {CustomRoles.Doctor, CustomRoles.ScientistEHR}.RandomElement(),
                 CustomRoles.Vindicator or CustomRoles.Pickpocket => CustomRoles.Mayor,
                 CustomRoles.Councillor or CustomRoles.Magistrate => CustomRoles.Judge,
                 CustomRoles.EvilGuesser or CustomRoles.Doomsayer or CustomRoles.Augur => CustomRoles.NiceGuesser,
@@ -148,6 +148,7 @@ public class CopyCat : RoleBase
                 CustomRoles.Hookshot or CustomRoles.Ninja => new[] {CustomRoles.Tether, CustomRoles.Transmitter}.RandomElement(),
                 CustomRoles.Hypocrite or CustomRoles.Specter => CustomRoles.Speedrunner,
                 CustomRoles.Bandit => CustomRoles.Cleanser,
+                CustomRoles.Centralizer => CustomRoles.Convener,
                 CustomRoles.Weatherman => CustomRoles.Tornado,
                 _ => role
             };
@@ -190,4 +191,5 @@ public class CopyCat : RoleBase
     }
 
 }
+
 
