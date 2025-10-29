@@ -191,5 +191,3 @@ public class CopyCat : RoleBase
     }
 
 }
-
-
