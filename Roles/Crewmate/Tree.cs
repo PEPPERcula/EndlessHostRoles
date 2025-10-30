@@ -1,4 +1,5 @@
 ﻿using AmongUs.GameOptions;
+using EHR.Modules;
 
 namespace EHR.Crewmate;
 
@@ -50,6 +51,7 @@ public class Tree : RoleBase
     public override void OnPet(PlayerControl pc)
     {
         if (pc.GetAbilityUseLimit() < 1) return;
+        RPC.PlaySoundRPC(Sounds.TaskUpdateSound, pc.PlayerId);
         pc.RpcRemoveAbilityUse();
 
         Main.AllPlayerSpeed[pc.PlayerId] = Main.MinSpeed;
@@ -83,14 +85,21 @@ public class Tree : RoleBase
             
             Utils.GetPlayersInRadius(FallRadius.GetFloat(), pc.Pos()).Without(pc).Do(x =>
             {
-                if (IRandom.Instance.Next(100) < chance) x.Suicide(PlayerState.DeathReason.Fall, pc);
+                if (IRandom.Instance.Next(100) < chance)
+                {
+                    RPC.PlaySoundRPC(Sounds.KillSound, pc.PlayerId);
+                    x.Suicide(PlayerState.DeathReason.Fall, pc);
+                }
                 else
                 {
+                    pc.RPCPlayCustomSound("Dove");
+                    x.RPCPlayCustomSound("Dove");
                     Main.AllPlayerSpeed[x.PlayerId] = Main.MinSpeed;
                     x.MarkDirtySettings();
                     
                     LateTask.New(() =>
                     {
+                        RPC.PlaySoundRPC(Sounds.TaskComplete, x.PlayerId);
                         Main.AllPlayerSpeed[x.PlayerId] = Main.RealOptionsData.GetFloat(FloatOptionNames.PlayerSpeedMod);
                         if (!GameStates.IsInTask || ExileController.Instance || AntiBlackout.SkipTasks || pc == null || !pc.IsAlive()) return;
                         x.MarkDirtySettings();
