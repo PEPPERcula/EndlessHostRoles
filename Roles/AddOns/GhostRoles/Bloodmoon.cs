@@ -67,7 +67,11 @@ internal class Bloodmoon : IGhostRole
                 continue;
             }
 
-            if (pc.RpcCheckAndMurder(player, true)) player.Suicide(realKiller: pc);
+            if (pc.RpcCheckAndMurder(player, true))
+            {
+                RPC.PlaySoundRPC(Sounds.KillSound, pc.PlayerId);
+                player.Suicide(realKiller: pc);
+            }
         }
     }
 
