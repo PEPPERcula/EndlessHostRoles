@@ -2187,7 +2187,7 @@ public static class Utils
                             SelfSuffix.Append(MoveAndStop.GetSuffixText(seer));
                             break;
                         case CustomGameMode.HotPotato:
-                            SelfSuffix.Append(HotPotato.GetSuffixText(seer.PlayerId));
+                            SelfSuffix.Append(HotPotato.GetSuffixText(seer.PlayerId, false));
                             break;
                         case CustomGameMode.Speedrun:
                             SelfSuffix.Append(Speedrun.GetSuffixText(seer));
@@ -3502,4 +3502,5 @@ public static class Utils
         float minTime = Mathf.Max(0.02f, AmongUsClient.Instance.Ping / divice * 6f);
         return minTime;
     }
+
 }
