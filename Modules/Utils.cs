@@ -3407,6 +3407,8 @@ public static class Utils
             CustomRoles.Whisperer => Whisperer.Cooldown.GetInt() + (includeDuration ? Whisperer.Duration.GetInt() : 0),
             CustomRoles.Astral => Astral.AbilityCooldown.GetInt() + (includeDuration ? Astral.AbilityDuration.GetInt() : 0),
             CustomRoles.Vacuum => Vacuum.AbilityCooldown.GetInt() + (includeDuration ? Vacuum.AbilityDuration.GetInt() : 0),
+            CustomRoles.Jet => Jet.DashCooldown.GetInt() + (includeDuration ? Jet.DashDuration.GetInt() : 0),
+            CustomRoles.Dasher => Dasher.DashCooldown.GetInt() + (includeDuration ? Dasher.DashDuration.GetInt() : 0),
             CustomRoles.TimeMaster => TimeMaster.TimeMasterSkillCooldown.GetInt(),
             CustomRoles.Perceiver => Perceiver.CD.GetInt(),
             CustomRoles.Convener => Convener.CD.GetInt(),
