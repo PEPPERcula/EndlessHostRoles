@@ -1,4 +1,4 @@
-﻿using AmongUs.GameOptions;
+using AmongUs.GameOptions;
 
 namespace EHR.GameMode.HideAndSeekRoles;
 
@@ -82,16 +82,34 @@ public class Jet : RoleBase, IHideAndSeekRole
     public override void ApplyGameOptions(IGameOptions opt, byte playerId)
     {
         Main.AllPlayerSpeed[playerId] = DashStatus.IsDashing ? DashSpeed.GetFloat() : RoleSpeed;
+
+        if (!Options.UsePets.GetBool())
+        {
+            AURoleOptions.EngineerCooldown = DashStatus.Cooldown + DashStatus.Duration;
+            AURoleOptions.EngineerInVentMaxTime = 1f;
+        }
+    }
+
+    public override void OnEnterVent(PlayerControl pc, Vent vent)
+    {
+        Dash(pc);
     }
 
     public override void OnPet(PlayerControl pc)
     {
-        if (pc.HasAbilityCD() || DashStatus.IsDashing || pc.GetAbilityUseLimit() < 1f) return;
+        if (pc.HasAbilityCD()) return;
+        Dash(pc);
+        pc.AddAbilityCD(DashStatus.Cooldown + DashStatus.Duration);
+    }
+
+    private void Dash(PlayerControl pc)
+    {
+        if (DashStatus.IsDashing || pc.GetAbilityUseLimit() < 1f) return;
+
         DashStatus.IsDashing = true;
         DashStatus.DashEndTime = Utils.TimeStamp + DashStatus.Duration;
         pc.MarkDirtySettings();
         pc.RpcRemoveAbilityUse();
-        pc.AddAbilityCD(DashStatus.Cooldown + DashStatus.Duration);
     }
 
     public override void OnFixedUpdate(PlayerControl pc)
@@ -105,5 +123,13 @@ public class Jet : RoleBase, IHideAndSeekRole
             DashStatus.IsDashing = false;
             pc.MarkDirtySettings();
         }
+    }
+
+    public override void SetButtonTexts(HudManager hud, byte id)
+    {
+        if (Options.UsePets.GetBool())
+            hud.PetButton?.OverrideText(Translator.GetString("SwiftclawAbilityButtonText"));
+        else
+            hud.AbilityButton?.OverrideText(Translator.GetString("SwiftclawAbilityButtonText"));
     }
 }
