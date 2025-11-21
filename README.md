@@ -228,9 +228,11 @@ You can also report bugs and suggest features in the #bug-reports and #suggestio
 | /kick       | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /ban        | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /say        | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| /start      | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /poll       | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /mute       | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /ds         | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| /mpoll      | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /gmpoll     | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /fix        | :x:             | :x:                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | /exe        | :x:             | :x:                | :x:                | :heavy_check_mark: | :heavy_check_mark: |
@@ -698,5 +700,3 @@ If you have any questions about this Privacy Policy or how your data is handled,
 ------------------------------------------------------------------------------------------------------------
 
 By using the Endless Host Roles mod, you agree to the terms outlined in this Privacy Policy.
-
-
