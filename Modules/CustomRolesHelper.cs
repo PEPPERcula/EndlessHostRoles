@@ -45,7 +45,7 @@ internal static class CustomRolesHelper
         // Add-ons
         CustomRoles.Energetic,
 
-        // HnS
+        // Hide And Seek
         CustomRoles.Jet,
         CustomRoles.Dasher
     ];
@@ -399,7 +399,7 @@ internal static class CustomRolesHelper
             CustomRoles.Troll => CustomRoles.Crewmate,
             CustomRoles.Jumper => CustomRoles.Engineer,
             CustomRoles.Detector => CustomRoles.Crewmate,
-            CustomRoles.Jet => CustomRoles.Crewmate,
+            CustomRoles.Jet => UsePets ? CustomRoles.Crewmate : CustomRoles.Engineer,
             CustomRoles.Dasher => CustomRoles.Impostor,
             CustomRoles.Locator => CustomRoles.Impostor,
             CustomRoles.Venter => CustomRoles.Impostor,
@@ -2017,3 +2017,4 @@ public enum CountTypes
 
     Coven
 }
+
