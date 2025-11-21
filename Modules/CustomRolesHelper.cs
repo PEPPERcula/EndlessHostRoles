@@ -2017,4 +2017,3 @@ public enum CountTypes
 
     Coven
 }
-
