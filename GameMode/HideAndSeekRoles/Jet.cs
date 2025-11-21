@@ -97,9 +97,7 @@ public class Jet : RoleBase, IHideAndSeekRole
 
     public override void OnPet(PlayerControl pc)
     {
-        if (pc.HasAbilityCD()) return;
         Dash(pc);
-        pc.AddAbilityCD(DashStatus.Cooldown + DashStatus.Duration);
     }
 
     private void Dash(PlayerControl pc)
