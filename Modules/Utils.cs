@@ -3453,6 +3453,10 @@ public static class Utils
             CustomRoles.Cherokious => Cherokious.KillCooldown.GetInt(),
             CustomRoles.NoteKiller => NoteKiller.AbilityCooldown.GetInt(),
             CustomRoles.Weatherman => Weatherman.AbilityCooldown.GetInt(),
+
+            // Hide And Seek
+            CustomRoles.Jet => Jet.DashCooldown.GetInt() + (includeDuration ? Jet.DashDuration.GetInt() : 0),
+            CustomRoles.Dasher => Dasher.DashCooldown.GetInt() + (includeDuration ? Dasher.DashDuration.GetInt() : 0),
             _ => -1
         };
 
