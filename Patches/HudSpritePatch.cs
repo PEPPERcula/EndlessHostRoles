@@ -310,6 +310,7 @@ public static class HudSpritePatch
                     break;
                 }
                 case CustomRoles.Gangster when Gangster.CanRecruit(player.PlayerId):
+                case CustomRoles.Jackal when player.GetAbilityUseLimit() > 0:
                 {
                     newKillButton = CustomButton.Get("Sidekick");
                     break;
@@ -406,6 +407,7 @@ public static class HudSpritePatch
                     break;
                 }
                 case CustomRoles.Dasher:
+                case CustomRoles.Jet:
                 case CustomRoles.Swiftclaw:
                 {
                     if (Options.UsePets.GetBool() && !Options.UsePhantomBasis.GetBool()) newPetButton = CustomButton.Get("Dash");
