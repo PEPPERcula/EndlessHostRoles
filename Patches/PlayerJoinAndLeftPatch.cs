@@ -183,6 +183,7 @@ internal static class OnGameJoinedPatch
                     if (Options.AutoDraftStartCommandAfterJoin.GetBool())
                         ChatCommands.DraftStartCommand(PlayerControl.LocalPlayer, "Command.DraftStart", "/draftstart", ["/draftstart"]);
                 }
+            }
 
             if (Options.AutoReadyCheckCommandAfterJoin.GetBool())
             {
@@ -452,8 +453,6 @@ internal static class DisconnectInternalPatch
 {
     public static void Prefix( /*InnerNetClient __instance,*/ DisconnectReasons reason, string stringReason)
     {
-        //ShowDisconnectPopupPatch.Reason = reason;
-        //ShowDisconnectPopupPatch.StringReason = stringReason;
         ErrorText.Instance.CheatDetected = false;
         ErrorText.Instance.SBDetected = false;
         ErrorText.Instance.Clear();
@@ -772,18 +771,6 @@ internal static class InnerNetClientSpawnPatch
                     }
                 }, 1.3f, "DisplayLastResult");
             }
-
-            // if (PlayerControl.LocalPlayer.FriendCode.GetDevUser().Up && Options.EnableUpMode.GetBool())
-            // {
-            //     LateTask.New(() =>
-            //     {
-            //         if (!AmongUsClient.Instance.IsGameStarted && client.Character != null)
-            //         {
-            //             Main.IsChatCommand = true;
-            //             Utils.SendMessage($"{GetString("Message.YTPlanNotice")} {PlayerControl.LocalPlayer.FriendCode.GetDevUser().UpName}", client.Character.PlayerId);
-            //         }
-            //     }, 1.4f, "DisplayUpWarnning");
-            // }
         }
     }
 }
