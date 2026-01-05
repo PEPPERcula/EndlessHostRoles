@@ -11,10 +11,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using EHR.Roles;
 using EHR.Gamemodes;
-
-
-
-
 #if ANDROID
 using System.Collections.Generic;
 #else
@@ -1506,5 +1502,4 @@ public static class RpcSyncSettingsPatch
     {
         OptionItem.SyncAllOptions();
     }
-
 }
