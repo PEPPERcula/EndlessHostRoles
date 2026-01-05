@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using EHR.Gamemodes;
-
 #if !ANDROID
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 #endif
