@@ -34,5 +34,4 @@ public class Jinx : RoleBase
     public override void Init() { }
 
     public override void Add(byte playerId) { }
-
 }
