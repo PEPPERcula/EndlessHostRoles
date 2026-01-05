@@ -465,7 +465,7 @@ public static class GuessManager
 
                     Logger.Info($"Player: {target.GetRealName().RemoveHtmlTags()} was guessed by {pc.GetRealName().RemoveHtmlTags()}", "Guesser");
 
-                    if (pc.IsHost()) Utils.FlashColor(guesserSuicide ? new(1f, 0f, 0f, 0.3f) : new(0f, 1f, 0f, 0.3f));
+                    Utils.FlashColor(guesserSuicide ? new(1f, 0f, 0f, 0.3f) : new(0f, 1f, 0f, 0.3f));
 
                     if (Main.PlayerStates[pc.PlayerId].Role is NecroGuesser ng)
                     {
@@ -1646,5 +1646,4 @@ public static class GuessManager
         if (Data.TryGetValue(shapeshifter.PlayerId, out MeetingShapeshiftData msd))
             msd.AdvanceStep(target);
     }
-
 }
