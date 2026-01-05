@@ -284,5 +284,4 @@ public class Werewolf : RoleBase
 
         return true;
     }
-
 }
