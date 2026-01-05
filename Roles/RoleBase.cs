@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using AmongUs.GameOptions;
+
 namespace EHR.Roles;
 
 public abstract class RoleBase : IComparable<RoleBase>
