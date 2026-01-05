@@ -335,4 +335,3 @@ public class Judge : RoleBase
         countsAs = 1;
     }
 }
-
