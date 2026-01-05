@@ -2021,5 +2021,3 @@ public enum CountTypes
 
     Coven
 }
-
-
