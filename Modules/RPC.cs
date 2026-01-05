@@ -39,6 +39,7 @@ public enum CustomRPC
     
     ShowPopUp,
     KillFlash,
+    FlashColor,
     SyncAbilityUseLimit,
     RemoveAbilityUseLimit,
     RemoveSubRole,
@@ -1205,6 +1206,16 @@ internal static class RPCHandlerPatch
                     if (Constants.ShouldPlaySfx()) RPC.PlaySound(PlayerControl.LocalPlayer.PlayerId, Sounds.KillSound);
                     break;
                 }
+                case CustomRPC.FlashColor:
+                {
+                    float r = reader.ReadSingle();
+                    float g = reader.ReadSingle();
+                    float b = reader.ReadSingle();
+                    float a = reader.ReadSingle();
+                    float duration = reader.ReadSingle();
+                    Utils.FlashColor(new(r, g, b, a), duration);
+                    break;
+                }
                 case CustomRPC.SetCleanserCleanLimit:
                 {
                     Cleanser.ReceiveRPC(reader);
@@ -1785,5 +1796,4 @@ internal static class PlayerPhysicsRPCHandlerPatch
 
         return true;
     }
-
 }
