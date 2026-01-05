@@ -4137,6 +4137,14 @@ public static class Utils
             obj.SetActive(Math.Abs(t - 1f) > 0.1f);
             obj.GetComponent<SpriteRenderer>().color = new(color.r, color.g, color.b, Mathf.Clamp01(((-2f * Mathf.Abs(t - 0.5f)) + 1) * color.a / 2));
         })));
+
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.FlashColor, SendOption.Reliable);
+        writer.Write(color.r);
+        writer.Write(color.g);
+        writer.Write(color.b);
+        writer.Write(color.a);
+        writer.Write(duration);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
 
     public static Sprite LoadSprite(string path, float pixelsPerUnit = 1f)
