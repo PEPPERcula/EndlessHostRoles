@@ -432,16 +432,16 @@ public enum CustomRoles
     // Solo PVP
     Challenger,
 
-    // FFA
+    // Free For All
     Killer,
 
-    // Move And Stop
+    // Stop And Go
     Tasker,
 
     // Hot Potato
     Potato,
 
-    // H&S
+    // Hide And Seek
     Hider,
     Seeker,
     Fox,
