@@ -1436,6 +1436,11 @@ internal static class RPCHandlerPatch
                     
                     break;
                 }
+                case CustomRPC.Deadlined:
+                {
+                    Deadlined.ReceiveRPC(reader);
+                    break;
+                }
             }
         }
         catch (Exception e) { Utils.ThrowException(e); }
@@ -1778,5 +1783,4 @@ internal static class PlayerPhysicsRPCHandlerPatch
 
         return true;
     }
-
 }
