@@ -17,8 +17,7 @@ public enum CustomRoles
     ShapeshifterEHR,
     ViperEHR,
 
-    // Impostors
-
+    // Impostors (Modded)
     Abyssbringer,
     Ambusher,
     Anonymous,
@@ -145,8 +144,7 @@ public enum CustomRoles
     TrackerEHR,
     DetectiveEHR,
 
-    // Crewmates
-
+    // Crewmates (Modded)
     Addict,
     Adrenaline,
     Adventurer,
@@ -288,7 +286,7 @@ public enum CustomRoles
     Wizard,
 
     // Neutrals
-
+    Accumulator,
     Agitator,
     Amnesiac,
     Amogus,
@@ -407,7 +405,6 @@ public enum CustomRoles
     Workaholic,
 
     // Coven
-
     Augur,
     Banshee,
     CovenLeader,
