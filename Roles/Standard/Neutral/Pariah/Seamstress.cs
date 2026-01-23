@@ -54,6 +54,7 @@ public class Seamstress : RoleBase
         else cd = 300f;
 
         AURoleOptions.ShapeshifterCooldown = cd;
+        AURoleOptions.ShapeshifterDuration = 0.1f;
     }
 
     public override bool OnShapeshift(PlayerControl shapeshifter, PlayerControl target, bool shapeshifting)
