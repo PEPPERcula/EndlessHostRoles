@@ -140,7 +140,7 @@ public class Inspector : RoleBase
             {
                 if (TryHideMsg.GetBool() && !isUI && spamRequired)
                     Utils.SendMessage("\n", pc.PlayerId, GetString("NoSpamAnymoreUseCmd"));
-                    
+
                 if (!MsgToPlayerAndRole(msg, out byte targetId1, out byte targetId2, out string error))
                 {
                     Utils.SendMessage(error, pc.PlayerId);
