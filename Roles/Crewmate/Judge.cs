@@ -8,7 +8,6 @@ using Hazel;
 using UnityEngine;
 using static EHR.Translator;
 
-
 namespace EHR.Crewmate;
 
 public class Judge : RoleBase
@@ -19,17 +18,14 @@ public class Judge : RoleBase
     private static OptionItem TrialLimitPerMeeting;
     private static OptionItem TrialLimitPerGame;
     private static OptionItem AbilityUseLimit;
-
-    private static OptionItem TryHideMsg;
     private static OptionItem CanTrialMadmate;
-
     private static OptionItem CanTrialConverted;
-
     private static OptionItem CanTrialCrewKilling;
     private static OptionItem CanTrialNeutralB;
-    private static OptionItem CanTrialNeutralK;
     private static OptionItem CanTrialNeutralE;
+    private static OptionItem CanTrialNeutralK;
     private static OptionItem CanTrialCoven;
+    private static OptionItem TryHideMsg;
     public static OptionItem JudgeAbilityUseGainWithEachTaskCompleted;
     public static OptionItem AbilityChargesWhenFinishedTasks;
 
@@ -334,7 +330,7 @@ public class Judge : RoleBase
             targetBox.name = "ShootButton";
             targetBox.transform.localPosition = new(-0.35f, 0.03f, -1.31f);
             var renderer = targetBox.GetComponent<SpriteRenderer>();
-            renderer.sprite = CustomButton.Get("JudgeIcon");
+            renderer.sprite = CustomButton.Get("Trial");
             var button = targetBox.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
             button.OnClick.AddListener((Action)(() => JudgeOnClick(pva.TargetPlayerId /*, __instance*/)));
