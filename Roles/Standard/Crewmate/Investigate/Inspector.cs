@@ -139,7 +139,7 @@ public class Inspector : RoleBase
             case 2:
             {
                 if (TryHideMsg.GetBool() && !isUI && spamRequired)
-                    Utils.SendMessage("\n", pc.PlayerId, GetString("NoSpamAnymoreUseCmd"));
+                    ChatManager.SendPreviousMessagesToAll();
 
                 if (!MsgToPlayerAndRole(msg, out byte targetId1, out byte targetId2, out string error))
                 {
@@ -193,7 +193,7 @@ public class Inspector : RoleBase
                             if (!isUI)
                                 Utils.SendMessage(GetString("InspectorCheckSelf"), pc.PlayerId, Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")));
                             else
-                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckSelf")) + "\n" + GetString("InspectorCheckTitle"));
+                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")) + "\n" + GetString("InspectorCheckSelf"));
 
                             Logger.Msg("Check attempted on self", "Inspector");
                         }, 0.2f, "Inspector 2");
@@ -208,7 +208,7 @@ public class Inspector : RoleBase
                             if (!isUI)
                                 Utils.SendMessage(GetString("InspectorCheckSame"), pc.PlayerId, Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")));
                             else
-                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckSame")) + "\n" + GetString("InspectorCheckTitle"));
+                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")) + "\n" + GetString("InspectorCheckSame"));
 
                             Logger.Msg("Check attempted on same player", "Inspector");
                         }, 0.2f, "Inspector 8");
@@ -223,7 +223,7 @@ public class Inspector : RoleBase
                             if (!isUI)
                                 Utils.SendMessage(GetString("InspectorCheckReveal"), pc.PlayerId, Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")));
                             else
-                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckReveal")) + "\n" + GetString("InspectorCheckTitle"));
+                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")) + "\n" + GetString("InspectorCheckReveal"));
 
                             Logger.Msg("Check attempted on revealed role", "Inspector");
                         }, 0.2f, "Inspector 3");
@@ -240,7 +240,7 @@ public class Inspector : RoleBase
                             if (!isUI)
                                 Utils.SendMessage(format, pc.PlayerId, Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")));
                             else
-                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), format) + "\n" + GetString("InspectorCheckTitle"));
+                                pc.ShowPopUp(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")) + "\n" + format);
 
                             Logger.Msg("Check attempt, result TRUE", "Inspector");
                         }, 0.2f, "Inspector 4");
@@ -254,7 +254,7 @@ public class Inspector : RoleBase
                             if (!isUI)
                                 Utils.SendMessage(format, pc.PlayerId, Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle")));
                             else
-                                pc.ShowPopUp($"{Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), format)}\n{GetString("InspectorCheckTitle")}");
+                                pc.ShowPopUp($"{Utils.ColorString(Utils.GetRoleColor(CustomRoles.Inspector), GetString("InspectorCheckTitle"))}\n{format}");
 
                             Logger.Msg("Check attempt, result FALSE", "Inspector");
                         }, 0.2f, "Inspector 5");
@@ -434,7 +434,7 @@ public class Inspector : RoleBase
             targetBox.name = "ShootButton";
             targetBox.transform.localPosition = new(-0.35f, 0.03f, -1.31f);
             var renderer = targetBox.GetComponent<SpriteRenderer>();
-            renderer.sprite = Utils.LoadSprite("EHR.Resources.Images.Skills.InspectorIcon.png", 170f);
+            renderer.sprite = Utils.LoadSprite("EHR.Resources.Images.Skills.Compare.png", 170f);
             var button = targetBox.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
             button.OnClick.AddListener((Action)(() => InspectorOnClick(pva.TargetPlayerId /*, __instance*/)));
