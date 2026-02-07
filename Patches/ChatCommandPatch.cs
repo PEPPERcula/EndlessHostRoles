@@ -526,7 +526,8 @@ internal static class ChatCommands
 
         sum.SummonedPlayerId = targetId;
         player.RpcRemoveAbilityUse();
-        
+
+        RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
         Utils.SendMessage("\n", player.PlayerId, string.Format(GetString("Summoner.SummonSuccessMessage"), targetId.ColoredPlayerName()));
         
         MeetingManager.SendCommandUsedMessage(args[0]);
