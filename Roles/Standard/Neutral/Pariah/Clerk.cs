@@ -50,6 +50,7 @@ public class Clerk : RoleBase
         if (voter.GetAbilityUseLimit() < 1) return false;
         if (target.PlayerId == voter.PlayerId) return false;
 
+        RPC.PlaySoundRPC(voter.PlayerId, Sounds.TaskUpdateSound);
         voter.RpcRemoveAbilityUse();
 
         TaskState ts = target.GetTaskState();
