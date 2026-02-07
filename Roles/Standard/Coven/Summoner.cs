@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 using EHR.Modules;
 using EHR.Modules.Extensions;
 using Hazel;
+using UnityEngine;
 
 namespace EHR.Roles;
 
@@ -13,7 +14,7 @@ public class Summoner : CovenBase
     public static bool On;
     public static List<Summoner> Instances = [];
     public static HashSet<byte> AdditionalWinners = [];
-    
+
     private static OptionItem SummonedTimeToKill;
     private static OptionItem AbilityUseLimit;
     private static OptionItem AbilityUseGainWithEachKill;
@@ -96,7 +97,7 @@ public class Summoner : CovenBase
         if (SummonedPlayerId != byte.MaxValue && Main.PlayerStates.TryGetValue(SummonedPlayerId, out var state))
         {
             var summoned = SummonedPlayerId.GetPlayer();
-            
+
             if (summoned != null && !summoned.IsAlive())
             {
                 SummonedPlayerTimer = new(SummonedTimeToKill.GetFloat(), () =>
@@ -116,30 +117,73 @@ public class Summoner : CovenBase
                 summoned.SyncGeneralOptions();
                 summoned.SyncSettings();
                 Vector2 pos = summoned.Pos();
-                summoned.TP(Main.EnumerateAlivePlayerControls().MinBy(x => Vector2.Distance(x.Pos(), pos)));
+                summoned.TP(Main.AllAlivePlayerControls.MinBy(x => Vector2.Distance(x.Pos(), pos)));
                 LateTask.New(() => summoned.SetKillCooldown(10f), 0.2f);
-                
+
                 Utils.SendRPC(CustomRPC.SyncRoleData, SummonerId, 1, SummonedPlayerId);
             }
         }
-        
-        
+
+
         if (!HasNecronomicon || Changed) return;
-        
+
         var summoner = SummonerId.GetPlayer();
         if (summoner == null || !summoner.IsAlive()) return;
-            
+
         summoner.RpcChangeRoleBasis(CustomRoles.SerialKiller);
         summoner.ResetKillCooldown();
         LateTask.New(() => summoner.SetKillCooldown(), 0.2f);
-        
+
         Changed = true;
     }
 
     public override void OnVoteKick(PlayerControl pc, PlayerControl target)
     {
         string command = $"/summon {target.PlayerId}";
-        ChatCommands.SummonCommand(pc, command, command.Split(' '));
+        ChatCommands.SummonCommand(pc, "Command.Summon", command, command.Split(' '));
+    }
+
+    private static void SummonerOnClick(byte playerId /*, MeetingHud __instance*/)
+    {
+        Logger.Msg($"Click: ID {playerId}", "Summoner UI");
+        PlayerControl pc = Utils.GetPlayerById(playerId);
+        if (pc == null || pc.IsAlive() || !GameStates.IsVoting || Starspawn.IsDayBreak) return;
+
+        var command = $"/summon {playerId}";
+
+        if (AmongUsClient.Instance.AmHost)
+            ChatCommands.SummonCommand(PlayerControl.LocalPlayer, command, command.Split(' '));
+        else
+            ChatCommands.RequestCommandProcessingFromHost(command, "Summon");
+    }
+
+    private static void CreateSummonerButton(MeetingHud __instance)
+    {
+        foreach (PlayerVoteArea pva in __instance.playerStates.ToArray())
+        {
+            PlayerControl pc = Utils.GetPlayerById(pva.TargetPlayerId);
+            if (pc == null || pc.IsAlive()) continue;
+
+            GameObject template = pva.Buttons.transform.Find("CancelButton").gameObject;
+            GameObject targetBox = Object.Instantiate(template, pva.transform);
+            targetBox.name = "SummonerButton";
+            targetBox.transform.localPosition = new(-0.35f, 0.03f, -1.31f);
+            var renderer = targetBox.GetComponent<SpriteRenderer>();
+            renderer.sprite = Utils.LoadSprite("EHR.Resources.Images.Skills.Summon.png", 170f);
+            var button = targetBox.GetComponent<PassiveButton>();
+            button.OnClick.RemoveAllListeners();
+            button.OnClick.AddListener((Action)(() => SummonerOnClick(pva.TargetPlayerId)));
+        }
+    }
+
+    //[HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
+    public static class StartMeetingPatch
+    {
+        public static void Postfix(MeetingHud __instance)
+        {
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.Summoner) && PlayerControl.LocalPlayer.IsAlive())
+                CreateSummonerButton(__instance);
+        }
     }
 
     public static void OnAnyoneMurder(PlayerControl killer)
