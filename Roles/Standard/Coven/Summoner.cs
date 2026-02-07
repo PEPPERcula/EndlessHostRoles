@@ -117,13 +117,12 @@ public class Summoner : CovenBase
                 summoned.SyncGeneralOptions();
                 summoned.SyncSettings();
                 Vector2 pos = summoned.Pos();
-                summoned.TP(Main.AllAlivePlayerControls.MinBy(x => Vector2.Distance(x.Pos(), pos)));
+                summoned.TP(Main.EnumerateAlivePlayerControls().MinBy(x => Vector2.Distance(x.Pos(), pos)));
                 LateTask.New(() => summoned.SetKillCooldown(10f), 0.2f);
 
                 Utils.SendRPC(CustomRPC.SyncRoleData, SummonerId, 1, SummonedPlayerId);
             }
         }
-
 
         if (!HasNecronomicon || Changed) return;
 
@@ -140,7 +139,7 @@ public class Summoner : CovenBase
     public override void OnVoteKick(PlayerControl pc, PlayerControl target)
     {
         string command = $"/summon {target.PlayerId}";
-        ChatCommands.SummonCommand(pc, "Command.Summon", command, command.Split(' '));
+        ChatCommands.SummonCommand(pc, command, command.Split(' '));
     }
 
     private static void SummonerOnClick(byte playerId /*, MeetingHud __instance*/)
