@@ -64,9 +64,8 @@ public class Clerk : RoleBase
             target.SetRealKiller(voter);
             PlayerState state = Main.PlayerStates[target.PlayerId];
             state.deathReason = PlayerState.DeathReason.Taxes;
-            state.SetDead();
             Medic.IsDead(target);
-            target.RpcExileV2();
+            target.RpcGuesserMurderPlayer();
             Utils.AfterPlayerDeathTasks(target, true);
             Utils.SendMessage(string.Format(Translator.GetString("Clerk.Killed"), target.PlayerId.ColoredPlayerName()), title: CustomRoles.Clerk.ToColoredString());
             
