@@ -215,9 +215,7 @@ public static class GuessManager
 
                     switch (pc.GetCustomRole())
                     {
-                        case CustomRoles.Augur when !((Augur)Main.PlayerStates[pc.PlayerId].Role).CanGuess:
-                        case CustomRoles.Augur when Main.GuesserGuessed[pc.PlayerId] >= Augur.MaxGuessesPerGame.GetInt():
-                        case CustomRoles.Augur when Main.GuesserGuessedMeeting[pc.PlayerId] >= Augur.MaxGuessesPerMeeting.GetInt():
+                        case CustomRoles.Augur when !((Augur)Main.PlayerStates[pc.PlayerId].Role).CanGuess || Main.GuesserGuessed[pc.PlayerId] >= Augur.MaxGuessesPerGame.GetInt() || Main.GuesserGuessedMeeting[pc.PlayerId] >= Augur.MaxGuessesPerMeeting.GetInt():
                         case CustomRoles.NiceGuesser when Main.GuesserGuessed[pc.PlayerId] >= Options.GGCanGuessTime.GetInt():
                         case CustomRoles.EvilGuesser when Main.GuesserGuessed[pc.PlayerId] >= Options.EGCanGuessTime.GetInt():
                             ShowMessage("GGGuessMax");
@@ -1673,5 +1671,4 @@ public static class GuessManager
         if (Data.TryGetValue(shapeshifter.PlayerId, out MeetingShapeshiftData msd))
             msd.AdvanceStep(target);
     }
-
 }
