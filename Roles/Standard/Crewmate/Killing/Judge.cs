@@ -280,7 +280,7 @@ public class Judge : RoleBase
             targetBox.name = "ShootButton";
             targetBox.transform.localPosition = new(-0.35f, 0.03f, -1.31f);
             var renderer = targetBox.GetComponent<SpriteRenderer>();
-            renderer.sprite = CustomButton.Get("JudgeIcon");
+            renderer.sprite = CustomButton.Get("Trial");
             var button = targetBox.GetComponent<PassiveButton>();
             button.OnClick.RemoveAllListeners();
             button.OnClick.AddListener((Action)(() => JudgeOnClick(pva.TargetPlayerId /*, __instance*/)));
@@ -309,4 +309,3 @@ public class Judge : RoleBase
         countsAs = 1;
     }
 }
-
