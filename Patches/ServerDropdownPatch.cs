@@ -26,7 +26,7 @@ public static class ServerDropdownPatch
         TranslationController translationController = TranslationController.Instance;
         var regions = serverManager.AvailableRegions.ToList();
         IRegionInfo currentRegion = serverManager.CurrentRegion;
-        var displayRegions = regions.Where(r => r.Name != currentRegion.Name).ToList();
+        var displayRegions = regions.Where(region => region.Name != currentRegion.Name).ToList();
         int totalColumns = Mathf.Max(1, Mathf.CeilToInt(displayRegions.Count / 5f));
         int rowLimit = Mathf.Min(displayRegions.Count, 5);
         __instance.defaultButtonSelected = __instance.firstOption;
