@@ -20,7 +20,7 @@ public enum CustomGameMode
 {
     Standard = 0x01,
     SoloPVP = 0x02,
-    FFA = 0x03,
+    FreeForAll = 0x03,
     StopAndGo = 0x04,
     HotPotato = 0x05,
     HideAndSeek = 0x06,
@@ -75,7 +75,7 @@ public static class Options
     [
         "Standard",
         "SoloPVP",
-        "FFA",
+        "FreeForAll",
         "StopAndGo",
         "HotPotato",
         "HideAndSeek",
@@ -909,7 +909,7 @@ public static class Options
     public static CustomGameMode CurrentGameMode => GameMode.GetInt() switch
     {
         1 => CustomGameMode.SoloPVP,
-        2 => CustomGameMode.FFA,
+        2 => CustomGameMode.FreeForAll,
         3 => CustomGameMode.StopAndGo,
         4 => CustomGameMode.HotPotato,
         5 => CustomGameMode.HideAndSeek,
@@ -1804,11 +1804,11 @@ public static class Options
 
         MainLoadingText = "Building Settings for Other Gamemodes";
 
-        // SoloPVP
+        // Solo PVP
         SoloPVP.SetupCustomOption();
-        // FFA
+        // Free For All
         FreeForAll.SetupCustomOption();
-        // Move And Stop
+        // Stop And Go
         StopAndGo.SetupCustomOption();
         // Hot Potato
         HotPotato.SetupCustomOption();
@@ -3316,7 +3316,7 @@ public static class Options
                     CustomGameMode gm = explicitChoice.GetInt() switch
                     {
                         1 => CustomGameMode.SoloPVP,
-                        2 => CustomGameMode.FFA,
+                        2 => CustomGameMode.FreeForAll,
                         3 => CustomGameMode.StopAndGo,
                         4 => CustomGameMode.HotPotato,
                         5 => CustomGameMode.HideAndSeek,
