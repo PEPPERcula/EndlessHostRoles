@@ -423,9 +423,9 @@ public class AbstractPagingBehaviour(IntPtr ptr) : MonoBehaviour(ptr)
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || (!chatIsOpen || !gameMenuIsOpen && Input.mouseScrollDelta.y > 0f))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || (!chatIsOpen && !gameMenuIsOpen && Input.mouseScrollDelta.y > 0f))
             Cycle(false);
-        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) || (!chatIsOpen || !gameMenuIsOpen && Input.mouseScrollDelta.y < 0f))
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) || (!chatIsOpen && !gameMenuIsOpen && Input.mouseScrollDelta.y < 0f))
             Cycle(true);
     }
 
