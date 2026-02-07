@@ -129,7 +129,7 @@ public class Main : BasePlugin
     public static readonly Dictionary<CustomGameMode, HashSet<string>> HasPlayedGM = new()
     {
         [CustomGameMode.SoloPVP] = [],
-        [CustomGameMode.FFA] = [],
+        [CustomGameMode.FreeForAll] = [],
         [CustomGameMode.HotPotato] = [],
         [CustomGameMode.HideAndSeek] = [],
         [CustomGameMode.Speedrun] = [],
@@ -734,7 +734,7 @@ public class Main : BasePlugin
 
                 // Solo PVP
                 { CustomRoles.Challenger, "#f55252" },
-                // FFA
+                // Free For All
                 { CustomRoles.Killer, "#00ffff" },
                 // Stop And Go
                 { CustomRoles.Tasker, "#00ffa5" },
@@ -834,7 +834,7 @@ public class Main : BasePlugin
         {
             [CustomGameMode.Standard] = Color.white,
             [CustomGameMode.SoloPVP] = ColorUtility.TryParseHtmlString("#f55252", out Color c) ? c : Color.white,
-            [CustomGameMode.FFA] = Color.cyan,
+            [CustomGameMode.FreeForAll] = Color.cyan,
             [CustomGameMode.StopAndGo] = ColorUtility.TryParseHtmlString("#00ffa5", out c) ? c : Color.white,
             [CustomGameMode.HotPotato] = ColorUtility.TryParseHtmlString("#e8cd46", out c) ? c : Color.white,
             [CustomGameMode.HideAndSeek] = ColorUtility.TryParseHtmlString("#345eeb", out c) ? c : Color.white,
