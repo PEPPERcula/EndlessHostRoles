@@ -17,8 +17,7 @@ public enum CustomRoles
     ShapeshifterEHR,
     ViperEHR,
 
-    // Impostors
-
+    // Impostors (Modded)
     Abyssbringer,
     Ambusher,
     Anonymous,
@@ -145,8 +144,7 @@ public enum CustomRoles
     TrackerEHR,
     DetectiveEHR,
 
-    // Crewmates
-
+    // Crewmates (Modded)
     Addict,
     Adrenaline,
     Adventurer,
@@ -288,7 +286,6 @@ public enum CustomRoles
     Wizard,
 
     // Neutrals
-
     Accumulator,
     Agitator,
     Amnesiac,
@@ -409,7 +406,6 @@ public enum CustomRoles
     Workaholic,
 
     // Coven
-
     Augur,
     Banshee,
     CovenLeader,
@@ -434,16 +430,16 @@ public enum CustomRoles
     // Solo PVP
     Challenger,
 
-    // FFA
+    // Free For All
     Killer,
 
-    // Move And Stop
+    // Stop And Go
     Tasker,
 
     // Hot Potato
     Potato,
 
-    // H&S
+    // Hide And Seek
     Hider,
     Seeker,
     Fox,
