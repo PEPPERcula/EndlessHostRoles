@@ -618,13 +618,13 @@ internal static class GameEndChecker
             if (Main.EnumerateAlivePlayerControls().Any(x => x.GetCountTypes() == CountTypes.CustomTeam)) return false;
             if (Pawn.KeepsGameGoing.GetBool() && CustomRoles.Pawn.RoleExist()) return false;
 
-            PlayerState[] statesCoutingAsCrew = Main.PlayerStates.Values.Where(x => x.countTypes == CountTypes.Crew).ToArray();
+            PlayerState[] statesCoutingAsCrew = Main.PlayerStates.Values.Where(x => x.countTypes == CountTypes.Crewmate).ToArray();
 
             if (statesCoutingAsCrew.Length > 0 && statesCoutingAsCrew.All(WouldWinIfCrewLost))
                 statesCoutingAsCrew.Do(x => x.countTypes = CountTypes.None);
 
             int imp = AlivePlayersCount(CountTypes.Impostor);
-            int crew = AlivePlayersCount(CountTypes.Crew);
+            int crew = AlivePlayersCount(CountTypes.Crewmate);
             int coven = AlivePlayersCount(CountTypes.Coven);
 
             var crewKeepsGameGoing = false;
@@ -650,7 +650,7 @@ internal static class GameEndChecker
                 if ((!role.IsNK() && role is not CustomRoles.Bloodlust and not CustomRoles.Gaslighter) || role.IsMadmate() || role is CustomRoles.Sidekick) continue;
 
                 CountTypes countTypes = role.GetCountTypes();
-                if (countTypes is CountTypes.Crew or CountTypes.Impostor or CountTypes.None or CountTypes.OutOfGame or CountTypes.CustomTeam or CountTypes.Coven) continue;
+                if (countTypes is CountTypes.Crewmate or CountTypes.Impostor or CountTypes.None or CountTypes.OutOfGame or CountTypes.CustomTeam or CountTypes.Coven) continue;
 
                 CustomRoles? keyRole = role.IsRecruitingRole() ? null : role;
                 var keyWinner = (CustomWinner)role;
