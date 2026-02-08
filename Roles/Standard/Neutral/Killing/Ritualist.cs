@@ -35,5 +35,4 @@ public class Ritualist : RoleBase
     public override void Init() { }
 
     public override void Add(byte playerId) { }
-
 }
