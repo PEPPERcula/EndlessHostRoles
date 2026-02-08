@@ -1075,13 +1075,13 @@ internal static class StartGameHostPatch
             switch (Options.CurrentGameMode)
             {
                 case CustomGameMode.Standard:
-                    GameEndChecker.SetPredicateToNormal();
+                    GameEndChecker.SetPredicateToStandard();
                     break;
                 case CustomGameMode.SoloPVP:
                     GameEndChecker.SetPredicateToSoloPVP();
                     break;
-                case CustomGameMode.FFA:
-                    GameEndChecker.SetPredicateToFFA();
+                case CustomGameMode.FreeForAll:
+                    GameEndChecker.SetPredicateToFreeForAll();
                     break;
                 case CustomGameMode.StopAndGo:
                     GameEndChecker.SetPredicateToStopAndGo();
