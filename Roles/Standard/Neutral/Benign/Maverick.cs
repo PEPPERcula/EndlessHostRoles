@@ -95,6 +95,4 @@ public class Maverick : RoleBase
     {
         NumOfKills = reader.ReadPackedInt32();
     }
-
 }
-
