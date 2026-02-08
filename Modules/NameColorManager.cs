@@ -38,7 +38,7 @@ public static class NameColorManager
 
         switch (Options.CurrentGameMode)
         {
-            case CustomGameMode.FFA when FreeForAll.FFATeamMode.GetBool():
+            case CustomGameMode.FreeForAll when FreeForAll.FFATeamMode.GetBool():
                 if (FreeForAll.PlayerTeams.TryGetValue(target.PlayerId, out int team))
                     color = FreeForAll.TeamColors.GetValueOrDefault(team, "#00ffff");
                 return true;
@@ -238,7 +238,7 @@ public static class NameColorManager
 
         if (seer == target
             || (Main.GodMode.Value && seer.AmOwner)
-            || Options.CurrentGameMode is CustomGameMode.FFA or CustomGameMode.StopAndGo
+            || Options.CurrentGameMode is CustomGameMode.FreeForAll or CustomGameMode.StopAndGo
             || (seer.Data.IsDead && !seer.IsAlive() && Options.GhostCanSeeOtherRoles.GetBool() && (!Utils.IsRevivingRoleAlive() || !Main.DiedThisRound.Contains(seer.PlayerId)))
             || (seer.Is(CustomRoles.Mimic) && target.Data.IsDead && !target.IsAlive() && Options.MimicCanSeeDeadRoles.GetBool())
             || target.Is(CustomRoles.GM)
