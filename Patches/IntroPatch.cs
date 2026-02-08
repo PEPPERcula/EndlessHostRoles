@@ -169,7 +169,7 @@ internal static class SetUpRoleTextPatch
                 __instance.RoleBlurbText.text = lp.GetRoleInfo();
                 break;
             }
-            case CustomGameMode.FFA:
+            case CustomGameMode.FreeForAll:
             {
                 Color color = ColorUtility.TryParseHtmlString("#00ffff", out Color c) ? c : new(255, 255, 255, 255);
                 __instance.YouAreText.transform.gameObject.SetActive(false);
@@ -507,7 +507,7 @@ internal static class BeginCrewmatePatch
             }
         }
 
-        if (Options.CurrentGameMode == CustomGameMode.FFA && FreeForAll.FFATeamMode.GetBool() && FreeForAll.PlayerTeams.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out int ffaTeam))
+        if (Options.CurrentGameMode == CustomGameMode.FreeForAll && FreeForAll.FFATeamMode.GetBool() && FreeForAll.PlayerTeams.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out int ffaTeam))
         {
             teamToDisplay = new();
 
@@ -880,7 +880,7 @@ internal static class BeginCrewmatePatch
                 __instance.ImpostorText.text = GetString("ChallengerInfo");
                 break;
             }
-            case CustomGameMode.FFA:
+            case CustomGameMode.FreeForAll:
             {
                 __instance.TeamTitle.text = GetString("Killer");
                 Color color = FreeForAll.PlayerTeams.TryGetValue(PlayerControl.LocalPlayer.PlayerId, out int team) && FreeForAll.TeamColors.TryGetValue(team, out var teamColorHex) && ColorUtility.TryParseHtmlString(teamColorHex, out Color teamColor) ? teamColor : new(0, 255, 255, byte.MaxValue);
@@ -1170,7 +1170,7 @@ internal static class IntroCutsceneDestroyPatch
             switch (Options.CurrentGameMode)
             {
                 case CustomGameMode.SoloPVP when SoloPVP.SoloPVP_ChatDuringGame.GetBool():
-                case CustomGameMode.FFA when FreeForAll.FFAChatDuringGame.GetBool():
+                case CustomGameMode.FreeForAll when FreeForAll.FFAChatDuringGame.GetBool():
                 case CustomGameMode.Mingle when Mingle.ChatDuringGameOption.GetBool():
                 case CustomGameMode.Quiz when Quiz.Chat:
                 case CustomGameMode.HideAndSeek when CustomHnS.Chat:
@@ -1401,5 +1401,4 @@ internal static class IntroCutsceneDestroyPatch
                 PlayerControl.LocalPlayer.NetTransform.SnapTo(new(15.5f, 0.0f), (ushort)(PlayerControl.LocalPlayer.NetTransform.lastSequenceId + 8));
         }, 4f, "Airship Spawn FailSafe");
     }
-
 }
