@@ -85,26 +85,21 @@ public class PlayerState(byte playerId)
     }
 
     public readonly PlayerControl Player = Utils.GetPlayerById(playerId, false);
-
     private readonly byte PlayerId = playerId;
     public readonly List<CustomRoles> SubRoles = [];
     public readonly Dictionary<byte, string> TargetColorData = [];
-    public CountTypes countTypes = CountTypes.Crew;
+    public CountTypes countTypes = CountTypes.Crewmate;
     public PlainShipRoom LastRoom;
     public CustomRoles MainRole = CustomRoles.NotAssigned;
     public NetworkedPlayerInfo.PlayerOutfit NormalOutfit;
     public (DateTime TimeStamp, byte ID) RealKiller = (DateTime.MinValue, byte.MaxValue);
     public RoleBase Role = new VanillaRole();
-
     private int RoleChangeTimes = -1;
-
     public readonly List<CustomRoles> RoleHistory = [];
     public bool IsDead { get; set; }
-
     // ReSharper disable once InconsistentNaming
     public DeathReason deathReason { get; set; } = DeathReason.etc;
     public bool IsBlackOut { get; set; }
-
     public bool IsSuicide => deathReason is DeathReason.Suicide or DeathReason.Fall;
     public TaskState TaskState { get; set; } = new();
 
@@ -233,7 +228,7 @@ public class PlayerState(byte playerId)
                 {
                     0 => CountTypes.OutOfGame,
                     1 => CountTypes.Impostor,
-                    2 => CountTypes.Crew,
+                    2 => CountTypes.Crewmate,
                     _ => throw new NotImplementedException()
                 };
 
@@ -585,13 +580,10 @@ public static class GameStates
 public static class MeetingStates
 {
     public static DeadBody[] DeadBodies;
-
     public static int MeetingNum;
     public static bool MeetingCalled;
     public static bool FirstMeeting = true;
     public static bool IsEmergencyMeeting => ReportTarget == null;
     public static bool IsExistDeadBody => DeadBodies.Length > 0;
-
     public static NetworkedPlayerInfo ReportTarget { get; set; }
-
 }
