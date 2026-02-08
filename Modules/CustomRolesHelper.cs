@@ -1451,14 +1451,14 @@ internal static class CustomRolesHelper
             CustomRoles.Hypocrite => CountTypes.Impostor,
             CustomRoles.Crewpostor => CountTypes.Impostor,
             CustomRoles.Renegade => CountTypes.Impostor,
-            CustomRoles.Gaslighter => Gaslighter.WinCondition.GetValue() == 2 ? CountTypes.Gaslighter : CountTypes.Crew,
-            CustomRoles.Stalker when Stalker.SnatchesWin.GetBool() => CountTypes.Crew,
-            CustomRoles.SchrodingersCat => SchrodingersCat.WinsWithCrewIfNotAttacked.GetBool() ? CountTypes.Crew : CountTypes.OutOfGame,
-            CustomRoles.Stalker => !Stalker.SnatchesWin.GetBool() ? CountTypes.Stalker : CountTypes.Crew,
-            CustomRoles.Arsonist => Arsonist.ArsonistKeepsGameGoing.GetBool() ? CountTypes.Arsonist : CountTypes.Crew,
+            CustomRoles.Gaslighter => Gaslighter.WinCondition.GetValue() == 2 ? CountTypes.Gaslighter : CountTypes.Crewmate,
+            CustomRoles.Stalker when Stalker.SnatchesWin.GetBool() => CountTypes.Crewmate,
+            CustomRoles.SchrodingersCat => SchrodingersCat.WinsWithCrewIfNotAttacked.GetBool() ? CountTypes.Crewmate : CountTypes.OutOfGame,
+            CustomRoles.Stalker => !Stalker.SnatchesWin.GetBool() ? CountTypes.Stalker : CountTypes.Crewmate,
+            CustomRoles.Arsonist => Arsonist.ArsonistKeepsGameGoing.GetBool() ? CountTypes.Arsonist : CountTypes.Crewmate,
             CustomRoles.Shifter => CountTypes.OutOfGame,
-            CustomRoles.NoteKiller when !NoteKiller.CountsAsNeutralKiller => CountTypes.Crew,
-            CustomRoles.DoubleAgent => CountTypes.Crew,
+            CustomRoles.NoteKiller when !NoteKiller.CountsAsNeutralKiller => CountTypes.Crewmate,
+            CustomRoles.DoubleAgent => CountTypes.Crewmate,
 
             _ => Enum.TryParse(role.ToString(), true, out CountTypes type)
                 ? type
@@ -1466,7 +1466,7 @@ internal static class CustomRolesHelper
                     ? CountTypes.Impostor
                     : role.IsCoven()
                         ? CountTypes.Coven
-                        : CountTypes.Crew
+                        : CountTypes.Crewmate
         };
     }
 
