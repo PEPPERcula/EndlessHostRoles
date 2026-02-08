@@ -272,7 +272,7 @@ internal static class HudManagerPatch
                     LowerInfoText.text = Options.CurrentGameMode switch
                     {
                         CustomGameMode.SoloPVP => SoloPVP.GetHudText(),
-                        CustomGameMode.FFA => FreeForAll.GetHudText(),
+                        CustomGameMode.FreeForAll => FreeForAll.GetHudText(),
                         CustomGameMode.StopAndGo => StopAndGo.GetHudText(),
                         CustomGameMode.HotPotato => HotPotato.GetSuffixText(player.PlayerId, true),
                         CustomGameMode.HideAndSeek when player.IsHost() => CustomHnS.GetSuffixText(player, player, true),
@@ -608,7 +608,7 @@ internal static class SetHudActivePatch
                 __instance.SabotageButton?.ToggleVisible(false);
                 __instance.ImpostorVentButton?.ToggleVisible(false);
                 return;
-            case CustomGameMode.FFA:
+            case CustomGameMode.FreeForAll:
                 __instance.AbilityButton?.ToggleVisible(false);
                 goto case CustomGameMode.HideAndSeek;
             case CustomGameMode.RoomRush:
@@ -1100,7 +1100,7 @@ internal static class TaskPanelBehaviourPatch
                 finalTextBuilder.Append("</size>");
                 break;
             }
-            case CustomGameMode.FFA:
+            case CustomGameMode.FreeForAll:
             {
                 finalTextBuilder.Append("<size=80%>");
                 foreach (var key in Main.PlayerStates.Keys.OrderBy(FreeForAll.GetRankFromScore))
