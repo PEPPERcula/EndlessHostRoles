@@ -35,7 +35,7 @@ internal static class SoloPVP
 
     public static void SetupCustomOption()
     {
-        SoloPVP_GameTime = new IntegerOptionItem(66_233_001, "SoloPVP_GameTime", new(30, 300, 5), 180, TabGroup.GameSettings)
+        SoloPVP_GameTime = new IntegerOptionItem(66_233_001, "GameModeGameTime", new(30, 300, 5), 180, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.SoloPVP)
             .SetColor(new Color32(245, 82, 82, byte.MaxValue))
             .SetValueFormat(OptionFormat.Seconds)
@@ -80,7 +80,7 @@ internal static class SoloPVP
             .SetGameMode(CustomGameMode.SoloPVP)
             .SetColor(new Color32(245, 82, 82, byte.MaxValue));
         
-        SoloPVP_ChatDuringGame = new BooleanOptionItem(66_233_010, "FFA_ChatDuringGame", false, TabGroup.GameSettings)
+        SoloPVP_ChatDuringGame = new BooleanOptionItem(66_233_010, "GameModeChatDuringGame", false, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.SoloPVP)
             .SetColor(new Color32(245, 82, 82, byte.MaxValue));
     }
