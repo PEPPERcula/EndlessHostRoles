@@ -4054,11 +4054,12 @@
   "Mode": "Mode",
   "GameMode": "Game Mode",
   "GameModeListTitle": "Game Modes",
+  "GameModeChatMessageNotify": "[Chat] {0}: <#ffffff>{1}",
   "DoingTasksIsPointlessInThisGameMode": "Look, I see that you're a very diligent crewmate, but....\\nDoing tasks is completely pointless in this game mode",
   // Standard
   "Standard": "Standard",
   "ModeStandard": "Gamemode: Standard",
-  // Bedwars
+  // Bed Wars
   "BedWars": "BED WARS",
   "ModeBedWars": "Gamemode: Bed Wars",
   "ModeDescribe.BedWars": "In the Bed Wars gamemode, players are split into teams. Each team has a bed. If a team's bed is destroyed, all players in that team can no longer respawn. The goal is to destroy all other teams' beds (via Pet button) and be the last team alive.\\n\\nYou can buy items (blocks, weapons, tool, etc.) and team upgrades (heal pool, haste, trap, etc.) in shops from the resources (iron, gold, diamond, emerald) you can collect from the generators on the map. These are useful for protecting the bed with various layers to make it harder to break it, increase your attack damage, increase your defense, or give you or your team various abilities.\\n\\nIn the beginning, there's a grace period, where no attacks are allowed, and players can't leave their own base.\\n\\nEach player has an inventory with all of their items. Cycle through the slots using the Vanish button or by typing the number of the slot in the chat (ex. '5'). Use weapons through the kill button, other items via Pet. To start breaking someone's bed, Pet. Make sure to always have the correct item selected in your inventory (blocks when you protect the bed, tools when you break beds, etc.).\\nYou can break beds with anything, but using the correct tool for each layer will make the process significantly faster.\\n\\nIf you die, you will respawn after a few seconds, unless your bed is broken. If your bed is broken, you will not respawn anymore.",
@@ -4252,11 +4253,10 @@
   "Deathrace.SpawnPowerUpsOption": "Spawn Power-Ups",
   "Deathrace.VentUse": "Vent to the next room!",
   // Free For All - FFA
-  "FFA": "FREE FOR ALL",
-  "ModeFFA": "Gamemode: FFA",
-  "ModeDescribe.FFA": "In the FFA (Free For All) gamemode, everyone is a killer and everyone can kill anyone. The last player alive wins!\\n\\nSome random events make this even more fun in the mean time!",
-  "GameModeTutorial.FFA": "<size=90%>The current game mode is <#00ffff>Free For All (FFA)</color>.</size>\\n<size=80%>Everyone can kill. Be the last one alive to win!\\nWhen you kill someone, you get a random buff or debuff.</size>",
-  "FFAChatMessageNotify": "[Chat] {0}: <#ffffff>{1}",
+  "FreeForAll": "FREE FOR ALL",
+  "ModeFreeForAll": "Gamemode: Free For All",
+  "ModeDescribe.FreeForAll": "In the Free For All gamemode, everyone is a killer and everyone can kill anyone. The last player alive wins!\\n\\nSome random events make this even more fun in the mean time!",
+  "GameModeTutorial."GameModeChatMessageNotify": "[Chat] {0}: <#ffffff>{1}",": "<size=90%>The current game mode is <#00ffff>Free For All</color>.</size>\\n<size=80%>Everyone can kill. Be the last one alive to win!\\nWhen you kill someone, you get a random buff or debuff.</size>",
   "FFA-Event-GetDecreasedSpeed": "You have decreased speed temporarily",
   "FFA-Event-GetHighKCD": "You got a higher kill cooldown",
   "FFA-Event-GetIncreasedSpeed": "You have a temporary speed boost!",
@@ -7955,7 +7955,7 @@
   "Snowdown.SnowballGainFrequencyOption": "Initial Snowball Gaining Frequency",
   "Snowdown.SnowballThrowSpeedOption": "Snowball Throwing Speed",
   "SnowdownButtonText": "THROW",
-  // SoloPVP
+  // Solo PVP
   "SoloPVP": "SOLO PVP",
   "ModeSoloPVP": "Gamemode: Solo PVP",
   "ModeDescribe.SoloPVP": "In the Solo PVP game mode, everyone has HP and can use their kill button to cause damage on other players. When a player's health reaches 0, they 'die' and respawn after a few seconds. The player(s) with the highest number of kills win(s) at the end of the game.",
