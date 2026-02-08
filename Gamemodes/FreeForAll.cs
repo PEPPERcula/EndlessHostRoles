@@ -51,7 +51,7 @@ internal static class FreeForAll
 
     public static void SetupCustomOption()
     {
-        FFAGameTime = new IntegerOptionItem(67_223_001, "FFA_GameTime", new(30, 600, 10), 300, TabGroup.GameSettings)
+        FFAGameTime = new IntegerOptionItem(67_223_001, "GameModeGameTime", new(30, 600, 10), 300, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.FFA)
             .SetColor(new Color32(0, 255, 165, byte.MaxValue))
             .SetValueFormat(OptionFormat.Seconds)
@@ -109,7 +109,7 @@ internal static class FreeForAll
             .SetGameMode(CustomGameMode.FFA)
             .SetColor(new Color32(0, 255, 165, byte.MaxValue));
 
-        FFAChatDuringGame = new BooleanOptionItem(67_223_014, "FFA_ChatDuringGame", false, TabGroup.GameSettings)
+        FFAChatDuringGame = new BooleanOptionItem(67_223_014, "GameModeChatDuringGame", false, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.FFA)
             .SetColor(new Color32(0, 255, 165, byte.MaxValue));
 
@@ -189,13 +189,13 @@ internal static class FreeForAll
 
             if (target.inVent)
             {
-                Logger.Info("Target is in a vent, kill blocked", "FFA");
+                Logger.Info("Target is in a vent, kill blocked", "FreeForAll");
                 return;
             }
 
             if (FFATeamMode.GetBool() && PlayerTeams[killer.PlayerId] == PlayerTeams[target.PlayerId])
             {
-                Logger.Info("Killer and Target are in the same team, attack blocked", "FFA");
+                Logger.Info("Killer and Target are in the same team, attack blocked", "FreeForAll");
                 return;
             }
 
@@ -204,13 +204,13 @@ internal static class FreeForAll
             if (FFAShieldedList.TryGetValue(target.PlayerId, out long dur))
             {
                 killer.Notify(GetString("FFA_TargetIsShielded"));
-                Logger.Info($"{killer.GetRealName().RemoveHtmlTags()} attacked shielded player {target.GetRealName().RemoveHtmlTags()}, their shield expires in {FFAShieldDuration.GetInt() - (Utils.TimeStamp - dur)}s", "FFA");
+                Logger.Info($"{killer.GetRealName().RemoveHtmlTags()} attacked shielded player {target.GetRealName().RemoveHtmlTags()}, their shield expires in {FFAShieldDuration.GetInt() - (Utils.TimeStamp - dur)}s", "FreeForAll");
 
                 if (FFAShieldIsOneTimeUse.GetBool())
                 {
                     FFAShieldedList.Remove(target.PlayerId);
                     target.Notify(GetString("FFA_ShieldBroken"));
-                    Logger.Info($"{target.GetRealName().RemoveHtmlTags()}'s shield was removed because {killer.GetRealName().RemoveHtmlTags()} tried to kill them and the shield is one-time-use according to settings", "FFA");
+                    Logger.Info($"{target.GetRealName().RemoveHtmlTags()}'s shield was removed because {killer.GetRealName().RemoveHtmlTags()} tried to kill them and the shield is one-time-use according to settings", "FreeForAll");
                 }
 
                 return;
@@ -229,7 +229,7 @@ internal static class FreeForAll
                     otherPC = pc;
                 }
 
-                Logger.Info($"The last 2 players ({killer.GetRealName().RemoveHtmlTags()} & {otherPC?.GetRealName().RemoveHtmlTags()}) now have an arrow toward each other", "FFA");
+                Logger.Info($"The last 2 players ({killer.GetRealName().RemoveHtmlTags()} & {otherPC?.GetRealName().RemoveHtmlTags()}) now have an arrow toward each other", "FreeForAll");
 
                 if (FFADisableVentingWhenTwoPlayersAlive.GetBool())
                 {
@@ -383,7 +383,7 @@ internal static class FreeForAll
 
             if (FFAEnableRandomTwists.GetBool() && ffaDoTP)
             {
-                Logger.Info("Swap everyone with someone", "FFA");
+                Logger.Info("Swap everyone with someone", "FreeForAll");
 
                 List<byte> changePositionPlayers = [];
 
@@ -426,7 +426,7 @@ internal static class FreeForAll
 
                 if (FFADecreasedSpeedList.TryGetValue(pc.PlayerId, out long dstime) && dstime + FFAModifiedSpeedDuration.GetInt() < now)
                 {
-                    Logger.Info(pc.GetRealName() + "'s decreased speed expired", "FFA");
+                    Logger.Info(pc.GetRealName() + "'s decreased speed expired", "FreeForAll");
                     FFADecreasedSpeedList.Remove(pc.PlayerId);
                     Main.AllPlayerSpeed[pc.PlayerId] = Main.RealOptionsData.GetFloat(FloatOptionNames.PlayerSpeedMod);
                     sync = true;
@@ -434,7 +434,7 @@ internal static class FreeForAll
 
                 if (FFAIncreasedSpeedList.TryGetValue(pc.PlayerId, out long istime) && istime + FFAModifiedSpeedDuration.GetInt() < now)
                 {
-                    Logger.Info(pc.GetRealName() + "'s increased speed expired", "FFA");
+                    Logger.Info(pc.GetRealName() + "'s increased speed expired", "FreeForAll");
                     FFAIncreasedSpeedList.Remove(pc.PlayerId);
                     Main.AllPlayerSpeed[pc.PlayerId] = Main.RealOptionsData.GetFloat(FloatOptionNames.PlayerSpeedMod);
                     sync = true;
@@ -442,14 +442,14 @@ internal static class FreeForAll
 
                 if (FFALowerVisionList.TryGetValue(pc.PlayerId, out long lvtime) && lvtime + FFAModifiedVisionDuration.GetInt() < now)
                 {
-                    Logger.Info(pc.GetRealName() + "'s lower vision effect expired", "FFA");
+                    Logger.Info(pc.GetRealName() + "'s lower vision effect expired", "FreeForAll");
                     FFALowerVisionList.Remove(pc.PlayerId);
                     sync = true;
                 }
 
                 if (FFAShieldedList.TryGetValue(pc.PlayerId, out long stime) && stime + FFAShieldDuration.GetInt() < now)
                 {
-                    Logger.Info(pc.GetRealName() + "'s shield expired", "FFA");
+                    Logger.Info(pc.GetRealName() + "'s shield expired", "FreeForAll");
                     FFAShieldedList.Remove(pc.PlayerId);
                 }
 
