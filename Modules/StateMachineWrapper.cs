@@ -1,4 +1,4 @@
-﻿// https://github.com/XtraCube/Reactor/blob/main/Reactor/Utilities/StateMachineWrapper.cs
+// https://github.com/XtraCube/Reactor/blob/main/Reactor/Utilities/StateMachineWrapper.cs
 
 using System;
 using System.Reflection;
@@ -16,12 +16,10 @@ public class StateMachineWrapper<T> : CompilerGeneratedObjectWrapper
     private readonly PropertyInfo _thisProperty;
     private readonly PropertyInfo _stateProperty;
 
-    private T? _parentInstance;
-
     /// <summary>
     /// Gets the instance of the parent class that owns the state machine.
     /// </summary>
-    public T Instance => _parentInstance ??= (T) _thisProperty.GetValue(GeneratedObject)!;
+    public T Instance => field ??= (T) _thisProperty.GetValue(GeneratedObject)!;
 
     /// <summary>
     /// Gets or sets the current state of the state machine.
