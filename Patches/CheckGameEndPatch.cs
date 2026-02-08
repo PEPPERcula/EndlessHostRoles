@@ -818,7 +818,7 @@ internal static class GameEndChecker
             {
                 PlayerControl winner = Main.GM.Value && Main.AllPlayerControls.Count == 1 ? PlayerControl.LocalPlayer : Main.EnumeratePlayerControls().Where(x => !x.Is(CustomRoles.GM) && x != null).OrderBy(x => FreeForAll.GetRankFromScore(x.PlayerId)).First();
                 byte winnerId = winner.PlayerId;
-                Logger.Warn($"Winner: {winner.GetRealName().RemoveHtmlTags()}", "FFA");
+                Logger.Warn($"Winner: {winner.GetRealName().RemoveHtmlTags()}", "FreeForAll");
                 WinnerIds = [winnerId];
 
                 Main.DoBlockNameChange = true;
@@ -854,7 +854,7 @@ internal static class GameEndChecker
                 {
                     PlayerControl winner = aapc[0];
 
-                    Logger.Info($"Winner: {winner.GetRealName().RemoveHtmlTags()}", "FFA");
+                    Logger.Info($"Winner: {winner.GetRealName().RemoveHtmlTags()}", "FreeForAll");
 
                     WinnerIds =
                     [
@@ -867,7 +867,7 @@ internal static class GameEndChecker
                 }
                 case 0:
                     FreeForAll.RoundTime = 0;
-                    Logger.Warn("No players alive. Force ending the game", "FFA");
+                    Logger.Warn("No players alive. Force ending the game", "FreeForAll");
                     return false;
                 default:
                     return false;
