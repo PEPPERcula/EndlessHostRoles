@@ -69,7 +69,7 @@ public static class Statistics
 
             switch (gm)
             {
-                case CustomGameMode.FFA when won:
+                case CustomGameMode.FreeForAll when won:
                     Achievements.Type.SerialKiller.CompleteAfterGameEnd();
                     return;
                 case CustomGameMode.SoloPVP when won:
