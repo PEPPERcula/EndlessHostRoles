@@ -72,7 +72,7 @@ internal static class CmdCheckMurderPatch
     {
         if (AmongUsClient.Instance.AmHost)
             __instance.CheckMurder(target);
-        else if (Options.CurrentGameMode != CustomGameMode.FFA)
+        else if (Options.CurrentGameMode != CustomGameMode.FreeForAll)
         {
             MessageWriter messageWriter = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.CheckMurder, SendOption.Reliable);
             messageWriter.WriteNetObject(target);
@@ -213,7 +213,7 @@ internal static class CheckMurderPatch
                 case CustomGameMode.SoloPVP:
                     SoloPVP.OnPlayerAttack(killer, target);
                     return false;
-                case CustomGameMode.FFA:
+                case CustomGameMode.FreeForAll:
                     FreeForAll.OnPlayerAttack(killer, target);
                     return false;
                 case CustomGameMode.HotPotato:
@@ -1523,7 +1523,7 @@ internal static class FixedUpdatePatch
             {
                 Camouflage.OnFixedUpdate(player);
 
-                if (self && Options.CurrentGameMode is CustomGameMode.Standard or CustomGameMode.FFA or CustomGameMode.CaptureTheFlag or CustomGameMode.NaturalDisasters or CustomGameMode.Snowdown && IntroCutsceneDestroyPatch.IntroDestroyTS + 20 == TimeStamp)
+                if (self && Options.CurrentGameMode is CustomGameMode.Standard or CustomGameMode.FreeForAll or CustomGameMode.CaptureTheFlag or CustomGameMode.NaturalDisasters or CustomGameMode.Snowdown && IntroCutsceneDestroyPatch.IntroDestroyTS + 20 == TimeStamp)
                     NotifyRoles();
             }
         }
@@ -1953,7 +1953,7 @@ internal static class FixedUpdatePatch
                 case CustomGameMode.SoloPVP:
                     additionalSuffixes.Add(SoloPVP.GetDisplayHealth(target, self));
                     break;
-                case CustomGameMode.FFA:
+                case CustomGameMode.FreeForAll:
                     additionalSuffixes.Add(FreeForAll.GetPlayerArrow(seer, target));
                     break;
                 case CustomGameMode.StopAndGo when self:
@@ -1994,7 +1994,7 @@ internal static class FixedUpdatePatch
                     break;
             }
 
-            if (MeetingStates.FirstMeeting && Main.ShieldPlayer == target.FriendCode && !string.IsNullOrWhiteSpace(target.FriendCode) && !self && Options.CurrentGameMode is CustomGameMode.Standard or CustomGameMode.SoloPVP or CustomGameMode.FFA)
+            if (MeetingStates.FirstMeeting && Main.ShieldPlayer == target.FriendCode && !string.IsNullOrWhiteSpace(target.FriendCode) && !self && Options.CurrentGameMode is CustomGameMode.Standard or CustomGameMode.SoloPVP or CustomGameMode.FreeForAll)
                 additionalSuffixes.Add(GetString("DiedR1Warning"));
 
             List<string> addSuff = additionalSuffixes.FindAll(x => !string.IsNullOrWhiteSpace(x));
@@ -2149,11 +2149,11 @@ internal static class EnterVentPatch
 
         switch (Options.CurrentGameMode)
         {
-            case CustomGameMode.FFA when FreeForAll.FFADisableVentingWhenTwoPlayersAlive.GetBool() && Main.AllAlivePlayerControls.Count <= 2:
+            case CustomGameMode.FreeForAll when FreeForAll.FFADisableVentingWhenTwoPlayersAlive.GetBool() && Main.AllAlivePlayerControls.Count <= 2:
                 pc.Notify(GetString("FFA-NoVentingBecauseTwoPlayers"), 7f);
                 pc.MyPhysics?.RpcBootFromVent(__instance.Id);
                 break;
-            case CustomGameMode.FFA when FreeForAll.FFADisableVentingWhenKcdIsUp.GetBool() && Main.KillTimers[pc.PlayerId] <= 0:
+            case CustomGameMode.FreeForAll when FreeForAll.FFADisableVentingWhenKcdIsUp.GetBool() && Main.KillTimers[pc.PlayerId] <= 0:
                 pc.Notify(GetString("FFA-NoVentingBecauseKCDIsUP"), 7f);
                 pc.MyPhysics?.RpcExitVent(__instance.Id);
                 break;
