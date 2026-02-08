@@ -201,8 +201,8 @@ public static class ChatManager
                 break;
         }
 
-        if (Options.CurrentGameMode is CustomGameMode.FFA or CustomGameMode.SoloPVP or CustomGameMode.NaturalDisasters or CustomGameMode.Mingle or CustomGameMode.HideAndSeek && GameStates.InGame && !message.StartsWith('/'))
-            Main.EnumerateAlivePlayerControls().NotifyPlayers(string.Format(Utils.ColorString(Main.GameModeColors.GetValueOrDefault(Options.CurrentGameMode, new(1,1,1)), Translator.GetString("FFAChatMessageNotify")), player.PlayerId.ColoredPlayerName(), message));
+        if (Options.CurrentGameMode is CustomGameMode.SoloPVP or CustomGameMode.FreeForAll or CustomGameMode.HideAndSeek or CustomGameMode.NaturalDisasters or CustomGameMode.Mingle && GameStates.InGame && !message.StartsWith('/'))
+            Main.EnumerateAlivePlayerControls().NotifyPlayers(string.Format(Utils.ColorString(Main.GameModeColors.GetValueOrDefault(Options.CurrentGameMode, new(1,1,1)), Translator.GetString("GameModeChatMessageNotify")), player.PlayerId.ColoredPlayerName(), message));
     }
 
     public static void AddChatHistory(PlayerControl player, string message)
