@@ -26,18 +26,14 @@ public static class RoomRush
 
     private static Dictionary<byte, int> Points = [];
     private static int PointsToWinValue;
-
     public static readonly HashSet<string> HasPlayedFriendCodes = [];
     public static Dictionary<byte, int> VentLimit = [];
-
     private static HashSet<SystemTypes> AllRooms = [];
     private static SystemTypes RoomGoal;
     private static long TimeLimitEndTS;
     private static HashSet<byte> DonePlayers = [];
-
     private static bool GameGoing;
     private static DateTime GameStartDateTime;
-
     private static RandomSpawn.SpawnMap Map;
 
     public static readonly Dictionary<MapNames, Dictionary<(SystemTypes, SystemTypes), int>> Multipliers = new()
