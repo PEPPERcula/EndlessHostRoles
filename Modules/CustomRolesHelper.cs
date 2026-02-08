@@ -2031,5 +2031,5 @@ public enum CountTypes
     PlagueBearer,
     Glitch,
     Arsonist,
-    Cherokious,
+    Cherokious
 }
