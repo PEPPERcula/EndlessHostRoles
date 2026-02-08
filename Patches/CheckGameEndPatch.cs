@@ -583,7 +583,7 @@ internal static class GameEndChecker
         Predicate = new SnowdownGameEndPredicate();
     }
 
-    private class NormalGameEndPredicate : GameEndPredicate
+    private class StandardGameEndPredicate : GameEndPredicate
     {
         public override bool CheckForGameEnd(out GameOverReason reason)
         {
@@ -802,7 +802,7 @@ internal static class GameEndChecker
         }
     }
 
-    private class FFAGameEndPredicate : GameEndPredicate
+    private class FreeForAllGameEndPredicate : GameEndPredicate
     {
         public override bool CheckForGameEnd(out GameOverReason reason)
         {
