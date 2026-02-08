@@ -14,12 +14,9 @@ internal static class FreeForAll
     private static Dictionary<byte, long> FFAIncreasedSpeedList = [];
     private static Dictionary<byte, long> FFADecreasedSpeedList = [];
     public static Dictionary<byte, long> FFALowerVisionList = [];
-
     public static Dictionary<byte, int> KillCount = [];
-    public static int RoundTime;
-
     public static Dictionary<byte, int> PlayerTeams = [];
-
+    public static int RoundTime;
     public static readonly Dictionary<int, string> TeamColors = new()
     {
         { 0, "#00ffff" },
