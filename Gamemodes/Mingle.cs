@@ -18,7 +18,6 @@ public static class Mingle
     public static long TimeEndTS;
     public static long LastUpdateTS;
     public static int Time;
-
     public static int TimeLimit;
     public static int TimeDecreaseOnNoDeath;
     public static int ExtraTimeOnAirship;
