@@ -38,7 +38,7 @@ internal static class CustomHnS
         const int id = 69_211_001;
         Color color = new(52, 94, 235, byte.MaxValue);
 
-        MaxGameLength = new IntegerOptionItem(id, "FFA_GameTime", new(0, 1200, 10), 300, TabGroup.GameSettings)
+        MaxGameLength = new IntegerOptionItem(id, "GameModeGameTime", new(0, 1200, 10), 300, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.HideAndSeek)
             .SetValueFormat(OptionFormat.Seconds)
             .SetColor(color);
@@ -59,7 +59,7 @@ internal static class CustomHnS
             .SetGameMode(CustomGameMode.HideAndSeek)
             .SetColor(color);
         
-        ChatDuringGame = new BooleanOptionItem(id + 5, "FFA_ChatDuringGame", false, TabGroup.GameSettings)
+        ChatDuringGame = new BooleanOptionItem(id + 5, "GameModeChatDuringGame", false, TabGroup.GameSettings)
             .SetGameMode(CustomGameMode.HideAndSeek)
             .SetColor(color);
     }
