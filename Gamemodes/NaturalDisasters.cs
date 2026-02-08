@@ -92,7 +92,7 @@ public static class NaturalDisasters
             .SetParent(WhenLimitIsReached)
             .SetColor(color);
         
-        ChatDuringGame = new BooleanOptionItem(id++, "FFA_ChatDuringGame", false, TabGroup.GameSettings)
+        ChatDuringGame = new BooleanOptionItem(id++, "GameModeChatDuringGame", false, TabGroup.GameSettings)
             .SetGameMode(gameMode)
             .SetColor(color);
 
