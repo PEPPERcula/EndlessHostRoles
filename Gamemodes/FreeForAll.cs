@@ -67,7 +67,7 @@ internal static class FreeForAll
             .SetColor(new Color32(0, 255, 165, byte.MaxValue));
 
         FFADisableVentingWhenKcdIsUp = new BooleanOptionItem(67_223_004, "FFA_DisableVentingWhenKCDIsUp", true, TabGroup.GameSettings)
-            .SetGameMode(CustomGameMode.FFA)
+            .SetGameMode(CustomGameMode.FreeForAll)
             .SetColor(new Color32(0, 255, 165, byte.MaxValue));
 
         FFAEnableRandomAbilities = new BooleanOptionItem(67_223_005, "FFA_EnableRandomAbilities", true, TabGroup.GameSettings)
@@ -108,7 +108,7 @@ internal static class FreeForAll
             .SetColor(new Color32(0, 255, 165, byte.MaxValue));
 
         FFAShieldIsOneTimeUse = new BooleanOptionItem(67_223_013, "FFA_ShieldIsOneTimeUse", true, TabGroup.GameSettings)
-            .SetGameMode(CustomGameMode.FFA)
+            .SetGameMode(CustomGameMode.FreeForAll)
             .SetColor(new Color32(0, 255, 165, byte.MaxValue));
 
         FFAChatDuringGame = new BooleanOptionItem(67_223_014, "GameModeChatDuringGame", false, TabGroup.GameSettings)
