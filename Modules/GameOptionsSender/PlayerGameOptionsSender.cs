@@ -184,7 +184,7 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
 
             switch (Options.CurrentGameMode)
             {
-                case CustomGameMode.FFA:
+                case CustomGameMode.FreeForAll:
                 {
                     if (FreeForAll.FFALowerVisionList.ContainsKey(player.PlayerId))
                     {
@@ -690,5 +690,4 @@ public sealed class PlayerGameOptionsSender(PlayerControl player) : GameOptionsS
     {
         return base.AmValid() && player != null && player.Data != null && !player.Data.Disconnected && Main.RealOptionsData != null;
     }
-
 }
