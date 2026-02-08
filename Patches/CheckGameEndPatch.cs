@@ -498,9 +498,9 @@ internal static class GameEndChecker
         }
     }
 
-    public static void SetPredicateToNormal()
+    public static void SetPredicateToStandard()
     {
-        Predicate = new NormalGameEndPredicate();
+        Predicate = new StandardGameEndPredicate();
     }
 
     public static void SetPredicateToSoloPVP()
@@ -508,9 +508,9 @@ internal static class GameEndChecker
         Predicate = new SoloPVPGameEndPredicate();
     }
 
-    public static void SetPredicateToFFA()
+    public static void SetPredicateToFreeForAll()
     {
-        Predicate = new FFAGameEndPredicate();
+        Predicate = new FreeForAllGameEndPredicate();
     }
 
     public static void SetPredicateToStopAndGo()
