@@ -1225,7 +1225,7 @@ internal static class RPCHandlerPatch
                 }
                 case CustomRPC.FFAKill:
                 {
-                    if (Options.CurrentGameMode != CustomGameMode.FFA)
+                    if (Options.CurrentGameMode != CustomGameMode.FreeForAll)
                     {
                         EAC.WarnHost();
                         EAC.Report(__instance, "FFA RPC when game mode is not FFA");
@@ -1739,5 +1739,4 @@ internal static class PlayerPhysicsRPCHandlerPatch
 
         return true;
     }
-
 }
