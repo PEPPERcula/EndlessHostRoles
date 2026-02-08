@@ -4256,7 +4256,7 @@
   "FreeForAll": "FREE FOR ALL",
   "ModeFreeForAll": "Gamemode: Free For All",
   "ModeDescribe.FreeForAll": "In the Free For All gamemode, everyone is a killer and everyone can kill anyone. The last player alive wins!\\n\\nSome random events make this even more fun in the mean time!",
-  "GameModeTutorial."GameModeChatMessageNotify": "[Chat] {0}: <#ffffff>{1}",": "<size=90%>The current game mode is <#00ffff>Free For All</color>.</size>\\n<size=80%>Everyone can kill. Be the last one alive to win!\\nWhen you kill someone, you get a random buff or debuff.</size>",
+  "GameModeTutorial.FreeForAll": "<size=90%>The current game mode is <#00ffff>Free For All</color>.</size>\\n<size=80%>Everyone can kill. Be the last one alive to win!\\nWhen you kill someone, you get a random buff or debuff.</size>",
   "FFA-Event-GetDecreasedSpeed": "You have decreased speed temporarily",
   "FFA-Event-GetHighKCD": "You got a higher kill cooldown",
   "FFA-Event-GetIncreasedSpeed": "You have a temporary speed boost!",
