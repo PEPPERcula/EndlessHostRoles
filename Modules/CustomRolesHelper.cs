@@ -462,7 +462,7 @@ internal static class CustomRolesHelper
         {
             // Solo PVP
             CustomRoles.Challenger => RoleTypes.Impostor,
-            // FFA
+            // Free For All
             CustomRoles.Killer => RoleTypes.Impostor,
             // Capture The Flag
             CustomRoles.CTFPlayer => RoleTypes.Phantom,
@@ -1956,8 +1956,9 @@ public enum CountTypes
 {
     OutOfGame,
     None,
-    Crew,
+    Crewmate,
     Impostor,
+    Coven,
     CustomTeam,
     Bloodlust,
     Jackal,
@@ -2031,6 +2032,4 @@ public enum CountTypes
     Glitch,
     Arsonist,
     Cherokious,
-
-    Coven
 }
