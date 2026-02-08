@@ -220,7 +220,7 @@ public static class FixedUpdateCaller
                         case CustomGameMode.HideAndSeek:
                             CustomHnS.FixedUpdatePatch.Postfix();
                             goto default;
-                        case CustomGameMode.FFA:
+                        case CustomGameMode.FreeForAll:
                             FreeForAll.FixedUpdatePatch.Postfix();
                             goto default;
                         case CustomGameMode.KingOfTheZones:
