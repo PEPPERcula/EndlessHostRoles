@@ -1509,5 +1509,4 @@ public static class RpcSyncSettingsPatch
     {
         OptionItem.SyncAllOptions();
     }
-
 }
