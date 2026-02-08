@@ -180,7 +180,7 @@ internal class Arsonist : RoleBase
                             CustomWinnerHolder.WinnerIds.Add(physics.myPlayer.PlayerId);
                             break;
                         case 2:
-                            if (Main.EnumerateAlivePlayerControls().Where(x => x.PlayerId != physics.myPlayer.PlayerId).All(x => x.GetCountTypes() == CountTypes.Crew))
+                            if (Main.EnumerateAlivePlayerControls().Where(x => x.PlayerId != physics.myPlayer.PlayerId).All(x => x.GetCountTypes() == CountTypes.Crewmate))
                             {
                                 CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Arsonist);
                                 CustomWinnerHolder.WinnerIds.Add(physics.myPlayer.PlayerId);
