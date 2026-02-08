@@ -140,7 +140,7 @@ public static class Quiz
             Settings[difficulty] = (rounds, questionsAsked, correctRequirement, timeLimit);
         }
 
-        ChatDuringGame = new BooleanOptionItem(id, "Quiz.Settings.ChatDuringGame", false, TabGroup.GameSettings)
+        ChatDuringGame = new BooleanOptionItem(id, "GameModeChatDuringGame", false, TabGroup.GameSettings)
             .SetHeader(true)
             .SetColor(color)
             .SetGameMode(gameMode);
