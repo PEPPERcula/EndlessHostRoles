@@ -16,22 +16,14 @@ internal static class SoloPVP
     public static Dictionary<byte, float> PlayerHPReco = [];
     public static Dictionary<byte, float> PlayerATK = [];
     public static Dictionary<byte, float> PlayerDF = [];
-
     public static Dictionary<byte, int> PlayerScore = [];
     public static int RoundTime;
-
     private static readonly Dictionary<byte, (string Text, long RemoveTimeStamp)> NameNotify = [];
-
     private static Dictionary<byte, int> BackCountdown = [];
     private static Dictionary<byte, long> LastHurt = [];
     private static Dictionary<byte, long> LastCountdownTime = [];
-
     public static bool CanVent => SoloPVP_CanVent.GetBool();
-
-    public static bool SoloAlive(this PlayerControl pc)
-    {
-        return PlayerHP.TryGetValue(pc.PlayerId, out float hp) && hp > 0f;
-    }
+    public static bool SoloAlive(this PlayerControl pc) => PlayerHP.TryGetValue(pc.PlayerId, out float hp) && hp > 0f;
 
     public static void SetupCustomOption()
     {
