@@ -85,7 +85,7 @@ public static class Mingle
             .SetGameMode(gameMode)
             .SetValueFormat(OptionFormat.Players);
         
-        ChatDuringGameOption = new BooleanOptionItem(id, "FFA_ChatDuringGame", false, TabGroup.GameSettings)
+        ChatDuringGameOption = new BooleanOptionItem(id, "GameModeChatDuringGame", false, TabGroup.GameSettings)
             .SetColor(color)
             .SetGameMode(gameMode);
     }
