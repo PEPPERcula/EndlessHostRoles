@@ -186,6 +186,4 @@ public class HeadHunter : RoleBase
         SendRPC();
         Utils.NotifyRoles(SpecifySeer: Utils.GetPlayerById(HeadHunterId));
     }
-
 }
-
