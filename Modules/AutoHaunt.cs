@@ -18,7 +18,7 @@ public static class AutoHaunt
         {
             CustomGameMode.Standard => validPCs.OrderByDescending(x => x.GetCustomRole() is CustomRoles.Workaholic or CustomRoles.Snitch && x.GetTaskState().RemainingTasksCount <= 2).ThenByDescending(x => x.Is(CustomRoleTypes.Coven)).ThenByDescending(x => x.IsNeutralKiller()).ThenByDescending(x => x.IsImpostor()).ThenByDescending(x => x.GetCustomRole().IsNeutral()).FirstOrDefault(),
             CustomGameMode.SoloPVP => validPCs.Where(x => x.SoloAlive()).MinBy(x => SoloPVP.GetRankFromScore(x.PlayerId)),
-            CustomGameMode.FFA => validPCs.MaxBy(x => FreeForAll.KillCount.GetValueOrDefault(x.PlayerId, 0)),
+            CustomGameMode.FreeForAll => validPCs.MaxBy(x => FreeForAll.KillCount.GetValueOrDefault(x.PlayerId, 0)),
             CustomGameMode.StopAndGo => validPCs.MaxBy(x => x.GetTaskState().CompletedTasksCount),
             CustomGameMode.HotPotato => HotPotato.GetState().HolderID.GetPlayer(),
             CustomGameMode.HideAndSeek => validPCs.OrderByDescending(x => x.GetCustomRole() is CustomRoles.Venter or CustomRoles.Dasher).ThenByDescending(x => CustomHnS.PlayerRoles.TryGetValue(x.PlayerId, out (IHideAndSeekRole Interface, CustomRoles Role) info) && info.Interface.Team == Team.Impostor).ThenByDescending(x => CustomHnS.PlayerRoles.TryGetValue(x.PlayerId, out (IHideAndSeekRole Interface, CustomRoles Role) info) && info.Interface.Team == Team.Neutral).FirstOrDefault(),
