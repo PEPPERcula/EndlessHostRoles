@@ -791,7 +791,7 @@ public static class Utils
         switch (Options.CurrentGameMode)
         {
             case CustomGameMode.SoloPVP:
-            case CustomGameMode.FFA:
+            case CustomGameMode.FreeForAll:
             case CustomGameMode.HotPotato:
             case CustomGameMode.CaptureTheFlag:
             case CustomGameMode.NaturalDisasters:
@@ -1034,7 +1034,7 @@ public static class Utils
             case CustomGameMode.CaptureTheFlag or CustomGameMode.NaturalDisasters or CustomGameMode.RoomRush or CustomGameMode.KingOfTheZones or CustomGameMode.Quiz or CustomGameMode.TheMindGame or CustomGameMode.BedWars or CustomGameMode.Deathrace or CustomGameMode.Mingle or CustomGameMode.Snowdown:
             case CustomGameMode.Standard when IsRevivingRoleAlive() && Main.DiedThisRound.Contains(PlayerControl.LocalPlayer.PlayerId):
                 return PlayerControl.LocalPlayer.Is(CustomRoles.GM);
-            case CustomGameMode.FFA or CustomGameMode.SoloPVP or CustomGameMode.StopAndGo or CustomGameMode.HotPotato or CustomGameMode.Speedrun:
+            case CustomGameMode.FreeForAll or CustomGameMode.SoloPVP or CustomGameMode.StopAndGo or CustomGameMode.HotPotato or CustomGameMode.Speedrun:
             case CustomGameMode.HideAndSeek when CustomHnS.IsRoleTextEnabled(PlayerControl.LocalPlayer, __instance):
                 return true;
         }
@@ -1496,7 +1496,7 @@ public static class Utils
                 }
 
                 break;
-            case CustomGameMode.FFA:
+            case CustomGameMode.FreeForAll:
                 List<(int, byte)> list2 = [];
                 list2.AddRange(cloneRoles.Select(id => (FreeForAll.GetRankFromScore(id), id)));
 
@@ -2398,7 +2398,7 @@ public static class Utils
                 name = Options.CurrentGameMode switch
                 {
                     CustomGameMode.SoloPVP => $"<color=#f55252>{modeText}</color>\r\n{name}",
-                    CustomGameMode.FFA => $"<color=#00ffff>{modeText}</color>\r\n{name}",
+                    CustomGameMode.FreeForAll => $"<color=#00ffff>{modeText}</color>\r\n{name}",
                     CustomGameMode.StopAndGo => $"<color=#00ffa5>{modeText}</color>\r\n{name}",
                     CustomGameMode.HotPotato => $"<color=#e8cd46>{modeText}</color>\r\n{name}",
                     CustomGameMode.HideAndSeek => $"<color=#345eeb>{modeText}</color>\r\n{name}",
@@ -2843,7 +2843,7 @@ public static class Utils
 
                 switch (Options.CurrentGameMode)
                 {
-                    case CustomGameMode.FFA:
+                    case CustomGameMode.FreeForAll:
                         additionalSuffixes.Add(FreeForAll.GetPlayerArrow(seer));
                         break;
                     case CustomGameMode.SoloPVP:
@@ -2911,10 +2911,10 @@ public static class Utils
 
             if (!GameStates.IsLobby)
             {
-                if ((Options.CurrentGameMode == CustomGameMode.FFA && FreeForAll.FFATeamMode.GetBool()) || Options.CurrentGameMode == CustomGameMode.HotPotato)
+                if ((Options.CurrentGameMode == CustomGameMode.FreeForAll && FreeForAll.FFATeamMode.GetBool()) || Options.CurrentGameMode == CustomGameMode.HotPotato)
                     seerRealName = seerRealName.ApplyNameColorData(seer, seer, forMeeting);
 
-                if (!forMeeting && MeetingStates.FirstMeeting && Options.ChangeNameToRoleInfo.GetBool() && Options.CurrentGameMode is not CustomGameMode.FFA and not CustomGameMode.StopAndGo and not CustomGameMode.HotPotato and not CustomGameMode.Speedrun and not CustomGameMode.CaptureTheFlag and not CustomGameMode.NaturalDisasters and not CustomGameMode.RoomRush and not CustomGameMode.KingOfTheZones and not CustomGameMode.Quiz and not CustomGameMode.TheMindGame and not CustomGameMode.BedWars and not CustomGameMode.Deathrace and not CustomGameMode.Mingle and not CustomGameMode.Snowdown)
+                if (!forMeeting && MeetingStates.FirstMeeting && Options.ChangeNameToRoleInfo.GetBool() && Options.CurrentGameMode is not CustomGameMode.FreeForAll and not CustomGameMode.StopAndGo and not CustomGameMode.HotPotato and not CustomGameMode.Speedrun and not CustomGameMode.CaptureTheFlag and not CustomGameMode.NaturalDisasters and not CustomGameMode.RoomRush and not CustomGameMode.KingOfTheZones and not CustomGameMode.Quiz and not CustomGameMode.TheMindGame and not CustomGameMode.BedWars and not CustomGameMode.Deathrace and not CustomGameMode.Mingle and not CustomGameMode.Snowdown)
                 {
                     CustomTeamManager.CustomTeam team = CustomTeamManager.GetCustomTeam(seer.PlayerId);
 
@@ -2998,7 +2998,7 @@ public static class Utils
                         SoloPVP.GetNameNotify(seer, ref selfName);
                         selfName = $"<size={fontSize}>{selfTaskText}</size>\r\n{selfName}";
                         break;
-                    case CustomGameMode.FFA:
+                    case CustomGameMode.FreeForAll:
                         selfName = $"<size={fontSize}>{selfTaskText}</size>\r\n{selfName}";
                         break;
                     default:
@@ -3019,7 +3019,7 @@ public static class Utils
 
             bool onlySelfNameUpdateRequired = Options.CurrentGameMode switch
             {
-                CustomGameMode.FFA => !FreeForAll.FFATeamMode.GetBool(),
+                CustomGameMode.FreeForAll => !FreeForAll.FFATeamMode.GetBool(),
                 CustomGameMode.StopAndGo => true,
                 CustomGameMode.CaptureTheFlag => true,
                 CustomGameMode.NaturalDisasters => true,
@@ -3256,7 +3256,7 @@ public static class Utils
                                         break;
                                 }
 
-                                if (MeetingStates.FirstMeeting && Main.ShieldPlayer == target.FriendCode && !string.IsNullOrWhiteSpace(target.FriendCode) && Options.CurrentGameMode is CustomGameMode.Standard or CustomGameMode.FFA or CustomGameMode.Speedrun)
+                                if (MeetingStates.FirstMeeting && Main.ShieldPlayer == target.FriendCode && !string.IsNullOrWhiteSpace(target.FriendCode) && Options.CurrentGameMode is CustomGameMode.Standard or CustomGameMode.FreeForAll or CustomGameMode.Speedrun)
                                     additionalSuffixes.Add(GetString("DiedR1Warning"));
 
                                 if (!forMeeting)
@@ -3365,7 +3365,7 @@ public static class Utils
                (CustomTeamManager.AreInSameCustomTeam(seer.PlayerId, target.PlayerId) && CustomTeamManager.IsSettingEnabledForPlayerTeam(seer.PlayerId, CTAOption.KnowRoles)) ||
                Main.PlayerStates.Values.Any(x => x.Role.KnowRole(seer, target)) ||
                Markseeker.PlayerIdList.Any(x => Main.PlayerStates[x].Role is Markseeker { IsEnable: true, TargetRevealed: true } ms && ms.MarkedId == target.PlayerId) ||
-               Options.CurrentGameMode is CustomGameMode.FFA or CustomGameMode.StopAndGo or CustomGameMode.HotPotato or CustomGameMode.Speedrun ||
+               Options.CurrentGameMode is CustomGameMode.FreeForAll or CustomGameMode.StopAndGo or CustomGameMode.HotPotato or CustomGameMode.Speedrun ||
                (Options.CurrentGameMode == CustomGameMode.HideAndSeek && CustomHnS.IsRoleTextEnabled(seer, target)) ||
                (seer.IsRevealedPlayer(target) && !target.Is(CustomRoles.Trickster)) ||
                (seer.Is(CustomRoles.God) && God.KnowInfo.GetValue() == 2) ||
@@ -4228,7 +4228,7 @@ public static class Utils
                 case CustomGameMode.SoloPVP:
                     summary = $"{ColorString(Main.PlayerColors[id], name)} - {SoloPVP.GetSummaryStatistics(id)}";
                     break;
-                case CustomGameMode.FFA:
+                case CustomGameMode.FreeForAll:
                     summary = $"{ColorString(Main.PlayerColors[id], name)} {GetKillCountText(id, true)}";
                     break;
                 case CustomGameMode.Speedrun:
