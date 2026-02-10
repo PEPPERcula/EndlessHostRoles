@@ -83,7 +83,7 @@ public class Ventriloquist : RoleBase
     {
         public static void Postfix(MeetingHud __instance)
         {
-            if (PlayerControl.LocalPlayer.Is(CustomRoles.Ventriloquist) && PlayerControl.LocalPlayer.IsAlive())
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.Ventriloquist) && PlayerControl.LocalPlayer.GetAbilityUseLimit() > 0 && PlayerControl.LocalPlayer.IsAlive())
                 CreateVentriloquistButton(__instance);
         }
     }
