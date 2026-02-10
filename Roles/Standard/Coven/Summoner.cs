@@ -180,7 +180,7 @@ public class Summoner : CovenBase
     {
         public static void Postfix(MeetingHud __instance)
         {
-            if (PlayerControl.LocalPlayer.Is(CustomRoles.Summoner) && PlayerControl.LocalPlayer.IsAlive())
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.Summoner) && PlayerControl.LocalPlayer.GetAbilityUseLimit() > 0 && PlayerControl.LocalPlayer.IsAlive())
                 CreateSummonerButton(__instance);
         }
     }
