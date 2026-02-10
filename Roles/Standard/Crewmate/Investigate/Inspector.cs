@@ -446,7 +446,7 @@ public class Inspector : RoleBase
     {
         public static void Postfix(MeetingHud __instance)
         {
-            if (PlayerControl.LocalPlayer.Is(CustomRoles.Inspector) && PlayerControl.LocalPlayer.IsAlive())
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.Inspector) && PlayerControl.LocalPlayer.GetAbilityUseLimit() > 0 && PlayerControl.LocalPlayer.IsAlive())
                 CreateInspectorButton(__instance);
         }
     }
