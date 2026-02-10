@@ -292,7 +292,7 @@ public class Judge : RoleBase
     {
         public static void Postfix(MeetingHud __instance)
         {
-            if (PlayerControl.LocalPlayer.Is(CustomRoles.Judge) && PlayerControl.LocalPlayer.IsAlive())
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.Judge) && PlayerControl.LocalPlayer.GetAbilityUseLimit() > 0 && PlayerControl.LocalPlayer.IsAlive())
                 CreateJudgeButton(__instance);
         }
     }
