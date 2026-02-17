@@ -66,3 +66,4 @@ internal class Swapster : RoleBase
     {
         hud.AbilityButton?.OverrideText(Translator.GetString("BountyHunterChangeButtonText"));
     }
+}
