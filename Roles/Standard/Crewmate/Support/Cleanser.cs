@@ -71,8 +71,6 @@ public class Cleanser : RoleBase
         DidVote.Remove(playerId);
     }
 
-    //public static string GetProgressText(byte playerId) => Utils.ColorString(CleanserUsesOpt.GetInt() - CleanserUses[playerId] > 0 ? Utils.GetRoleColor(CustomRoles.Cleanser).ShadeColor(0.25f) : Color.gray, CleanserUses.TryGetValue(playerId, out var x) ? $"({CleanserUsesOpt.GetInt() - x})" : "Invalid");
-
     public void SendRPC(byte playerId)
     {
         if (!IsEnable || !Utils.DoRPC) return;
@@ -136,6 +134,7 @@ public class Cleanser : RoleBase
         Logger.Info($"Removed all the add ons of {targetPc.GetNameWithRole().RemoveHtmlTags()}", "Cleanser");
         CleanserTarget = byte.MaxValue;
         targetPc.MarkDirtySettings();
+        targetPc.RPCPlayCustomSound("OIIAI");
         targetPc.Notify(string.Format(GetString("LostAddonByCleanser"), CustomRoles.Cleanser.ToColoredString()));
     }
 }
