@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using AmongUs.GameOptions;
 using EHR.Modules;
 
@@ -50,6 +50,7 @@ public class Clerk : RoleBase
         if (voter.GetAbilityUseLimit() < 1) return false;
         if (target.PlayerId == voter.PlayerId) return false;
 
+        RPC.PlaySoundRPC(voter.PlayerId, Sounds.TaskUpdateSound);
         voter.RpcRemoveAbilityUse();
 
         TaskState ts = target.GetTaskState();
@@ -64,9 +65,8 @@ public class Clerk : RoleBase
             target.SetRealKiller(voter);
             PlayerState state = Main.PlayerStates[target.PlayerId];
             state.deathReason = PlayerState.DeathReason.Taxes;
-            state.SetDead();
             Medic.IsDead(target);
-            target.RpcExileV2();
+            target.RpcGuesserMurderPlayer();
             Utils.AfterPlayerDeathTasks(target, true);
             Utils.SendMessage(string.Format(Translator.GetString("Clerk.Killed"), target.PlayerId.ColoredPlayerName()), title: CustomRoles.Clerk.ToColoredString(), importance: MessageImportance.High);
             
@@ -103,4 +103,3 @@ public class Clerk : RoleBase
             opt.SetFloat(FloatOptionNames.ImpostorLightMod, increasedVision);
         }
     }
-}
