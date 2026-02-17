@@ -116,6 +116,7 @@ internal class NiceEraser : RoleBase
             CustomRoles erasedRole = player.IsImpostor() ? CustomRoles.ImpostorEHR : player.IsCrewmate() ? CustomRoles.CrewmateEHR : player.Is(Team.Coven) ? CustomRoles.CovenMember : CustomRoles.Amnesiac;
             player.RpcSetCustomRole(erasedRole);
             player.RpcChangeRoleBasis(erasedRole);
+            player.RPCPlayCustomSound("OIIAI");
             player.Notify(GetString("LostRoleByNiceEraser"));
             Logger.Info($"{player.GetNameWithRole().RemoveHtmlTags()} lost their role", "NiceEraser");
             ErasedPlayers.Add(pc);
