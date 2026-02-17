@@ -103,3 +103,4 @@ public class Clerk : RoleBase
             opt.SetFloat(FloatOptionNames.ImpostorLightMod, increasedVision);
         }
     }
+}
