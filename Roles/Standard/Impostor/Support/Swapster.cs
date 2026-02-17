@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using AmongUs.GameOptions;
 
 namespace EHR.Roles;
@@ -52,6 +52,8 @@ internal class Swapster : RoleBase
             Vector2 pos = firstTarget.Pos();
             firstTarget.TP(target);
             target.TP(pos);
+            swapster.RPCPlayCustomSound("Teleport");
+            target.RPCPlayCustomSound("Teleport");
             FirstSwapTarget.Remove(swapster.PlayerId);
         }
         else
@@ -64,4 +66,3 @@ internal class Swapster : RoleBase
     {
         hud.AbilityButton?.OverrideText(Translator.GetString("BountyHunterChangeButtonText"));
     }
-}
