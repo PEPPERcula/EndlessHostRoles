@@ -190,20 +190,20 @@ public class Fireworker : RoleBase
     public override string GetSuffix(PlayerControl seer, PlayerControl target, bool hud = false, bool meeting = false)
     {
         var retText = string.Empty;
-        if (seer == null || !seer.IsAlive() || seer.PlayerId != target.PlayerId || Main.PlayerStates[seer.PlayerId].Role is not Fireworker fw) return retText;
+        if (seer == null || !seer.IsAlive() || seer.PlayerId != target.PlayerId || (seer.IsModdedClient() && !hud) || meeting || Main.PlayerStates[seer.PlayerId].Role is not Fireworker fireworker) return retText
 
-        if (fw.state == FireworkerState.WaitTime && Main.EnumerateAlivePlayerControls().Count(pc => pc.Is(CustomRoleTypes.Impostor)) <= 1)
+        if (fireworker.state == FireworkerState.WaitTime && Main.EnumerateAlivePlayerControls().Count(pc => pc.Is(CustomRoleTypes.Impostor)) <= 1)
         {
-            fw.state = FireworkerState.ReadyFire;
-            fw.SendRPC(seer.PlayerId);
+            fireworker.state = FireworkerState.ReadyFire;
+            fireworker.SendRPC(seer.PlayerId);
             Utils.NotifyRoles(SpecifySeer: seer, SpecifyTarget: seer);
         }
 
-        switch (fw.state)
+        switch (fireworker.state)
         {
             case FireworkerState.Initial:
             case FireworkerState.SettingFireworks:
-                retText = string.Format(GetString("FireworkerPutPhase"), fw.nowFireworksCount);
+                retText = string.Format(GetString("FireworkerPutPhase"), fireworker.nowFireworksCount);
                 break;
             case FireworkerState.WaitTime:
                 retText = GetString("FireworkerWaitPhase");
