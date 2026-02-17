@@ -197,9 +197,7 @@ public static class BanManager
         if (GameStates.CurrentServerType is not GameStates.ServerType.Vanilla)
         {
             if (player.ProductUserId.IsNullOrWhiteSpace() || player.ProductUserId.Length != 32)
-            {
                 return;
-            }
         }
 
         string friendcode = player.FriendCode.Replace(':', '#');
