@@ -433,6 +433,8 @@ internal static class CustomHnS
                     PlayerRoles[id] = (roleInterface, role);
                 }
 
+                Main.HasJustStarted = false;
+
                 break;
             }
             case 2:
