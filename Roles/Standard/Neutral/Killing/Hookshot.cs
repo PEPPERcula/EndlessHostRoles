@@ -168,6 +168,6 @@ internal class Hookshot : RoleBase
 
     public override string GetSuffix(PlayerControl seer, PlayerControl target, bool hud = false, bool meeting = false)
     {
-        return seer.PlayerId == target.PlayerId && seer.PlayerId == HookshotId ? $"<#00ffa5>{Translator.GetString("Mode")}:</color> <#ffffff>{(ToTargetTP ? Translator.GetString("HookshotTpToTarget") : Translator.GetString("HookshotPullTarget"))}</color>" : string.Empty;
+        return seer.PlayerId != target.PlayerId || HookshotId != seer.PlayerId || (seer.IsModdedClient() && !hud) || meeting ? string.Empty : $"<#00ffa5>{Translator.GetString("Mode")}:</color> <#ffffff>{(ToTargetTP ? Translator.GetString("HookshotTpToTarget") : Translator.GetString("HookshotPullTarget"))}</color>";
     }
 }
