@@ -56,6 +56,7 @@ public class Unshifter : RoleBase
 
         if (!target.IsShifted())
         {
+            RPC.PlaySoundRPC(killer.PlayerId, Sounds.SabotageSound);
             killer.Notify(GetString("UnshifterTargetNotShifted"));
             return false;
         }
@@ -66,10 +67,14 @@ public class Unshifter : RoleBase
         killer.RpcRemoveAbilityUse();
         killer.SetKillCooldown();
 
+        RPC.PlaySoundRPC(killer.PlayerId, Sounds.TaskComplete);
         killer.Notify(GetString("UnshifterSuccess"));
 
         if (TargetKnows.GetBool())
+        {
+            RPC.PlaySoundRPC(target.PlayerId, Sounds.ImpDiscovered);
             target.Notify(GetString("UnshifterTargetNotify"));
+        }
 
         Logger.Info($"Unshifter: {killer.GetNameWithRole()} unshifted {target.GetNameWithRole()}", "Unshifter");
         return false;
