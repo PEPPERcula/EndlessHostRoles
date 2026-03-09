@@ -63,7 +63,22 @@ public static class GuessManager
 
     public static bool GuesserMsg(PlayerControl pc, string msg, bool isUI = false, bool ssMenu = false)
     {
-        if (!AmongUsClient.Instance.AmHost) return false;
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            if (isUI || ssMenu) return false;
+
+            string msgCopy = msg.ToLower().TrimStart().TrimEnd();
+            bool isGuessCommand = CheckCommand(ref msgCopy, "shoot|guess|bet|st|bt|猜|赌", false, out _);
+
+            if (!isGuessCommand) return false;
+
+            if (MsgToPlayerAndRole(msgCopy, out byte chatTargetId, out CustomRoles chatRole, out string parseError))
+                SendRPC(chatTargetId, chatRole);
+            else
+                Utils.SendMessage(string.IsNullOrEmpty(parseError) ? GetString("GuessHelp") : parseError, PlayerControl.LocalPlayer.PlayerId);
+
+            return true;
+        }
         if (!GameStates.IsMeeting || MeetingHud.Instance.state is MeetingHud.VoteStates.Results or MeetingHud.VoteStates.Proceeding || pc == null) return false;
 
         bool hasGuessingRole = pc.GetCustomRole() is CustomRoles.NiceGuesser or CustomRoles.EvilGuesser or CustomRoles.Doomsayer or CustomRoles.Judge or CustomRoles.Swapper or CustomRoles.Councillor or CustomRoles.NecroGuesser or CustomRoles.Augur;
@@ -119,7 +134,7 @@ public static class GuessManager
 
                 SkipCheck:
 
-                if (!isUI && !ssMenu && spamRequired && (pc.GetCustomRole() is CustomRoles.Decryptor or CustomRoles.NecroGuesser ||
+                if (!pc.IsModdedClient() && !isUI && !ssMenu && spamRequired && (pc.GetCustomRole() is CustomRoles.Decryptor or CustomRoles.NecroGuesser ||
                      (pc.Is(CustomRoles.NiceGuesser) && Options.GGTryHideMsg.GetBool()) ||
                      (pc.Is(CustomRoles.EvilGuesser) && Options.EGTryHideMsg.GetBool()) ||
                      (pc.Is(CustomRoles.Doomsayer) && Doomsayer.DoomsayerTryHideMsg.GetBool()) ||
@@ -1673,5 +1688,4 @@ public static class GuessManager
         if (Data.TryGetValue(shapeshifter.PlayerId, out MeetingShapeshiftData msd))
             msd.AdvanceStep(target);
     }
-
 }
