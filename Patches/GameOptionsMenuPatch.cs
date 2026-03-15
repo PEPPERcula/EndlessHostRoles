@@ -15,8 +15,8 @@ using EHR.Gamemodes;
 // ReSharper disable PossibleLossOfFraction
 
 namespace EHR;
-// Credit: https://github.com/Yumenopai/TownOfHost_Y
 
+// Credit: https://github.com/Yumenopai/TownOfHost_Y
 public static class ModGameOptionsMenu
 {
     public static int TabIndex;
@@ -325,15 +325,17 @@ public static class GameOptionsMenuPatch
             }
         }
     }
+    
     [HarmonyPatch(nameof(GameOptionsMenu.Update))]
     [HarmonyPrefix]
     public static void UpdatePostfix(GameOptionsMenu __instance)
     {
-        // Disable scroll options when chat open
+        // Disable scroll options when chat, game menu, or friends list UI is open
         if (!HudManager.InstanceExists || !__instance.gameObject.activeSelf) return;
 
-        __instance.scrollBar.enabled = !HudManager.Instance.Chat.IsOpenOrOpening;
+        __instance.scrollBar.enabled = !HudManager.Instance.Chat.IsOpenOrOpening && !HudManager.Instance.GameMenu.IsOpen && !FriendsListUI.Instance.IsOpen;
     }
+    
     [HarmonyPatch(nameof(GameOptionsMenu.ValueChanged))]
     [HarmonyPrefix]
     private static bool ValueChangedPrefix(GameOptionsMenu __instance, OptionBehaviour option)
@@ -1493,8 +1495,6 @@ public static class GameSettingMenuPatch
         ModSettingsButtons = [];
         ModSettingsTabs = [];
         GMButtons = [];
-
-        //Main.Instance.StartCoroutine(OptionShower.GetText());
     }
 }
 
@@ -1540,5 +1540,4 @@ public static class RpcSyncSettingsPatch
     {
         OptionItem.SyncAllOptions();
     }
-
 }
