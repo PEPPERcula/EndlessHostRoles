@@ -325,14 +325,10 @@ public static class GameStartManagerPatch
 
             if (instance.LobbyInfoPane.gameObject.activeSelf)
             {
+                // Disable scroll options when chat, game menu, or friends list UI is open
                 var lobbyViewSettingsPane = instance.LobbyInfoPane.LobbyViewSettingsPane;
-                lobbyViewSettingsPane.scrollBar.enabled = !HudManager.Instance.Chat.IsOpenOrOpening;
+                lobbyViewSettingsPane.scrollBar.enabled = !HudManager.Instance.Chat.IsOpenOrOpening && !HudManager.Instance.GameMenu.IsOpen && !FriendsListUI.Instance.IsOpen;
             }
-
-            //if (instance.LobbyInfoPane.gameObject.activeSelf && HudManager.Instance.Chat.IsOpenOrOpening)
-            //    instance.LobbyInfoPane.DeactivatePane();
-
-            //instance.LobbyInfoPane.gameObject.SetActive(!HudManager.Instance.Chat.IsOpenOrOpening);
         }
 
         public static void Postfix(GameStartManager __instance)
@@ -401,7 +397,6 @@ public static class GameStartManagerPatch
 
                 __instance.RulesPresetText.text = GetString($"Preset_{OptionItem.CurrentPreset + 1}");
 
-                
                 int estimatedGameLength = Options.CurrentGameMode switch
                 {
                     CustomGameMode.SoloPVP => SoloPVP.SoloPVP_GameTime.GetInt(),
@@ -655,5 +650,4 @@ public static class GameStartManagerFinallyBeginPatch
     {
         SoundManager.Instance.StopSound(__instance.gameStartSound);
     }
-
 }
