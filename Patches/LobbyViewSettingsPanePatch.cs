@@ -99,7 +99,6 @@ public static class LobbyViewSettingsPanePatch
             Transform labelBackground = viewSettingsInfoPanel.labelBackground.transform;
             labelBackground.localPosition = new(-0.5325f, 0f, 0);
             labelBackground.localScale = new(1.22f, 1f, 1f);
-            //labelBackground.color = new(0.6f, 0.6f, 0.6f); // Also changed vanilla label background
 
             // Change value size
             Transform spritePanel = viewSettingsInfoPanel.transform.FindChild("Value")?.transform.FindChild("Sprite");
@@ -141,12 +140,7 @@ public static class LobbyViewSettingsPanePatch
             // #### Set colors for role tab ####
             __instance.rolesTabButton.activeTextColor = __instance.rolesTabButton.inactiveTextColor = Color.white;
             __instance.rolesTabButton.selectedTextColor = Color.gray;
-            //__instance.rolesTabButton.inactiveSprites.GetComponent<SpriteRenderer>().color = Color.black;
-            //__instance.rolesTabButton.activeSprites.GetComponent<SpriteRenderer>().color = Color.gray;
-            //__instance.rolesTabButton.selectedSprites.GetComponent<SpriteRenderer>().color = Color.black;
             __instance.rolesTabButton.inactiveSprites.GetComponent<SpriteRenderer>().sprite = Utils.LoadSprite("EHR.Resources.Images.DefaultPlate.png", 135f);
-            //__instance.rolesTabButton.activeSprites.GetComponent<SpriteRenderer>().sprite = CustomButton.Get("GuessPlate");
-            //__instance.rolesTabButton.selectedSprites.GetComponent<SpriteRenderer>().sprite = CustomButton.Get("GuessPlate");
             __instance.rolesTabButton.inactiveSprites.transform.FindChild("Shine").gameObject.SetActive(false);
             __instance.rolesTabButton.activeSprites.transform.FindChild("Shine").gameObject.SetActive(false);
             __instance.rolesTabButton.selectedSprites.transform.FindChild("Shine").gameObject.SetActive(false);
@@ -304,7 +298,7 @@ public static class LobbyViewSettingsPanePatch
             GameObject leftButton = Object.Instantiate(rightButton, __instance.BackButton.transform.parent).gameObject;
             leftButton.transform.localPosition = new Vector3(-6.4f, 3.85f, -2f);
             leftButton.name = "LeftButtonArrow";
-            // flip button
+            // Flip button
             leftButton.transform.FindChild("Normal").gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
             leftButton.transform.FindChild("Hover").gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
 
@@ -322,14 +316,6 @@ public static class LobbyViewSettingsPanePatch
 
 
             // #### Add Tab Group ####
-
-            // Started vanilla tab button positions:
-            // taskTabButton  - x: -5.65 - y: 3.1 - z: 0
-            // rolesTabButton - x: -3.2  - y: 3.1 - z: 0
-
-            // x: +2.45
-            // y: -0.6
-
             var indexSettings = 1;
             var indexRoles = 0;
 
@@ -579,8 +565,35 @@ public static class LobbyViewSettingsPanePatch
         }
     }
 
+    private static bool ShouldHideSettings()
+    {
+        return Options.HideGameSettings.GetBool() && !AmongUsClient.Instance.AmHost;
+    }
+
     private static void DrawOptions(LobbyViewSettingsPane viewSettings, TabGroup tabName)
     {
+        if (ShouldHideSettings())
+        {
+            var sb = new StringBuilder();
+            sb.Append($"<color=#ff0000>{Translator.GetString("Message.HideGameSettings")}</color>");
+
+            ViewSettingsInfoPanel hiddenPanel = Object.Instantiate(viewSettings.infoPanelOrigin, Vector3.zero, Quaternion.identity, viewSettings.settingsContainer);
+            hiddenPanel.name = "HideSettingsMessage";
+            hiddenPanel.transform.localScale = new Vector3(2f, 2f, 1f);
+            hiddenPanel.transform.localPosition = new Vector3(-4.65f, -1.5f, -2f);
+            hiddenPanel.titleText.text = sb.ToString();
+            hiddenPanel.titleText.alignment = TextAlignmentOptions.Center;
+            hiddenPanel.titleText.fontSize = 3f;
+            hiddenPanel.labelBackground.color = Color.clear;
+            hiddenPanel.settingText.text = string.Empty;
+            hiddenPanel.checkMark.gameObject.SetActive(false);
+            hiddenPanel.checkMarkOff.gameObject.SetActive(false);
+
+            viewSettings.settingsInfo.Add(hiddenPanel.gameObject);
+            viewSettings.scrollBar.SetYBoundsMax(0f);
+            return;
+        }
+        
         float xPos;
         var yPos = 1.44f;
         var firstTitle = true;
@@ -721,6 +734,28 @@ public static class LobbyViewSettingsPanePatch
 
     private static void DrawRoles(LobbyViewSettingsPane viewSettings, TabGroup tabName)
     {
+        if (ShouldHideSettings())
+        {
+            var sb = new StringBuilder();
+            sb.Append($"<color=#ff0000>{Translator.GetString("Message.HideGameSettings")}</color>");
+
+            ViewSettingsInfoPanel hiddenPanel = Object.Instantiate(viewSettings.infoPanelOrigin, Vector3.zero, Quaternion.identity, viewSettings.settingsContainer);
+            hiddenPanel.name = "HideSettingsMessage";
+            hiddenPanel.transform.localScale = new Vector3(2f, 2f, 1f);
+            hiddenPanel.transform.localPosition = new Vector3(-4.65f, -1.5f, -2f);
+            hiddenPanel.titleText.text = sb.ToString();
+            hiddenPanel.titleText.alignment = TextAlignmentOptions.Center;
+            hiddenPanel.titleText.fontSize = 3f;
+            hiddenPanel.labelBackground.color = Color.clear;
+            hiddenPanel.settingText.text = string.Empty;
+            hiddenPanel.checkMark.gameObject.SetActive(false);
+            hiddenPanel.checkMarkOff.gameObject.SetActive(false);
+
+            viewSettings.settingsInfo.Add(hiddenPanel.gameObject);
+            viewSettings.scrollBar.SetYBoundsMax(0f);
+            return;
+        }
+        
         var yPos = 1.3f;
         var xPos = -6.53f;
         float xPosOpt;
@@ -855,7 +890,7 @@ public static class LobbyViewSettingsPanePatch
                             settingTitle.enableWordWrapping = false;
                             settingTitle.overflowMode = TextOverflowModes.Overflow;
 
-                            // if start y pos not changed
+                            // If start Y position not changed
                             if (Mathf.Approximately(yPos, 1.3f)) yPos -= 0.8f;
                             viewSettingsInfoPanelRoleVariant.transform.localScale = Vector3.one;
                             viewSettingsInfoPanelRoleVariant.transform.localPosition = new Vector3(xPos, yPos, -2f);
@@ -887,7 +922,6 @@ public static class LobbyViewSettingsPanePatch
                             {
                                 if (role.IsAdditionRole())
                                 {
-                                    //viewSettingsInfoPanelRoleVariant.chanceText.text = $"{Translator.GetString("RoleOff")}/{chanceAddOnPerGame}";
                                     viewSettingsInfoPanelRoleVariant.chanceText.text = Translator.GetString("RoleOff");
                                     viewSettingsInfoPanelRoleVariant.chanceText.outlineWidth = Translator.LangHasSensitiveOutlineText() ? 0.09f : 0.26f;
                                 }
@@ -1058,7 +1092,7 @@ public static class LobbyViewSettingsPanePatch
         advancedRoleViewPanel.header.Title.text = Translator.GetString(role.ToString());
         advancedRoleViewPanel.header.Title.color = Color.white;
 
-        // default color
+        // Default color
         if (optionRole.NameColor != Color.white)
         {
             advancedRoleViewPanel.header.Background.color = optionRole.NameColor;
