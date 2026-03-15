@@ -316,6 +316,14 @@ public static class LobbyViewSettingsPanePatch
 
 
             // #### Add Tab Group ####
+
+            // Started vanilla tab button positions:
+            // taskTabButton  - x: -5.65 - y: 3.1 - z: 0
+            // rolesTabButton - x: -3.2  - y: 3.1 - z: 0
+
+            // x: +2.45
+            // y: -0.6
+
             var indexSettings = 1;
             var indexRoles = 0;
 
