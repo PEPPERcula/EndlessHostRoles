@@ -1603,6 +1603,9 @@ internal static class ExtendedPlayerControl
         if (!AmongUsClient.Instance.AmHost) return;
         if (phantom && Options.CurrentGameMode != CustomGameMode.Standard) return;
         if (!Main.Invisible.Add(player.PlayerId)) return;
+
+        if (PlayerControl.LocalPlayer == player)
+            SoundManager.Instance.PlaySound(RoleManager.Instance.AllRoles.ToArray().FirstOrDefault((role) => role.Role == RoleTypes.Phantom)?.UseSound, false);
         
         player.RpcSetPet("");
         
@@ -1652,6 +1655,9 @@ internal static class ExtendedPlayerControl
         if (!AmongUsClient.Instance.AmHost) return;
         if (phantom && Options.CurrentGameMode != CustomGameMode.Standard) return;
         if (!Main.Invisible.Remove(player.PlayerId)) return;
+
+        if (PlayerControl.LocalPlayer == player)
+            SoundManager.Instance.PlaySound(RoleManager.Instance.AllRoles.ToArray().FirstOrDefault(role => role.Role == RoleTypes.Phantom)?.TryCast<PhantomRole>()?.appearSound, false);
         
         if (Options.UsePets.GetBool()) PetsHelper.SetPet(player, PetsHelper.GetPetId());
         
