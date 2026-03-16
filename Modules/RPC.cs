@@ -1279,16 +1279,24 @@ internal static class RPCHandlerPatch
                     {
                         case 1:
                             __instance.MakeInvisible();
+                            if (__instance == PlayerControl.LocalPlayer)
+                                SoundManager.Instance.PlaySound(RoleManager.Instance.AllRoles.ToArray().FirstOrDefault((role) => role.Role == RoleTypes.Phantom)?.UseSound, false);
                             Main.Invisible.Add(__instance.PlayerId);
                             break;
                         case 0:
                             __instance.MakeVisible();
+                            if (__instance == PlayerControl.LocalPlayer)
+                                SoundManager.Instance.PlaySound(RoleManager.Instance.AllRoles.ToArray().FirstOrDefault(role => role.Role == RoleTypes.Phantom)?.TryCast<PhantomRole>()?.appearSound, false);
                             Main.Invisible.Remove(__instance.PlayerId);
                             break;
                         case 11:
+                            if (__instance == PlayerControl.LocalPlayer)
+                                SoundManager.Instance.PlaySound(RoleManager.Instance.AllRoles.ToArray().FirstOrDefault((role) => role.Role == RoleTypes.Phantom)?.UseSound, false);
                             Main.Invisible.Add(__instance.PlayerId);
                             break;
                         case 10:
+                            if (__instance == PlayerControl.LocalPlayer)
+                                SoundManager.Instance.PlaySound(RoleManager.Instance.AllRoles.ToArray().FirstOrDefault(role => role.Role == RoleTypes.Phantom)?.TryCast<PhantomRole>()?.appearSound, false);
                             Main.Invisible.Remove(__instance.PlayerId);
                             break;
                     }
