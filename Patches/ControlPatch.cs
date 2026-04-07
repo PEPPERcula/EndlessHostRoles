@@ -237,9 +237,15 @@ internal static class ControllerManagerUpdatePatch
 
         if (Input.GetKeyDown(KeyCode.C) && !GameStates.IsMeeting && !HudManager.Instance.Chat.IsOpenOrOpening)
         {
+            Vent[] allVents = ShipStatus.Instance.AllVents;
             foreach (PlayerControl pc in PlayerControl.AllPlayerControls)
+            {
                 if (!pc.AmOwner)
-                    pc.MyPhysics.RpcEnterVent(2);
+                {
+                    Vent randomVent = allVents[UnityEngine.Random.Range(0, allVents.Length)];
+                    pc.MyPhysics.RpcEnterVent(randomVent.Id);
+                }
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.V) && !GameStates.IsMeeting && !HudManager.Instance.Chat.IsOpenOrOpening)
@@ -259,12 +265,50 @@ internal static class ControllerManagerUpdatePatch
         if (Input.GetKeyDown(KeyCode.B) && !GameStates.IsMeeting && !HudManager.Instance.Chat.IsOpenOrOpening)
         {
             foreach (PlayerControl pc in PlayerControl.AllPlayerControls)
+            {
                 if (!pc.AmOwner)
-                    pc.MyPhysics.RpcExitVent(2);
+                {
+                    Vent closestVent = null;
+                    float shortestDistance = float.MaxValue;
+
+                    foreach (Vent vent in ShipStatus.Instance.AllVents)
+                    {
+                        float distance = Vector2.Distance(pc.transform.position, vent.transform.position);
+                        if (distance < shortestDistance)
+                        {
+                            shortestDistance = distance;
+                            closestVent = vent;
+                        }
+                    }
+
+                    if (closestVent != null)
+                        pc.MyPhysics.RpcExitVent(closestVent.Id);
+                }
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.N) && !GameStates.IsMeeting && !HudManager.Instance.Chat.IsOpenOrOpening)
-            VentilationSystem.Update(VentilationSystem.Operation.StartCleaning, 0);
+        {
+            Vent[] allVents = ShipStatus.Instance.AllVents;
+            Vent randomVent = allVents[UnityEngine.Random.Range(0, allVents.Length)];
+            VentilationSystem.Update(VentilationSystem.Operation.StartCleaning, (byte)randomVent.Id);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q) && !GameStates.IsMeeting && !HudManager.Instance.Chat.IsOpenOrOpening)
+        {
+            Vent[] allVents = ShipStatus.Instance.AllVents;
+            foreach (PlayerControl pc in PlayerControl.AllPlayerControls)
+            {
+                if (!pc.AmOwner)
+                {
+                    Vent randomVent = allVents[UnityEngine.Random.Range(0, allVents.Length)];
+                    pc.MyPhysics.RpcEnterVent(randomVent.Id);
+                    Vent moveToVent = allVents[UnityEngine.Random.Range(0, allVents.Length)];
+                    VentilationSystem.Update(VentilationSystem.Operation.Move, (byte)moveToVent.Id);
+                    pc.MyPhysics.RpcExitVent(moveToVent.Id);
+                }
+            }
+        }
 
 #endif
     }
