@@ -482,10 +482,9 @@ public class MeetingHudPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(ptr
                 button.gameObject.SetActive(true);
                 int relativeIndex = i % MaxPerPage;
                 int row = relativeIndex / 3;
-                int col = relativeIndex % 3;
+                int column = relativeIndex % 3;
                 Transform buttonTransform = button.transform;
-
-                buttonTransform.localPosition = meetingHud.VoteOrigin + new Vector3(meetingHud.VoteButtonOffsets.x * col, meetingHud.VoteButtonOffsets.y * row, buttonTransform.localPosition.z);
+                buttonTransform.localPosition = meetingHud.VoteOrigin + new Vector3(meetingHud.VoteButtonOffsets.x * column, meetingHud.VoteButtonOffsets.y * row, buttonTransform.localPosition.z);
             }
             else
                 button.gameObject.SetActive(false);
@@ -526,10 +525,9 @@ public class ShapeShifterPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(p
                 panel.gameObject.SetActive(true);
                 int relativeIndex = i % MaxPerPage;
                 int row = relativeIndex / 3;
-                int col = relativeIndex % 3;
+                int column = relativeIndex % 3;
                 Transform buttonTransform = panel.transform;
-
-                buttonTransform.localPosition = new(shapeshifterMinigame.XStart + (shapeshifterMinigame.XOffset * col), shapeshifterMinigame.YStart + (shapeshifterMinigame.YOffset * row), buttonTransform.localPosition.z);
+                buttonTransform.localPosition = new(shapeshifterMinigame.XStart + (shapeshifterMinigame.XOffset * column), shapeshifterMinigame.YStart + (shapeshifterMinigame.YOffset * row), buttonTransform.localPosition.z);
             }
             else
                 panel.gameObject.SetActive(false);
@@ -573,10 +571,9 @@ public class VitalsPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(ptr)
                 panel.gameObject.SetActive(true);
                 int relativeIndex = i % MaxPerPage;
                 int row = relativeIndex / 3;
-                int col = relativeIndex % 3;
+                int column = relativeIndex % 3;
                 Transform panelTransform = panel.transform;
-
-                panelTransform.localPosition = new(vitalsMinigame.XStart + (vitalsMinigame.XOffset * col), vitalsMinigame.YStart + (vitalsMinigame.YOffset * row), panelTransform.localPosition.z);
+                panelTransform.localPosition = new(vitalsMinigame.XStart + (vitalsMinigame.XOffset * column), vitalsMinigame.YStart + (vitalsMinigame.YOffset * row), panelTransform.localPosition.z);
             }
             else
                 panel.gameObject.SetActive(false);
