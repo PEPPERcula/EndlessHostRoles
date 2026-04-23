@@ -618,7 +618,8 @@ public class DetectiveNotesPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour
                 int relativeIndex = i % MaxPerPage;
                 tab.transform.localPosition = new(-4.5f + (relativeIndex * 0.72f), tab.transform.localPosition.y, tab.transform.localPosition.z);
             }
-            else tab.gameObject.SetActive(false);
+            else
+                tab.gameObject.SetActive(false);
 
             i++;
         }
