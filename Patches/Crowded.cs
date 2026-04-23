@@ -50,7 +50,6 @@ internal static class Crowded
                 firstButtonRenderer.enabled = false;
                 var firstButtonButton = firstButtonRenderer.GetComponent<PassiveButton>();
                 firstButtonButton.OnClick.RemoveAllListeners();
-
                 firstButtonButton.OnClick.AddListener((Action)(() =>
                 {
                     for (var i = 1; i < 11; i++)
@@ -70,17 +69,13 @@ internal static class Crowded
                 lastButtonRenderer.enabled = false;
                 var lastButtonButton = lastButtonRenderer.GetComponent<PassiveButton>();
                 lastButtonButton.OnClick.RemoveAllListeners();
-
                 lastButtonButton.OnClick.AddListener((Action)(() =>
                 {
                     for (var i = 1; i < 11; i++)
                     {
                         var playerButton = __instance.MaxPlayerButtons[i];
                         var tmp = playerButton.GetComponentInChildren<TextMeshPro>();
-
-                        int newValue = Mathf.Min(byte.Parse(tmp.text) + 10,
-                            MaxPlayers - 14 + byte.Parse(playerButton.name));
-
+                        int newValue = Mathf.Min(byte.Parse(tmp.text) + 10, MaxPlayers - 14 + byte.Parse(playerButton.name));
                         tmp.text = newValue.ToString();
                     }
 
@@ -94,7 +89,6 @@ internal static class Crowded
                     var playerButton = __instance.MaxPlayerButtons[i].GetComponent<PassiveButton>();
                     var text = playerButton.GetComponentInChildren<TextMeshPro>();
                     playerButton.OnClick.RemoveAllListeners();
-
                     playerButton.OnClick.AddListener((Action)(() =>
                     {
                         byte maxPlayers = byte.Parse(text.text);
@@ -122,15 +116,9 @@ internal static class Crowded
                 firstButton.TextMesh.text = "-";
                 PassiveButton firstPassiveButton = firstButton.PassiveButton;
                 firstPassiveButton.OnClick.RemoveAllListeners();
-
                 firstPassiveButton.OnClick.AddListener((Action)(() =>
                 {
-                    int newVal = Mathf.Clamp(
-                        byte.Parse(secondButtonText.text) - 1,
-                        1,
-                        __instance.GetTargetOptions().MaxPlayers / 2
-                    );
-
+                    int newVal = Mathf.Clamp(byte.Parse(secondButtonText.text) - 1, 1, __instance.GetTargetOptions().MaxPlayers / 2);
                     __instance.SetImpostorButtons(newVal);
                     secondButtonText.text = newVal.ToString();
                 }));
@@ -140,15 +128,9 @@ internal static class Crowded
                 thirdButton.TextMesh.text = "+";
                 PassiveButton thirdPassiveButton = thirdButton.PassiveButton;
                 thirdPassiveButton.OnClick.RemoveAllListeners();
-
                 thirdPassiveButton.OnClick.AddListener((Action)(() =>
                 {
-                    int newVal = Mathf.Clamp(
-                        byte.Parse(secondButtonText.text) + 1,
-                        1,
-                        __instance.GetTargetOptions().MaxPlayers / 2
-                    );
-
+                    int newVal = Mathf.Clamp(byte.Parse(secondButtonText.text) + 1, 1, __instance.GetTargetOptions().MaxPlayers / 2);
                     __instance.SetImpostorButtons(newVal);
                     secondButtonText.text = newVal.ToString();
                 }));
@@ -176,10 +158,7 @@ internal static class Crowded
                     {
                         var playerButton = Instance.MaxPlayerButtons[i];
                         var tmp = playerButton.GetComponentInChildren<TextMeshPro>();
-
-                        int newValue = Mathf.Min(byte.Parse(tmp.text) + 10,
-                            MaxPlayers - 14 + byte.Parse(playerButton.name));
-
+                        int newValue = Mathf.Min(byte.Parse(tmp.text) + 10, MaxPlayers - 14 + byte.Parse(playerButton.name));
                         tmp.text = newValue.ToString();
                     }
 
@@ -272,11 +251,7 @@ internal static class Crowded
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public static bool Prefix(NormalGameOptionsV10 __instance, [HarmonyArgument(0)] int maxExpectedPlayers)
         {
-            return __instance.MaxPlayers > maxExpectedPlayers ||
-                   __instance.NumImpostors < 1 ||
-                   __instance.NumImpostors + 1 > maxExpectedPlayers / 2 ||
-                   __instance.KillDistance is < 0 or > 2 ||
-                   __instance.PlayerSpeedMod is <= 0f or > 3f;
+            return __instance.MaxPlayers > maxExpectedPlayers || __instance.NumImpostors < 1 || __instance.NumImpostors + 1 > maxExpectedPlayers / 2 || __instance.KillDistance is < 0 or > 2 || __instance.PlayerSpeedMod is <= 0f or > 3f;
         }
     }
 
@@ -351,6 +326,17 @@ internal static class Crowded
         }
     }
 
+    [HarmonyPatch(typeof(DetectiveNotesMinigame), nameof(DetectiveNotesMinigame.Begin))]
+    public static class DetectiveNotesMinigameBeginPatch
+    {
+        public static void Postfix(DetectiveNotesMinigame __instance)
+        {
+            if (Main.NormalOptions.MaxPlayers <= 15) return;
+            if (!__instance.notesSetup) return;
+            __instance.gameObject.AddComponent<DetectiveNotesPagingBehaviour>().detectiveNotesMinigame = __instance;
+        }
+    }
+
     [HarmonyPatch(typeof(PSManager), nameof(PSManager.CreateGame))]
     [HarmonyPatch(typeof(CreateGameOptions), nameof(CreateGameOptions.ContinueStart))]
     [HarmonyPatch(typeof(CreateGameOptions), nameof(CreateGameOptions.Confirm))]
@@ -363,6 +349,7 @@ internal static class Crowded
 
             var GameHostOptions = GameOptionsManager.Instance.GameHostOptions;
             var CurrentGameOptions = GameOptionsManager.Instance.CurrentGameOptions;
+
             if (GameHostOptions != null)
             {
                 if (GameHostOptions.MaxPlayers > 15)
@@ -419,13 +406,15 @@ public class AbstractPagingBehaviour(IntPtr ptr) : MonoBehaviour(ptr)
     {
         bool chatIsOpen = HudManager.Instance.Chat.IsOpenOrOpening;
         bool gameMenuIsOpen = HudManager.Instance.GameMenu.IsOpen;
+        bool mapIsOpen = MapBehaviour.Instance.IsOpen;
+        bool guesserMenuIsOpen = GuessManager.GuesserUI;
         
         if (Input.touchSupported)
         {
             foreach (Touch touch in Input.touches)
             {
                 if (touch.phase != TouchPhase.Moved) continue;
-                if (chatIsOpen || gameMenuIsOpen) break;
+                if (chatIsOpen || gameMenuIsOpen || mapIsOpen || guesserMenuIsOpen) break;
 
                 if (touch.deltaPosition.y > 0f)
                 {
@@ -440,9 +429,9 @@ public class AbstractPagingBehaviour(IntPtr ptr) : MonoBehaviour(ptr)
             }
         }
 
-        if (!chatIsOpen && !gameMenuIsOpen && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.mouseScrollDelta.y > 0f))
+        if (!chatIsOpen && !gameMenuIsOpen && !mapIsOpen && !guesserMenuIsOpen && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.mouseScrollDelta.y > 0f))
             Cycle(false);
-        else if (!chatIsOpen && !gameMenuIsOpen && (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.mouseScrollDelta.y < 0f))
+        else if (!chatIsOpen && !gameMenuIsOpen && !mapIsOpen && !guesserMenuIsOpen && (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.mouseScrollDelta.y < 0f))
             Cycle(true);
     }
 
@@ -476,7 +465,7 @@ public class MeetingHudPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(ptr
 
     public override void Update()
     {
-        base.Update();
+        if (!Minigame.Instance) base.Update();
         // Sometimes the timer text is spammed with the page counter for some eccentric reason, so this is just a Band-Aid fix for it
         if (meetingHud.state is MeetingHud.VoteStates.Animating or MeetingHud.VoteStates.Proceeding || meetingHud.TimerText.text.Contains($" ({PageIndex + 1}/{MaxPageIndex + 1})")) return; // TimerText does not update there
         meetingHud.TimerText.text += $" ({PageIndex + 1}/{MaxPageIndex + 1})";
@@ -496,14 +485,10 @@ public class MeetingHudPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(ptr
                 int col = relativeIndex % 3;
                 Transform buttonTransform = button.transform;
 
-                buttonTransform.localPosition = meetingHud.VoteOrigin +
-                                                new Vector3(
-                                                    meetingHud.VoteButtonOffsets.x * col,
-                                                    meetingHud.VoteButtonOffsets.y * row,
-                                                    buttonTransform.localPosition.z
-                                                );
+                buttonTransform.localPosition = meetingHud.VoteOrigin + new Vector3(meetingHud.VoteButtonOffsets.x * col, meetingHud.VoteButtonOffsets.y * row, buttonTransform.localPosition.z);
             }
-            else button.gameObject.SetActive(false);
+            else
+                button.gameObject.SetActive(false);
 
             i++;
         }
@@ -525,7 +510,7 @@ public class ShapeShifterPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(p
         PageText.enableWordWrapping = false;
         PageText.gameObject.SetActive(true);
         PageText.transform.localPosition = new(4.1f, -2.36f, -1f);
-        PageText.transform.localScale *= 0.5f;
+        PageText.transform.localScale *= 0.6f;
         OnPageChanged();
     }
 
@@ -544,14 +529,10 @@ public class ShapeShifterPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(p
                 int col = relativeIndex % 3;
                 Transform buttonTransform = panel.transform;
 
-                buttonTransform.localPosition =
-                    new(
-                        shapeshifterMinigame.XStart + (shapeshifterMinigame.XOffset * col),
-                        shapeshifterMinigame.YStart + (shapeshifterMinigame.YOffset * row),
-                        buttonTransform.localPosition.z
-                    );
+                buttonTransform.localPosition = new(shapeshifterMinigame.XStart + (shapeshifterMinigame.XOffset * col), shapeshifterMinigame.YStart + (shapeshifterMinigame.YOffset * row), buttonTransform.localPosition.z);
             }
-            else panel.gameObject.SetActive(false);
+            else
+                panel.gameObject.SetActive(false);
 
             i++;
         }
@@ -595,14 +576,49 @@ public class VitalsPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(ptr)
                 int col = relativeIndex % 3;
                 Transform panelTransform = panel.transform;
 
-                panelTransform.localPosition =
-                    new(
-                        vitalsMinigame.XStart + (vitalsMinigame.XOffset * col),
-                        vitalsMinigame.YStart + (vitalsMinigame.YOffset * row),
-                        panelTransform.localPosition.z
-                    );
+                panelTransform.localPosition = new(vitalsMinigame.XStart + (vitalsMinigame.XOffset * col), vitalsMinigame.YStart + (vitalsMinigame.YOffset * row), panelTransform.localPosition.z);
             }
-            else panel.gameObject.SetActive(false);
+            else
+                panel.gameObject.SetActive(false);
+
+            i++;
+        }
+    }
+}
+
+public class DetectiveNotesPagingBehaviour(IntPtr ptr) : AbstractPagingBehaviour(ptr)
+{
+    public DetectiveNotesMinigame detectiveNotesMinigame = null!;
+    private TextMeshPro PageText = null!;
+    [HideFromIl2Cpp] private IEnumerable<DetectiveNotesTab> Targets => detectiveNotesMinigame.tabs.ToArray();
+
+    protected override int MaxPageIndex => (Targets.Count() - 1) / MaxPerPage;
+
+    public override void Start()
+    {
+        PageText = Instantiate(HudManager.Instance.KillButton.cooldownTimerText, detectiveNotesMinigame.transform);
+        PageText.name = PageIndexGameObjectName;
+        PageText.enableWordWrapping = false;
+        PageText.gameObject.SetActive(true);
+        PageText.transform.localPosition = new(5.0f, 2.5f, -1f);
+        PageText.transform.localScale *= 0.7f;
+        OnPageChanged();
+    }
+
+    public override void OnPageChanged()
+    {
+        PageText.text = $"({PageIndex + 1}/{MaxPageIndex + 1})";
+        var i = 0;
+
+        foreach (DetectiveNotesTab tab in Targets)
+        {
+            if (i >= PageIndex * MaxPerPage && i < (PageIndex + 1) * MaxPerPage)
+            {
+                tab.gameObject.SetActive(true);
+                int relativeIndex = i % MaxPerPage;
+                tab.transform.localPosition = new(-4.5f + (relativeIndex * 0.72f), tab.transform.localPosition.y, tab.transform.localPosition.z);
+            }
+            else tab.gameObject.SetActive(false);
 
             i++;
         }
