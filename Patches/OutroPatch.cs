@@ -24,7 +24,7 @@ internal static class EndGamePatch
     {
         GameStates.InGame = false;
 
-        Logger.Info("-----------Game over-----------", "Phase");
+        Logger.Info("-----------Game Over-----------", "Phase");
 
         ChatCommands.DraftResult = [];
         ChatCommands.DraftRoles = [];
@@ -39,7 +39,7 @@ internal static class EndGamePatch
             {
                 PlayerControl dpc = Utils.GetPlayerById(id);
 
-                if (dpc != null)
+                if (dpc)
                 {
                     dpc.RpcSetName(Doppelganger.DoppelVictim[id]);
                     Main.AllPlayerNames[id] = Doppelganger.DoppelVictim[id];
@@ -73,7 +73,7 @@ internal static class EndGamePatch
 
         KillLog = sb.Append("</size>").ToString();
         if (!KillLog.Contains('\n')) KillLog = string.Empty;
-
+        
         sb.Clear();
 
         foreach ((byte id, PlayerState state) in Main.PlayerStates)
@@ -161,7 +161,7 @@ internal static class EndGamePatch
                     break;
                 case CustomGameMode.Deathrace:
                     MapNames map = Main.CurrentMap;
-
+                    
                     foreach (PlayerControl pc in Main.EnumeratePlayerControls())
                     {
                         if (!Deathrace.PlayedMaps.TryGetValue(pc.FriendCode, out var maps))
@@ -174,6 +174,9 @@ internal static class EndGamePatch
                 case CustomGameMode.Mingle:
                     Main.EnumeratePlayerControls().Do(x => Mingle.HasPlayedFCs.Add(x.FriendCode));
                     break;
+                case CustomGameMode.NaturalDisasters:
+                    NaturalDisasters.FixedUpdatePatch.LastDisasterTimer.Reset();
+                    goto default;
                 default:
                     if (Main.HasPlayedGM.TryGetValue(Options.CurrentGameMode, out HashSet<string> playedFCs))
                         playedFCs.UnionWith(Main.EnumeratePlayerControls().Select(x => x.FriendCode));
@@ -193,7 +196,7 @@ internal static class EndGamePatch
                     else Options.AutoGMRotationIndex = 0;
                 }
             }
-
+            
             Main.Instance.StartCoroutine(BanManager.LoadEACList(reload: true));
         }
     }
@@ -204,7 +207,7 @@ internal static class SetEverythingUpPatch
 {
     public static string LastWinsText = string.Empty;
     public static string LastWinsReason = string.Empty;
-    private static SimpleButton ResultsToggleButton;
+    public static SimpleButton ResultsToggleButton;
 
     public static void Postfix(EndGameManager __instance)
     {
@@ -231,146 +234,146 @@ internal static class SetEverythingUpPatch
             switch (Options.CurrentGameMode)
             {
                 case CustomGameMode.SoloPVP:
-                    {
-                        __instance.BackgroundBar.material.color = new Color32(245, 82, 82, 255);
-                        customWinnerText = CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join() + GetString("Win");
-                        customWinnerColor = "#f55252";
-                        additionalWinnerText = "\n" + string.Format(GetString("SoloPVP.WinnersKillCount"), SoloPVP.PlayerScore[CustomWinnerHolder.WinnerIds.First()]);
-                        goto Skip;
-                    }
+                {
+                    __instance.BackgroundBar.material.color = new Color32(245, 82, 82, 255);
+                    customWinnerText = CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join() + GetString("Win");
+                    customWinnerColor = "#f55252";
+                    additionalWinnerText = "\n" + string.Format(GetString("SoloPVP.WinnersKillCount"), SoloPVP.PlayerScore[CustomWinnerHolder.WinnerIds.First()]);
+                    goto Skip;
+                }
                 case CustomGameMode.FFA:
-                    {
-                        byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                        __instance.BackgroundBar.material.color = new Color32(0, 255, 255, 255);
-                        winnerText.text = FreeForAll.FFATeamMode.GetBool() ? string.Empty : Main.AllPlayerNames[winnerId] + GetString("Win");
-                        winnerText.color = Main.PlayerColors[winnerId];
-                        goto EndOfText;
-                    }
+                {
+                    byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
+                    __instance.BackgroundBar.material.color = new Color32(0, 255, 255, 255);
+                    winnerText.text = FreeForAll.FFATeamMode.GetBool() ? string.Empty : Main.AllPlayerNames[winnerId] + GetString("Win");
+                    winnerText.color = Main.PlayerColors[winnerId];
+                    goto EndOfText;
+                }
                 case CustomGameMode.StopAndGo:
-                    {
-                        byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                        __instance.BackgroundBar.material.color = new Color32(0, 255, 165, 255);
-                        winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
-                        winnerText.color = Main.PlayerColors[winnerId];
-                        goto EndOfText;
-                    }
+                {
+                    byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
+                    __instance.BackgroundBar.material.color = new Color32(0, 255, 165, 255);
+                    winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
+                    winnerText.color = Main.PlayerColors[winnerId];
+                    goto EndOfText;
+                }
                 case CustomGameMode.HotPotato:
-                    {
-                        byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                        __instance.BackgroundBar.material.color = new Color32(232, 205, 70, 255);
-                        winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
-                        winnerText.color = Main.PlayerColors[winnerId];
-                        goto EndOfText;
-                    }
+                {
+                    byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
+                    __instance.BackgroundBar.material.color = new Color32(232, 205, 70, 255);
+                    winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
+                    winnerText.color = Main.PlayerColors[winnerId];
+                    goto EndOfText;
+                }
                 case CustomGameMode.Speedrun:
-                    {
-                        byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                        __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Speedrunner);
-                        winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
-                        winnerText.color = Main.PlayerColors[winnerId];
-                        goto EndOfText;
-                    }
+                {
+                    byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
+                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Speedrunner);
+                    winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
+                    winnerText.color = Main.PlayerColors[winnerId];
+                    goto EndOfText;
+                }
                 case CustomGameMode.CaptureTheFlag:
-                    {
-                        (Color Color, string Team) winnerData = CaptureTheFlag.WinnerData;
-                        __instance.BackgroundBar.material.color = winnerData.Color;
-                        winnerText.text = winnerData.Team;
-                        winnerText.color = winnerData.Color;
-                        goto EndOfText;
-                    }
+                {
+                    (Color Color, string Team) winnerData = CaptureTheFlag.WinnerData;
+                    __instance.BackgroundBar.material.color = winnerData.Color;
+                    winnerText.text = winnerData.Team;
+                    winnerText.color = winnerData.Color;
+                    goto EndOfText;
+                }
                 case CustomGameMode.NaturalDisasters:
-                    {
-                        var ndColor = new Color32(3, 252, 74, 255);
-                        __instance.BackgroundBar.material.color = ndColor;
+                {
+                    var ndColor = new Color32(3, 252, 74, 255);
+                    __instance.BackgroundBar.material.color = ndColor;
 
-                        if (CustomWinnerHolder.WinnerIds.Count <= 1)
-                        {
-                            byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                            winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
-                            winnerText.color = Main.PlayerColors[winnerId];
-                        }
-                        else
-                        {
-                            winnerText.text = CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join() + GetString("Win");
-                            winnerText.color = ndColor;
-                        }
-
-                        goto EndOfText;
-                    }
-                case CustomGameMode.RoomRush:
+                    if (CustomWinnerHolder.WinnerIds.Count <= 1)
                     {
                         byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                        __instance.BackgroundBar.material.color = new Color32(255, 171, 27, 255);
                         winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
                         winnerText.color = Main.PlayerColors[winnerId];
-                        goto EndOfText;
                     }
-                case CustomGameMode.KingOfTheZones:
+                    else
                     {
-                        (Color Color, string Team) winnerData = KingOfTheZones.WinnerData;
-                        __instance.BackgroundBar.material.color = winnerData.Color;
-                        winnerText.text = winnerData.Team;
-                        winnerText.color = winnerData.Color;
-                        goto EndOfText;
-                    }
-                case CustomGameMode.Quiz:
-                    {
-                        byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                        __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.QuizMaster);
-                        winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
-                        winnerText.color = Main.PlayerColors[winnerId];
-                        goto EndOfText;
-                    }
-                case CustomGameMode.TheMindGame:
-                    {
-                        __instance.BackgroundBar.material.color = Color.yellow;
                         winnerText.text = CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join() + GetString("Win");
-                        winnerText.color = Color.yellow;
-                        goto EndOfText;
+                        winnerText.color = ndColor;
                     }
+                
+                    goto EndOfText;
+                }
+                case CustomGameMode.RoomRush:
+                {
+                    byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
+                    __instance.BackgroundBar.material.color = new Color32(255, 171, 27, 255);
+                    winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
+                    winnerText.color = Main.PlayerColors[winnerId];
+                    goto EndOfText;
+                }
+                case CustomGameMode.KingOfTheZones:
+                {
+                    (Color Color, string Team) winnerData = KingOfTheZones.WinnerData;
+                    __instance.BackgroundBar.material.color = winnerData.Color;
+                    winnerText.text = winnerData.Team;
+                    winnerText.color = winnerData.Color;
+                    goto EndOfText;
+                }
+                case CustomGameMode.Quiz:
+                {
+                    byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
+                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.QuizMaster);
+                    winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
+                    winnerText.color = Main.PlayerColors[winnerId];
+                    goto EndOfText;
+                }
+                case CustomGameMode.TheMindGame:
+                {
+                    __instance.BackgroundBar.material.color = Color.yellow;
+                    winnerText.text = CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join() + GetString("Win");
+                    winnerText.color = Color.yellow;
+                    goto EndOfText;
+                }
                 case CustomGameMode.BedWars:
-                    {
-                        (Color Color, string Team) winnerData = BedWars.WinnerData;
-                        __instance.BackgroundBar.material.color = winnerData.Color;
-                        winnerText.text = winnerData.Team;
-                        winnerText.color = winnerData.Color;
-                        goto EndOfText;
-                    }
+                {
+                    (Color Color, string Team) winnerData = BedWars.WinnerData;
+                    __instance.BackgroundBar.material.color = winnerData.Color;
+                    winnerText.text = winnerData.Team;
+                    winnerText.color = winnerData.Color;
+                    goto EndOfText;
+                }
                 case CustomGameMode.Deathrace:
+                {
+                    byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
+                    __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Racer);
+                    winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
+                    winnerText.color = Main.PlayerColors[winnerId];
+                    goto EndOfText;
+                }
+                case CustomGameMode.Mingle:
+                {
+                    if (CustomWinnerHolder.WinnerIds.Count <= 1)
                     {
                         byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                        __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Racer);
+                        __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.MinglePlayer);
                         winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
                         winnerText.color = Main.PlayerColors[winnerId];
-                        goto EndOfText;
                     }
-                case CustomGameMode.Mingle:
+                    else
                     {
-                        if (CustomWinnerHolder.WinnerIds.Count <= 1)
-                        {
-                            byte winnerId = CustomWinnerHolder.WinnerIds.FirstOrDefault();
-                            __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.MinglePlayer);
-                            winnerText.text = Main.AllPlayerNames[winnerId] + GetString("Win");
-                            winnerText.color = Main.PlayerColors[winnerId];
-                        }
-                        else
-                        {
-                            Color color = Utils.GetRoleColor(CustomRoles.MinglePlayer);
-                            __instance.BackgroundBar.material.color = color;
-                            winnerText.text = CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join() + GetString("Win");
-                            winnerText.color = color;
-                        }
-
-                        goto EndOfText;
-                    }
-                case CustomGameMode.Snowdown:
-                    {
-                        Color color = Utils.GetRoleColor(CustomRoles.SnowdownPlayer);
+                        Color color = Utils.GetRoleColor(CustomRoles.MinglePlayer);
                         __instance.BackgroundBar.material.color = color;
-                        winnerText.text = (CustomWinnerHolder.WinnerIds.Count <= 1 ? CustomWinnerHolder.WinnerIds.FirstOrDefault().ColoredPlayerName() : CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join()) + GetString("Win");
+                        winnerText.text = CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join() + GetString("Win");
                         winnerText.color = color;
-                        goto EndOfText;
                     }
+                    
+                    goto EndOfText;
+                }
+                case CustomGameMode.Snowdown:
+                {
+                    Color color = Utils.GetRoleColor(CustomRoles.SnowdownPlayer);
+                    __instance.BackgroundBar.material.color = color;
+                    winnerText.text = (CustomWinnerHolder.WinnerIds.Count <= 1 ? CustomWinnerHolder.WinnerIds.FirstOrDefault().ColoredPlayerName() : CustomWinnerHolder.WinnerIds.Select(x => x.ColoredPlayerName()).Join()) + GetString("Win");
+                    winnerText.color = color;
+                    goto EndOfText;
+                }
             }
         }
 
@@ -463,7 +466,7 @@ internal static class SetEverythingUpPatch
             additionalWinnerText += "\n" + Utils.ColorString(color, GetAdditionalWinnerRoleName(additionalWinners == AdditionalWinners.AliveNeutrals ? additionalWinners.ToString() : addWinnerRole.ToString()));
         }
 
-    Skip:
+        Skip:
 
         if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None and not CustomWinner.Error)
             winnerText.text = additionalWinnerText == string.Empty ? $"<size=100%><color={customWinnerColor}>{customWinnerText}</color></size>" : $"<size=100%><color={customWinnerColor}>{customWinnerText}</color></size><size=50%>{additionalWinnerText}</size>";
@@ -471,6 +474,9 @@ internal static class SetEverythingUpPatch
         EndOfText:
 
         LastWinsText = winnerText.text /*.RemoveHtmlTags()*/;
+
+        // Cleam up memory for objects that are no longer referenced
+        GC.Collect();
         return;
 
         IEnumerator SetupPoolablePlayers()
@@ -478,6 +484,8 @@ internal static class SetEverythingUpPatch
             Camera main = Camera.main;
             if (!main) yield break;
 
+            // Clear unused assets
+            Resources.UnloadUnusedAssets();
             yield return null;
 
             Vector3 pos = main.ViewportToWorldPoint(new(0f, 1f, main.nearClipPlane));
@@ -485,7 +493,7 @@ internal static class SetEverythingUpPatch
             roleSummaryObject.transform.position = new(__instance.Navigation.ExitButton.transform.position.x + 0.1f, pos.y - 0.1f, -15f);
             roleSummaryObject.transform.localScale = new(1f, 1f, 1f);
             roleSummaryObject.SetActive(false);
-
+            
             yield return null;
 
             StringBuilder sb = new($"<font=\"DIN_Pro_Bold_700 SDF\">{GetString("RoleSummaryText")}\n<b>");
@@ -500,118 +508,118 @@ internal static class SetEverythingUpPatch
             }
 
             sb.Append("</b>\n");
-
+            
             yield return null;
 
             switch (Options.CurrentGameMode)
             {
                 case CustomGameMode.SoloPVP:
-                    {
-                        List<(int, byte)> list = [];
-                        list.AddRange(cloneRoles.Select(id => (SoloPVP.GetRankFromScore(id), id)));
+                {
+                    List<(int, byte)> list = [];
+                    list.AddRange(cloneRoles.Select(id => (SoloPVP.GetRankFromScore(id), id)));
 
-                        list.Sort();
-                        foreach ((int, byte) id in list.Where(x => EndGamePatch.SummaryText.ContainsKey(x.Item2)))
-                            sb.Append('\n').Append(EndGamePatch.SummaryText[id.Item2]);
+                    list.Sort();
+                    foreach ((int, byte) id in list.Where(x => EndGamePatch.SummaryText.ContainsKey(x.Item2)))
+                        sb.Append('\n').Append(EndGamePatch.SummaryText[id.Item2]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.FFA:
-                    {
-                        List<(int, byte)> list = [];
-                        list.AddRange(cloneRoles.Select(id => (FreeForAll.GetRankFromScore(id), id)));
+                {
+                    List<(int, byte)> list = [];
+                    list.AddRange(cloneRoles.Select(id => (FreeForAll.GetRankFromScore(id), id)));
 
-                        list.Sort();
-                        foreach ((int, byte) id in list.Where(x => EndGamePatch.SummaryText.ContainsKey(x.Item2)))
-                            sb.Append('\n').Append(EndGamePatch.SummaryText[id.Item2]);
+                    list.Sort();
+                    foreach ((int, byte) id in list.Where(x => EndGamePatch.SummaryText.ContainsKey(x.Item2)))
+                        sb.Append('\n').Append(EndGamePatch.SummaryText[id.Item2]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.StopAndGo:
-                    {
-                        List<(int, byte)> list = [];
-                        list.AddRange(cloneRoles.Select(id => (StopAndGo.GetRankFromScore(id), id)));
+                {
+                    List<(int, byte)> list = [];
+                    list.AddRange(cloneRoles.Select(id => (StopAndGo.GetRankFromScore(id), id)));
 
-                        list.Sort();
-                        foreach ((int, byte) id in list.Where(x => EndGamePatch.SummaryText.ContainsKey(x.Item2)))
-                            sb.Append('\n').Append(EndGamePatch.SummaryText[id.Item2]);
+                    list.Sort();
+                    foreach ((int, byte) id in list.Where(x => EndGamePatch.SummaryText.ContainsKey(x.Item2)))
+                        sb.Append('\n').Append(EndGamePatch.SummaryText[id.Item2]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.HotPotato:
-                    {
-                        IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(HotPotato.GetSurvivalTime);
-                        foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                {
+                    IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(HotPotato.GetSurvivalTime);
+                    foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.Speedrun:
-                    {
-                        IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(id => Main.PlayerStates[id].TaskState.CompletedTasksCount);
-                        foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                {
+                    IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(id => Main.PlayerStates[id].TaskState.CompletedTasksCount);
+                    foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.CaptureTheFlag:
-                    {
-                        IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(CaptureTheFlag.GetFlagTime);
-                        foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                {
+                    IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(CaptureTheFlag.GetFlagTime);
+                    foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.NaturalDisasters:
-                    {
-                        IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(NaturalDisasters.SurvivalTime);
-                        foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                {
+                    IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(NaturalDisasters.SurvivalTime);
+                    foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.RoomRush:
-                    {
-                        IOrderedEnumerable<byte> list = RoomRush.PointsSystem ? cloneRoles.OrderByDescending(x => int.TryParse(RoomRush.GetPoints(x).Split('/')[0], out int i) ? i : 0) : cloneRoles.OrderByDescending(RoomRush.GetSurvivalTime);
-                        foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                {
+                    IOrderedEnumerable<byte> list = RoomRush.PointsSystem ? cloneRoles.OrderByDescending(x => int.TryParse(RoomRush.GetPoints(x).Split('/')[0], out int i) ? i : 0) : cloneRoles.OrderByDescending(RoomRush.GetSurvivalTime);
+                    foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.KingOfTheZones:
-                    {
-                        IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(KingOfTheZones.GetZoneTime);
-                        foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                {
+                    IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(KingOfTheZones.GetZoneTime);
+                    foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.Snowdown:
                 case CustomGameMode.Mingle:
                 case CustomGameMode.Deathrace:
                 case CustomGameMode.BedWars:
                 case CustomGameMode.Quiz:
-                    {
-                        foreach (byte id in cloneRoles.Where(EndGamePatch.SummaryText.ContainsKey))
-                            sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                {
+                    foreach (byte id in cloneRoles.Where(EndGamePatch.SummaryText.ContainsKey))
+                        sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
 
-                        break;
-                    }
+                    break;
+                }
                 case CustomGameMode.TheMindGame:
-                    {
-                        IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(TheMindGame.GetPoints);
-                        foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
-                        break;
-                    }
+                {
+                    IOrderedEnumerable<byte> list = cloneRoles.OrderByDescending(TheMindGame.GetPoints);
+                    foreach (byte id in list.Where(EndGamePatch.SummaryText.ContainsKey)) sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                    break;
+                }
                 default:
+                {
+                    foreach (byte id in cloneRoles)
                     {
-                        foreach (byte id in cloneRoles)
+                        try
                         {
-                            try
-                            {
-                                if (EndGamePatch.SummaryText[id].Contains("<INVALID:NotAssigned>")) continue;
+                            if (EndGamePatch.SummaryText[id].Contains("<INVALID:NotAssigned>")) continue;
 
-                                sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
-                            }
-                            catch { }
+                            sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
                         }
-
-                        break;
+                        catch { }
                     }
+
+                    break;
+                }
             }
 
             yield return null;
@@ -651,13 +659,13 @@ internal static class SetEverythingUpPatch
                 lineText.alignment = TextAlignmentOptions.TopLeft;
 
                 var lineRect = lineObj.GetComponent<RectTransform>();
-                lineRect.anchoredPosition = new(pos.x + 3.5f - 5f, pos.y - 0.7f - (i * 0.15f)); // slide from the left
+                lineRect.anchoredPosition = new(pos.x + 3.5f - 5f, pos.y - 0.7f - (i * 0.15f)); // Slide from the left
                 lineText.alpha = 0f;
 
                 roleSummaryObjects.Add(lineText);
                 yield return null;
 
-                Main.Instance.StartCoroutine(SlideAndFadeIn(lineRect, lineText, i * 0.15f)); // stagger animation
+                Main.Instance.StartCoroutine(SlideAndFadeIn(lineRect, lineText, i * 0.15f)); // Stagger animation
                 continue;
 
                 static IEnumerator SlideAndFadeIn(RectTransform rect, TextMeshPro text, float delay)
@@ -665,16 +673,16 @@ internal static class SetEverythingUpPatch
                     yield return new WaitForSecondsRealtime(delay);
 
                     Vector2 start = rect.anchoredPosition;
-                    Vector2 end = start + new Vector2(5f, 0); // target pos
+                    Vector2 end = start + new Vector2(5f, 0); // Target position
                     const float duration = 0.5f;
                     var elapsed = 0f;
 
                     while (elapsed < duration)
                     {
                         elapsed += Time.deltaTime;
-                        float t = elapsed / duration;
-                        rect.anchoredPosition = Vector2.Lerp(start, end, Mathf.SmoothStep(0, 1, t));
-                        text.alpha = t;
+                        float time = elapsed / duration;
+                        rect.anchoredPosition = Vector2.Lerp(start, end, Mathf.SmoothStep(0, 1, time));
+                        text.alpha = time;
                         yield return null;
                     }
 
@@ -691,20 +699,14 @@ internal static class SetEverythingUpPatch
 
             bool showInitially = Main.ShowResult;
 
-            ResultsToggleButton = new SimpleButton(
-                __instance.transform,
-                "ShowHideResultsButton",
-                OperatingSystem.IsAndroid() ? new(-6.15f, 2.6f, -14f) : new(-4.65f, 2.6f, -14f),
-                new(0, 165, 255, 255),
-                new(0, 255, 255, 255),
-                () =>
-                {
-                    bool setToActive = !roleSummaryObjects[0].gameObject.activeSelf;
-                    roleSummaryObjects.ForEach(x => x.gameObject.SetActive(setToActive));
-                    Main.ShowResult = setToActive;
-                    ResultsToggleButton.Label.text = GetString(setToActive ? "HideResults" : "ShowResults");
-                },
-                GetString(showInitially ? "HideResults" : "ShowResults"))
+            ResultsToggleButton = new SimpleButton(__instance.transform, "ShowHideResultsButton", OperatingSystem.IsAndroid() ? new(-6.15f, 2.6f, -14f) : new(-4.65f, 2.6f, -14f), new(0, 165, 255, 255), new(0, 255, 255, 255),() =>
+            {
+                bool setToActive = !roleSummaryObjects[0].gameObject.activeSelf;
+                roleSummaryObjects.ForEach(x => x.gameObject.SetActive(setToActive));
+                Main.ShowResult = setToActive;
+                ResultsToggleButton.Label.text = GetString(setToActive ? "HideResults" : "ShowResults");
+            },
+            GetString(showInitially ? "HideResults" : "ShowResults"))
             {
                 Scale = new(1.5f, 0.5f),
                 FontSize = 2f
@@ -718,14 +720,14 @@ internal static class SetEverythingUpPatch
 
                 try
                 {
-                    Il2CppArrayBase<PoolablePlayer> pbs = __instance.transform.GetComponentsInChildren<PoolablePlayer>();
+                    Il2CppArrayBase<PoolablePlayer> poolablePlayers = __instance.transform.GetComponentsInChildren<PoolablePlayer>();
 
-                    if (pbs != null)
+                    if (poolablePlayers != null)
                     {
-                        foreach (PoolablePlayer pb in pbs)
+                        foreach (PoolablePlayer poolablePlayer in poolablePlayers)
                         {
-                            if (pb != null)
-                                pb.ToggleName(false);
+                            if (poolablePlayer)
+                                poolablePlayer.ToggleName(false);
                         }
                     }
                 }
@@ -806,20 +808,20 @@ internal static class SetEverythingUpPatch
             return name;
         }
     }
+}
 
-    [HarmonyPatch(typeof(ProgressionScreen), nameof(ProgressionScreen.Activate))]
-    internal static class ProgressionScreenPatch
+[HarmonyPatch(typeof(ProgressionScreen), nameof(ProgressionScreen.Activate))]
+internal static class ProgressionScreenPatch
+{
+    public static void Postfix(ProgressionScreen __instance)
     {
-        public static void Postfix(ProgressionScreen __instance)
-        {
-            if (ResultsToggleButton == null) return;
-            GameObject buttonObject = ResultsToggleButton.Button?.gameObject;
-            if (!buttonObject) return;
+        if (SetEverythingUpPatch.ResultsToggleButton == null) return;
+        GameObject buttonObject = SetEverythingUpPatch.ResultsToggleButton.Button?.gameObject;
+        if (!buttonObject) return;
 
-            buttonObject.SetActive(true);
-            buttonObject.transform.SetParent(__instance.transform, true);
-            foreach (Renderer renderer in buttonObject.GetComponentsInChildren<Renderer>())
-                renderer.sortingOrder = 100;
-        }
+        buttonObject.SetActive(true);
+        buttonObject.transform.SetParent(__instance.transform, true);
+        foreach (Renderer renderer in buttonObject.GetComponentsInChildren<Renderer>())
+            renderer.sortingOrder = 100;
     }
 }
