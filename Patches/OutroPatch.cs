@@ -73,7 +73,7 @@ internal static class EndGamePatch
 
         KillLog = sb.Append("</size>").ToString();
         if (!KillLog.Contains('\n')) KillLog = string.Empty;
-        
+
         sb.Clear();
 
         foreach ((byte id, PlayerState state) in Main.PlayerStates)
@@ -161,7 +161,7 @@ internal static class EndGamePatch
                     break;
                 case CustomGameMode.Deathrace:
                     MapNames map = Main.CurrentMap;
-                    
+
                     foreach (PlayerControl pc in Main.EnumeratePlayerControls())
                     {
                         if (!Deathrace.PlayedMaps.TryGetValue(pc.FriendCode, out var maps))
@@ -196,7 +196,7 @@ internal static class EndGamePatch
                     else Options.AutoGMRotationIndex = 0;
                 }
             }
-            
+
             Main.Instance.StartCoroutine(BanManager.LoadEACList(reload: true));
         }
     }
@@ -486,6 +486,7 @@ internal static class SetEverythingUpPatch
 
             // Clear unused assets
             Resources.UnloadUnusedAssets();
+
             yield return null;
 
             Vector3 pos = main.ViewportToWorldPoint(new(0f, 1f, main.nearClipPlane));
@@ -493,7 +494,7 @@ internal static class SetEverythingUpPatch
             roleSummaryObject.transform.position = new(__instance.Navigation.ExitButton.transform.position.x + 0.1f, pos.y - 0.1f, -15f);
             roleSummaryObject.transform.localScale = new(1f, 1f, 1f);
             roleSummaryObject.SetActive(false);
-            
+
             yield return null;
 
             StringBuilder sb = new($"<font=\"DIN_Pro_Bold_700 SDF\">{GetString("RoleSummaryText")}\n<b>");
@@ -508,7 +509,7 @@ internal static class SetEverythingUpPatch
             }
 
             sb.Append("</b>\n");
-            
+
             yield return null;
 
             switch (Options.CurrentGameMode)
@@ -663,6 +664,7 @@ internal static class SetEverythingUpPatch
                 lineText.alpha = 0f;
 
                 roleSummaryObjects.Add(lineText);
+
                 yield return null;
 
                 Main.Instance.StartCoroutine(SlideAndFadeIn(lineRect, lineText, i * 0.15f)); // Stagger animation
@@ -683,6 +685,7 @@ internal static class SetEverythingUpPatch
                         float time = elapsed / duration;
                         rect.anchoredPosition = Vector2.Lerp(start, end, Mathf.SmoothStep(0, 1, time));
                         text.alpha = time;
+        
                         yield return null;
                     }
 
