@@ -13,6 +13,17 @@ namespace EHR.Patches;
 //        __result = false;
 //    }
 //}
+
+[HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldClassicMainMenuMode))]
+public static class ShouldShowTogglePatch
+{
+    public static void Postfix(ref bool __result)
+    {
+        if (Main.ClassicMode.Value || AprilFoolsMode.ShouldClassicMode())
+            __result = true;
+    }
+}
+
 [HarmonyPatch(typeof(NormalGameManager), nameof(NormalGameManager.GetBodyType))]
 public static class GetNormalBodyTypePatch
 {
