@@ -59,5 +59,12 @@ internal class Markseeker : RoleBase
         if (Main.PlayerStates[player.PlayerId].Role is not Markseeker { IsEnable: true } ms || ms.MarkedId == byte.MaxValue) return;
 
         ms.TargetRevealed = true;
+        Utils.SendRPC(CustomRPC.SyncRoleData, player.PlayerId, ms.MarkedId);
+    }
+
+    public void ReceiveRPC(MessageReader reader)
+    {
+        MarkedId = reader.ReadByte();
+        TargetRevealed = true;
     }
 }
