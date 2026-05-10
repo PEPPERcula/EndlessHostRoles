@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using EHR.Gamemodes;
 using EHR.Modules;
 using Hazel;
@@ -80,36 +81,27 @@ internal class Asthmatic : IAddon
     public static void OnFixedUpdate()
     {
         if (Timers.Count == 0) return;
-
-        List<byte> toRemove = [];
         
-        foreach ((byte id, Counter counter) in Timers)
+        foreach (KeyValuePair<byte, Counter> kvp in Timers.ToArray())
         {
-            PlayerState state = Main.PlayerStates[id];
+            PlayerState state = Main.PlayerStates[kvp.Key];
 
             if (state.IsDead || !state.SubRoles.Contains(CustomRoles.Asthmatic) || state.MainRole == CustomRoles.Pestilence)
             {
-                toRemove.Add(id);
+                state.RemoveSubRole(CustomRoles.Asthmatic);
+                Timers.Remove(kvp.Key);
+                LastSuffix.Remove(kvp.Key);
+                LastPosition.Remove(kvp.Key);
                 continue;
             }
 
-            counter.Update();
-        }
-        
-        if (toRemove.Count == 0) return;
-
-        foreach (byte id in toRemove)
-        {
-            Main.PlayerStates[id].RemoveSubRole(CustomRoles.Asthmatic);
-            Timers.Remove(id);
-            LastSuffix.Remove(id);
-            LastPosition.Remove(id);
+            kvp.Value.Update();
         }
     }
 
     public static void OnCheckPlayerPosition(PlayerControl pc)
     {
-        if (!pc.Is(CustomRoles.Asthmatic) || !RunChecks || !Timers.TryGetValue(pc.PlayerId, out Counter counter)) return;
+        if (!Main.IntroDestroyed || !pc.Is(CustomRoles.Asthmatic) || ExileController.Instance || !RunChecks || !Timers.TryGetValue(pc.PlayerId, out Counter counter)) return;
 
         Vector2 currentPosition = pc.Pos();
 
@@ -151,12 +143,14 @@ internal class Asthmatic : IAddon
             }
         }
 
-        string suffix = GetSuffixText(pc.PlayerId);
+        string suffix = GetSuffixText(pc.PlayerId, true);
 
-        if (!pc.IsModdedClient() && (!LastSuffix.TryGetValue(pc.PlayerId, out string beforeSuffix) || beforeSuffix != suffix))
+        if (!LastSuffix.TryGetValue(pc.PlayerId, out string beforeSuffix) || beforeSuffix != suffix)
         {
-            Utils.NotifyRoles(SpecifySeer: pc, SpecifyTarget: pc);
-            Utils.SendRPC(CustomRPC.SyncAsthmatic, pc.PlayerId, suffix);
+            if (!pc.IsModdedClient())
+                Utils.NotifyRoles(SpecifySeer: pc, SpecifyTarget: pc);
+            else
+                Utils.SendRPC(CustomRPC.SyncAsthmatic, pc.PlayerId, suffix);
         }
 
         LastSuffix[pc.PlayerId] = suffix;
@@ -167,14 +161,16 @@ internal class Asthmatic : IAddon
         LastSuffix[reader.ReadByte()] = reader.ReadString();
     }
 
-    public static string GetSuffixText(byte id)
+    public static string GetSuffixText(byte id, bool hud = false, bool meeting = false)
     {
+        if ((id.IsPlayerModdedClient() && !hud) || meeting) return string.Empty;
+
         if (Main.PlayerStates.TryGetValue(id, out var state) && !state.IsDead)
         {
             if (Timers.TryGetValue(id, out Counter counter))
                 return $"{counter.ColoredArrow} <font=\"DIGITAL-7 SDF\" material=\"DIGITAL-7 Black Outline\">{counter.ColoredTimerString}</font>";
 
-            if (id.IsPlayerModdedClient() && !id.IsHost() && LastSuffix.TryGetValue(id, out string lastSuffix))
+            if (LastSuffix.TryGetValue(id, out string lastSuffix))
                 return lastSuffix;
         }
 
