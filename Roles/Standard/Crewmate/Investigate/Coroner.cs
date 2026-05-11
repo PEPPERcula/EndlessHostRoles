@@ -11,7 +11,6 @@ public class Coroner : RoleBase
 {
     private const int Id = 6400;
     private static List<byte> PlayerIdList = [];
-
     public static List<byte> UnreportablePlayers = [];
 
     public static OptionItem ArrowsPointingToDeadBody;
@@ -93,7 +92,7 @@ public class Coroner : RoleBase
 
     public override bool CheckReportDeadBody(PlayerControl pc, NetworkedPlayerInfo target, PlayerControl killer)
     {
-        if (killer != null && !target.Object.Is(CustomRoles.Disregarded))
+        if (killer && !target.Object.Is(CustomRoles.Disregarded))
         {
             if (CoronerTargets.Contains(killer.PlayerId)) return false;
 
@@ -110,7 +109,11 @@ public class Coroner : RoleBase
 
                 if (LeaveDeadBodyUnreportable.GetBool()) UnreportablePlayers.Add(target.PlayerId);
 
-                if (NotifyKiller.GetBool()) killer.Notify(GetString("CoronerKillerNotify"));
+                if (NotifyKiller.GetBool())
+                {
+                    killer.ReactorFlash();
+                    killer.Notify(GetString("CoronerKillerNotify"));
+                }
             }
             else
                 pc.Notify(GetString("OutOfAbilityUsesDoMoreTasks"));
@@ -123,7 +126,12 @@ public class Coroner : RoleBase
 
     public override string GetSuffix(PlayerControl seer, PlayerControl target, bool hud = false, bool meeting = false)
     {
-        if (target != null && seer.PlayerId != target.PlayerId || GameStates.IsMeeting || seer.PlayerId != CoronerId || hud || Main.PlayerStates[seer.PlayerId].Role is not Coroner cn) return string.Empty;
-        return cn.CoronerTargets.Count > 0 ? cn.CoronerTargets.Select(targetId => TargetArrow.GetArrows(seer, targetId)).Aggregate(string.Empty, (current, arrow) => current + Utils.ColorString(seer.GetRoleColor(), arrow)) : Utils.ColorString(Color.white, LocateArrow.GetArrows(seer));
+        if (target && seer.PlayerId != target.PlayerId || GameStates.IsMeeting || seer.PlayerId != CoronerId || hud || Main.PlayerStates[seer.PlayerId].Role is not Coroner coroner) return string.Empty;
+        return coroner.CoronerTargets.Count > 0 ? coroner.CoronerTargets.Select(targetId => TargetArrow.GetArrows(seer, targetId)).Aggregate(string.Empty, (current, arrow) => current + Utils.ColorString(seer.GetRoleColor(), arrow)) : Utils.ColorString(Color.white, LocateArrow.GetArrows(seer));
+    }
+
+    public override void SetButtonTexts(HudManager hud, byte id)
+    {
+        hud.ReportButton?.OverrideText(GetString("AbilityButtonText.Tracker"));
     }
 }
