@@ -109,7 +109,9 @@ public class Altruist : RoleBase
         PlayerState state = Main.PlayerStates[reporter.PlayerId];
         state.deathReason = PlayerState.DeathReason.Sacrifice;
         state.RealKiller = (DateTime.Now, target.PlayerId);
-        RPC.PlaySoundRPC(reporter.PlayerId, Sounds.KillSound);
+        reporter.KillFlash();
+        if (Main.GM.Value && AmongUsClient.Instance.AmHost) PlayerControl.LocalPlayer.KillFlash();
+        ChatCommands.Spectators.ToValidPlayers().Do(x => x.KillFlash());
         state.SetDead();
         reporter.RpcExileV2();
         Utils.AfterPlayerDeathTasks(reporter);
