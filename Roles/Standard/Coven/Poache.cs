@@ -64,15 +64,18 @@ public class Poache : CovenBase
     {
         if (!HasNecronomicon)
         {
+            killer.RPCPlayCustomSound("Line");
             PoachedPlayers.Add(target.PlayerId);
             Utils.SendRPC(CustomRPC.SyncRoleData, PoacheId, 1, target.PlayerId);
         }
         else
         {
+            killer.RPCPlayCustomSound("Bite");
             KillDelays.Add(target.PlayerId);
             _ = new CountdownTimer(KillDelay.GetInt(), () =>
             {
                 if (!KillDelays.Remove(target.PlayerId)) return;
+                RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
                 target.Suicide(PlayerState.DeathReason.Poison, realKiller: killer);
             }, onCanceled: () => KillDelays.Remove(target.PlayerId));
         }
@@ -104,5 +107,10 @@ public class Poache : CovenBase
                 PoachedPlayers.Clear();
                 break;
         }
+    }
+
+    public override void SetButtonTexts(HudManager hud, byte id)
+    {
+        hud.KillButton.OverrideText(GetString("PoisonerKillButtonText"));
     }
 }
