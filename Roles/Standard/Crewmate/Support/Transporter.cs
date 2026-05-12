@@ -45,10 +45,7 @@ internal class Transporter : RoleBase
             AURoleOptions.ShapeshifterCooldown = AbilityCooldown.GetFloat();
             AURoleOptions.ShapeshifterDuration = 1f;
         }
-        catch (Exception e)
-        {
-            Utils.ThrowException(e);
-        }
+        catch (Exception e) { Utils.ThrowException(e); }
     }
 
     public override bool OnShapeshift(PlayerControl shapeshifter, PlayerControl target, bool shapeshifting)
@@ -105,6 +102,10 @@ internal class Transporter : RoleBase
 
     public override void SetButtonTexts(HudManager hud, byte id)
     {
-        hud.AbilityButton?.OverrideText(Translator.GetString("BountyHunterChangeButtonText"));
+        PlayerControl pc = id.GetPlayer();
+        if (!pc) return;
+
+        if (pc.GetRoleTypes() == RoleTypes.Shapeshifter)
+            hud.AbilityButton?.OverrideText(Translator.GetString("BountyHunterChangeButtonText"));
     }
 }
