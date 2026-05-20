@@ -152,12 +152,14 @@ internal class Asthmatic : IAddon
             }
         }
 
-        string suffix = GetSuffixText(pc.PlayerId);
+        string suffix = GetSuffixText(pc.PlayerId, true);
 
-        if (!pc.IsModdedClient() && (!LastSuffix.TryGetValue(pc.PlayerId, out string beforeSuffix) || beforeSuffix != suffix))
+        if (!LastSuffix.TryGetValue(pc.PlayerId, out string beforeSuffix) || beforeSuffix != suffix)
         {
-            Utils.NotifyRoles(SpecifySeer: pc, SpecifyTarget: pc);
-            Utils.SendRPC(CustomRPC.SyncAsthmatic, pc.PlayerId, suffix);
+            if (!pc.IsModdedClient())
+                Utils.NotifyRoles(SpecifySeer: pc, SpecifyTarget: pc);
+            else
+                Utils.SendRPC(CustomRPC.SyncAsthmatic, pc.PlayerId, suffix);
         }
 
         LastSuffix[pc.PlayerId] = suffix;
@@ -168,14 +170,16 @@ internal class Asthmatic : IAddon
         LastSuffix[reader.ReadByte()] = reader.ReadString();
     }
 
-    public static string GetSuffixText(byte id)
+    public static string GetSuffixText(byte id, bool hud = false, bool meeting = false)
     {
+        if ((id.IsPlayerModdedClient() && !hud) || meeting) return string.Empty;
+
         if (Main.PlayerStates.TryGetValue(id, out var state) && !state.IsDead)
         {
             if (Timers.TryGetValue(id, out Counter counter))
                 return $"{counter.ColoredArrow} <font=\"DIGITAL-7 SDF\" material=\"DIGITAL-7 Black Outline\">{counter.ColoredTimerString}</font>";
 
-            if (id.IsPlayerModdedClient() && !id.IsHost() && LastSuffix.TryGetValue(id, out string lastSuffix))
+            if (LastSuffix.TryGetValue(id, out string lastSuffix))
                 return lastSuffix;
         }
 
