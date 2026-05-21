@@ -421,7 +421,7 @@ internal static class GameEndChecker
             }
 
             bool canWin = WinnerIds.Contains(pc.PlayerId) || WinnerRoles.Contains(pc.GetCustomRole()) || (winner == CustomWinner.Bloodlust && pc.Is(CustomRoles.Bloodlust));
-            bool isCrewmateWin = reason.Equals(GameOverReason.CrewmatesByVote) || reason.Equals(GameOverReason.CrewmatesByTask);
+            bool isCrewmateWin = reason.Equals(GameOverReason.CrewmatesByVote) || reason.Equals(GameOverReason.CrewmatesByTask) || reason.Equals(GameOverReason.ImpostorDisconnect) || reason.Equals(GameOverReason.HideAndSeek_CrewmatesByTimer);
             SetGhostRole(canWin ^ isCrewmateWin); // XOR
             continue;
 
@@ -634,8 +634,8 @@ internal static class GameEndChecker
             bool hasCustomTeamCount = false;
             bool hasPawn = false;
 
-            int imp = 0;
-            int crew = 0;
+            int impostor = 0;
+            int crewmate = 0;
             int coven = 0;
 
             for (int i = 0; i < aapc.Count; i++)
@@ -657,10 +657,10 @@ internal static class GameEndChecker
                 switch (countType)
                 {
                     case CountTypes.Impostor:
-                        imp++;
+                        impostor++;
                         break;
                     case CountTypes.Crew:
-                        crew++;
+                        crewmate++;
                         break;
                     case CountTypes.Coven:
                         coven++;
@@ -787,7 +787,7 @@ internal static class GameEndChecker
                 playerState.Role.ManipulateGameEndCheckCrew(playerState, out bool keepGameGoing, out int countsAs);
 
                 if (keepGameGoing) crewKeepsGameGoing = true;
-                crew += countsAs - 1;
+                crewmate += countsAs - 1;
             }
 
             RoleCounts.Clear();
@@ -816,8 +816,8 @@ internal static class GameEndChecker
                     var x = aapc[aliveIndex];
                     if (!x.Is(CustomRoles.Schizophrenic)) continue;
 
-                    if (x.Is(Team.Impostor)) imp++;
-                    else if (x.Is(Team.Crewmate)) crew++;
+                    if (x.Is(Team.Impostor)) impostor++;
+                    else if (x.Is(Team.Crewmate)) crewmate++;
                     else if (x.Is(Team.Coven)) coven++;
 
                     if (x.Is(CustomRoles.Charmed))
@@ -866,17 +866,17 @@ internal static class GameEndChecker
             {
                 if (coven == 0)
                 {
-                    if (crew == 0 && imp == 0)
+                    if (crewmate == 0 && impostor == 0)
                     {
                         reason = GameOverReason.ImpostorsByKill;
                         winner = CustomWinner.None;
                     }
-                    else if (crew <= imp && !crewKeepsGameGoing)
+                    else if (crewmate <= impostor && !crewKeepsGameGoing)
                     {
                         reason = GameOverReason.ImpostorsByKill;
                         winner = CustomWinner.Impostor;
                     }
-                    else if (imp == 0)
+                    else if (impostor == 0)
                     {
                         reason = GameOverReason.CrewmatesByVote;
                         winner = CustomWinner.Crewmate;
@@ -884,7 +884,7 @@ internal static class GameEndChecker
                     else
                         return false;
 
-                    Logger.Info($"Crew: {crew}, Imp: {imp}, Coven: {coven}", "CheckGameEndPatch.CheckGameEndByLivingPlayers");
+                    Logger.Info($"Crewmate: {crewmate}, Impostor: {impostor}, Coven: {coven}", "CheckGameEndPatch.CheckGameEndByLivingPlayers");
                     ResetAndSetWinner(winner.Value);
 
                     if (winner == CustomWinner.Crewmate && aapc.TrueForAll(x => x.GetCustomRole().IsNeutral()))
@@ -895,9 +895,9 @@ internal static class GameEndChecker
                 }
                 else
                 {
-                    if (imp >= 1 || crew > coven || crewKeepsGameGoing) return false;
+                    if (impostor >= 1 || crewmate > coven || crewKeepsGameGoing) return false;
 
-                    Logger.Info($"Crew: {crew}, Imp: {imp}, Coven: {coven}", "CheckGameEndPatch.CheckGameEndByLivingPlayers");
+                    Logger.Info($"Crewmate: {crewmate}, Impostor: {impostor}, Coven: {coven}", "CheckGameEndPatch.CheckGameEndByLivingPlayers");
                     reason = GameOverReason.ImpostorsByKill;
                     ResetAndSetWinner(CustomWinner.Coven);
                 }
@@ -905,15 +905,14 @@ internal static class GameEndChecker
                 return true;
             }
 
-            if (imp >= 1) return false; // both imps and NKs are alive, game must continue
-            if (coven >= 1) return false; // both covens and NKs are alive, game must continue
-            if (crew > totalNKAlive || crewKeepsGameGoing) return false; // Imps are dead, but crew still outnumbers NKs, game must continue
-
+            if (impostor >= 1) return false; // Both Impostors and Neutral Killers are alive, game must continue
+            if (coven >= 1) return false; // Both Covens and Neutral Killers are alive, game must continue
+            if (crewmate > totalNKAlive || crewKeepsGameGoing) return false; // Impostors are dead, but Crewmates still outnumbers Neutral Killers, game must continue
 
             int aliveNKTypes = 0;
             int aliveValue = 0;
             int maxValue = 0;
-            // Imps dead, Crew <= NK, Checking if all NKs alive are in 1 team
+            // Impostors dead, Crewmates <= Neutral Killers, Checking if all Neutral Killers alive are in 1 team
             foreach (var kv in RoleCounts)
             {
                 int value = kv.Value;
@@ -1027,9 +1026,9 @@ internal static class GameEndChecker
 
             if (FreeForAll.FFATeamMode.GetBool())
             {
-                IEnumerable<HashSet<byte>> teams = FreeForAll.PlayerTeams.GroupBy(x => x.Value, x => x.Key).Select(x => x.Where(p =>
+                IEnumerable<HashSet<byte>> teams = FreeForAll.PlayerTeams.GroupBy(x => x.Value, x => x.Key).Select(x => x.Where(player =>
                 {
-                    PlayerControl pc = GetPlayerById(p);
+                    PlayerControl pc = GetPlayerById(player);
                     return pc && !pc.Data.Disconnected;
                 }).ToHashSet()).Where(x => x.Count > 0);
 
@@ -1475,29 +1474,29 @@ internal static class GameEndChecker
                 (lifeSupp = ShipStatusSystem.LifeSuppSystemType) != null && // Confirmation that cast is possible
                 lifeSupp.Countdown <= 0f) // Time up confirmation
             {
-                // oxygen sabotage
+                // Oxygen sabotage
                 ResetAndSetWinner(CustomWinner.Impostor);
                 reason = GameOverReason.ImpostorsBySabotage;
                 lifeSupp.Countdown = 10000f;
                 return true;
             }
 
-            ISystemType sys = null;
+            ISystemType system = null;
 
             if (systems.ContainsKey(SystemTypes.Reactor))
-                sys = systems[SystemTypes.Reactor];
+                system = systems[SystemTypes.Reactor];
             else if (systems.ContainsKey(SystemTypes.Laboratory))
-                sys = systems[SystemTypes.Laboratory];
+                system = systems[SystemTypes.Laboratory];
             else if (systems.ContainsKey(SystemTypes.HeliSabotage))
-                sys = systems[SystemTypes.HeliSabotage];
+                system = systems[SystemTypes.HeliSabotage];
 
             ICriticalSabotage critical;
 
-            if (sys != null && // Confirmation of sabotage existence
+            if (system != null && // Confirmation of sabotage existence
                 (critical = ShipStatusSystem.ICriticalSabotage) != null && // Confirmation that cast is exists
                 critical.Countdown <= 0f) // Time up confirmation
             {
-                // reactor sabotage
+                // Reactor sabotage
                 ResetAndSetWinner(CustomWinner.Impostor);
                 reason = GameOverReason.ImpostorsBySabotage;
                 critical.ClearSabotage();
@@ -1516,5 +1515,43 @@ internal static class CheckEndGameViaTasksPatch
     {
         __result = false;
         return false;
+    }
+}
+
+[HarmonyPatch(typeof(GameManager), nameof(GameManager.DidHumansWin))]
+internal static class DidHumansWinPatch
+{
+    public static bool Prefix(GameOverReason reason, ref bool __result)
+    {
+        if (reason == GameOverReason.HideAndSeek_CrewmatesByTimer)
+        {
+            __result = true;
+            return false;
+        }
+        else if (reason == GameOverReason.HideAndSeek_ImpostorsByKills)
+        {
+            __result = false;
+            return false;
+        }
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(GameManager), nameof(GameManager.DidImpostorsWin))]
+internal static class DidImpostorsWinPatch
+{
+    public static bool Prefix(GameOverReason reason, ref bool __result)
+    {
+        if (reason == GameOverReason.HideAndSeek_ImpostorsByKills)
+        {
+            __result = true;
+            return false;
+        }
+        else if (reason == GameOverReason.HideAndSeek_CrewmatesByTimer)
+        {
+            __result = false;
+            return false;
+        }
+        return true;
     }
 }
