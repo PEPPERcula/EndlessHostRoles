@@ -25,7 +25,7 @@ internal static class EndGamePatch
     {
         GameStates.InGame = false;
 
-        Logger.Info("-----------Game over-----------", "Phase");
+        Logger.Info("-----------Game Over-----------", "Phase");
 
         ChatCommands.DraftResult = [];
         ChatCommands.DraftRoles = [];
@@ -40,7 +40,7 @@ internal static class EndGamePatch
             {
                 PlayerControl dpc = Utils.GetPlayerById(id);
 
-                if (dpc != null)
+                if (dpc)
                 {
                     dpc.RpcSetName(Doppelganger.DoppelVictim[id]);
                     Main.AllPlayerNames[id] = Doppelganger.DoppelVictim[id];
@@ -74,7 +74,7 @@ internal static class EndGamePatch
 
         KillLog = sb.Append("</size>").ToString();
         if (!KillLog.Contains('\n')) KillLog = string.Empty;
-        
+
         sb.Clear();
 
         foreach ((byte id, PlayerState state) in Main.PlayerStates)
@@ -162,7 +162,7 @@ internal static class EndGamePatch
                     break;
                 case CustomGameMode.Deathrace:
                     MapNames map = Main.CurrentMap;
-                    
+
                     foreach (PlayerControl pc in Main.CachedAllPlayerControls())
                     {
                         if (!Deathrace.PlayedMaps.TryGetValue(pc.FriendCode, out var maps))
@@ -197,7 +197,7 @@ internal static class EndGamePatch
                     else Options.AutoGMRotationIndex = 0;
                 }
             }
-            
+
             Main.Instance.StartCoroutine(BanManager.LoadEACList(reload: true));
         }
     }
@@ -208,7 +208,7 @@ internal static class SetEverythingUpPatch
 {
     public static string LastWinsText = string.Empty;
     public static string LastWinsReason = string.Empty;
-    private static SimpleButton ResultsToggleButton;
+    public static SimpleButton ResultsToggleButton;
 
     public static void Postfix(EndGameManager __instance)
     {
@@ -217,7 +217,6 @@ internal static class SetEverythingUpPatch
         //#######################################
 
         Main.Instance.StartCoroutine(SetupPoolablePlayers());
-
         __instance.WinText.alignment = TextAlignmentOptions.Center;
         GameObject winnerTextObject = Object.Instantiate(__instance.WinText.gameObject);
         winnerTextObject.transform.position = new(__instance.WinText.transform.position.x, __instance.WinText.transform.position.y - 0.5f, __instance.WinText.transform.position.z);
@@ -225,10 +224,16 @@ internal static class SetEverythingUpPatch
         var winnerText = winnerTextObject.GetComponent<TextMeshPro>();
         winnerText.fontSizeMin = 3f;
         winnerText.text = string.Empty;
-
         var customWinnerText = string.Empty;
         var additionalWinnerText = string.Empty;
         string customWinnerColor = Utils.GetRoleColorCode(CustomRoles.Crewmate);
+
+        if (Main.PlayerStates[PlayerControl.LocalPlayer.PlayerId].MainRole == CustomRoles.GM)
+        {
+            __instance.WinText.text = GetString("GameOver");
+            __instance.WinText.color = Utils.GetRoleColor(CustomRoles.GM);
+            __instance.BackgroundBar.material.color = Utils.GetRoleColor((CustomRoles)CustomWinnerHolder.WinnerTeam);
+        }
 
         if (CustomWinnerHolder.WinnerTeam is not (CustomWinner.None or CustomWinner.Draw or CustomWinner.Error))
         {
@@ -397,13 +402,6 @@ internal static class SetEverythingUpPatch
             __instance.BackgroundBar.material.color = Utils.GetRoleColor(winnerRole);
         }
 
-        if (Main.PlayerStates[PlayerControl.LocalPlayer.PlayerId].MainRole == CustomRoles.GM)
-        {
-            __instance.WinText.text = GetString("GameOver");
-            __instance.WinText.color = Utils.GetRoleColor(CustomRoles.GM);
-            __instance.BackgroundBar.material.color = Utils.GetRoleColor(winnerRole);
-        }
-
         switch (CustomWinnerHolder.WinnerTeam)
         {
             case CustomWinner.Crewmate:
@@ -489,6 +487,7 @@ internal static class SetEverythingUpPatch
 
             // Clear unused assets
             Resources.UnloadUnusedAssets();
+
             yield return null;
 
             Vector3 pos = main.ViewportToWorldPoint(new(0f, 1f, main.nearClipPlane));
@@ -496,7 +495,7 @@ internal static class SetEverythingUpPatch
             roleSummaryObject.transform.position = new(__instance.Navigation.ExitButton.transform.position.x + 0.1f, pos.y - 0.1f, -15f);
             roleSummaryObject.transform.localScale = new(1f, 1f, 1f);
             roleSummaryObject.SetActive(false);
-            
+
             yield return null;
 
             StringBuilder sb = new($"<font=\"DIN_Pro_Bold_700 SDF\">{GetString("RoleSummaryText")}\n<b>");
@@ -511,7 +510,7 @@ internal static class SetEverythingUpPatch
             }
 
             sb.Append("</b>\n");
-            
+
             yield return null;
 
             switch (Options.CurrentGameMode)
@@ -662,13 +661,14 @@ internal static class SetEverythingUpPatch
                 lineText.alignment = TextAlignmentOptions.TopLeft;
 
                 var lineRect = lineObj.GetComponent<RectTransform>();
-                lineRect.anchoredPosition = new(pos.x + 3.5f - 5f, pos.y - 0.7f - (i * 0.15f)); // slide from the left
+                lineRect.anchoredPosition = new(pos.x + 3.5f - 5f, pos.y - 0.7f - (i * 0.15f)); // Slide from the left
                 lineText.alpha = 0f;
 
                 roleSummaryObjects.Add(lineText);
+
                 yield return null;
 
-                __instance.StartCoroutine(SlideAndFadeIn(lineRect, lineText, i * 0.15f).WrapToIl2Cpp()); // stagger animation
+                Main.Instance.StartCoroutine(SlideAndFadeIn(lineRect, lineText, i * 0.15f)); // Stagger animation
                 continue;
 
                 static IEnumerator SlideAndFadeIn(RectTransform rect, TextMeshPro text, float delay)
@@ -676,16 +676,17 @@ internal static class SetEverythingUpPatch
                     yield return new WaitForSecondsRealtime(delay);
 
                     Vector2 start = rect.anchoredPosition;
-                    Vector2 end = start + new Vector2(5f, 0); // target pos
+                    Vector2 end = start + new Vector2(5f, 0); // Target position
                     const float duration = 0.5f;
                     var elapsed = 0f;
 
                     while (elapsed < duration)
                     {
                         elapsed += Time.deltaTime;
-                        float t = elapsed / duration;
-                        rect.anchoredPosition = Vector2.Lerp(start, end, Mathf.SmoothStep(0, 1, t));
-                        text.alpha = t;
+                        float time = elapsed / duration;
+                        rect.anchoredPosition = Vector2.Lerp(start, end, Mathf.SmoothStep(0, 1, time));
+                        text.alpha = time;
+
                         yield return null;
                     }
 
@@ -702,24 +703,14 @@ internal static class SetEverythingUpPatch
 
             bool showInitially = Main.ShowResult;
 
-            ResultsToggleButton = new SimpleButton(
-                __instance.transform,
-                "ShowHideResultsButton",
-                new(-4.5f, 2.6f, -14f),
-                new(0, 165, 255, 255),
-                new(0, 255, 255, 255),
-                () =>
-                {
-                    bool setToActive = !roleSummaryObjects[0].gameObject.activeSelf;
-                    roleSummaryObjects.ForEach(x => x.gameObject.SetActive(setToActive));
-                    Main.ShowResult = setToActive;
-                    ResultsToggleButton.Label.text = GetString(setToActive ? "HideResults" : "ShowResults");
-                },
-                GetString(showInitially ? "HideResults" : "ShowResults"))
+            ResultsToggleButton = new SimpleButton(__instance.transform, "ShowHideResultsButton", OperatingSystem.IsAndroid() ? new(-6.15f, 2.6f, -14f) : new(-4.65f, 2.6f, -14f), new(0, 165, 255, 255), new(0, 255, 255, 255),() =>
             {
-                Scale = new(1.5f, 0.5f),
-                FontSize = 2f
-            };
+                bool setToActive = !roleSummaryObjects[0].gameObject.activeSelf;
+                roleSummaryObjects.ForEach(x => x.gameObject.SetActive(setToActive));
+                Main.ShowResult = setToActive;
+                ResultsToggleButton.Label.text = GetString(setToActive ? "HideResults" : "ShowResults");
+            },
+            GetString(showInitially ? "HideResults" : "ShowResults"))
 
             if (Options.CurrentGameMode == CustomGameMode.Standard)
             {
@@ -729,14 +720,14 @@ internal static class SetEverythingUpPatch
 
                 try
                 {
-                    Il2CppArrayBase<PoolablePlayer> pbs = __instance.transform.GetComponentsInChildren<PoolablePlayer>();
+                    Il2CppArrayBase<PoolablePlayer> poolablePlayers = __instance.transform.GetComponentsInChildren<PoolablePlayer>();
 
-                    if (pbs != null)
+                    if (poolablePlayers != null)
                     {
-                        foreach (PoolablePlayer pb in pbs)
+                        foreach (PoolablePlayer poolablePlayer in poolablePlayers)
                         {
-                            if (pb != null)
-                                pb.ToggleName(false);
+                            if (poolablePlayer)
+                                poolablePlayer.ToggleName(false);
                         }
                     }
                 }
@@ -817,5 +808,20 @@ internal static class SetEverythingUpPatch
             return name;
         }
     }
+}
 
+[HarmonyPatch(typeof(ProgressionScreen), nameof(ProgressionScreen.Activate))]
+internal static class ProgressionScreenPatch
+{
+    public static void Postfix(ProgressionScreen __instance)
+    {
+        if (SetEverythingUpPatch.ResultsToggleButton == null) return;
+        GameObject buttonObject = SetEverythingUpPatch.ResultsToggleButton.Button?.gameObject;
+        if (!buttonObject) return;
+
+        buttonObject.SetActive(true);
+        buttonObject.transform.SetParent(__instance.transform, true);
+        foreach (Renderer renderer in buttonObject.GetComponentsInChildren<Renderer>())
+            renderer.sortingOrder = 100;
+    }
 }
