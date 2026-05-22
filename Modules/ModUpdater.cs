@@ -340,7 +340,7 @@ public static class ModUpdater
                 firstButton.gameObject.SetActive(true);
                 firstButton.name = "FirstButton";
                 var firstButtonTransform = firstButton.transform;
-                firstButton.transform.localPosition = new Vector3(firstButtonTransform.localPosition.x - 1f, firstButtonTransform.localPosition.y - 0.7f, firstButtonTransform.localPosition.z);
+                firstButton.transform.localPosition = new Vector3(firstButtonTransform.localPosition.x + 1f, firstButtonTransform.localPosition.y - 0.7f, firstButtonTransform.localPosition.z);
                 firstButton.transform.localScale *= 1.2f;
                 var firstButtonGetChild = firstButton.GetChild(0);
                 var textTranslatorTMP = firstButtonGetChild.GetComponent<TextTranslatorTMP>();
@@ -361,7 +361,7 @@ public static class ModUpdater
                 secondButton.gameObject.SetActive(true);
                 secondButton.name = "SecondButton";
                 var secondButtonTransform = secondButton.transform;
-                secondButton.transform.localPosition = new Vector3(secondButtonTransform.localPosition.x + 1f, secondButtonTransform.localPosition.y - 0.7f, secondButtonTransform.localPosition.z);
+                secondButton.transform.localPosition = new Vector3(secondButtonTransform.localPosition.x - 1f, secondButtonTransform.localPosition.y - 0.7f, secondButtonTransform.localPosition.z);
                 secondButton.transform.localScale *= 1.2f;
                 var secondButtonGetChild = secondButton.GetChild(0);
                 var textTranslatorTMP = secondButtonGetChild.GetComponent<TextTranslatorTMP>();
