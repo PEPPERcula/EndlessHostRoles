@@ -505,7 +505,7 @@ internal static class SetEverythingUpPatch
             {
                 if (EndGamePatch.SummaryText[id].Contains("<INVALID:NotAssigned>")) continue;
 
-                sb.Append('\n').Append(EndGamePatch.SummaryText[id]);
+                sb.Append("\n<#c4aa02>\u2605</color> ").Append(EndGamePatch.SummaryText[id]);
                 cloneRoles.Remove(id);
             }
 
