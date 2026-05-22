@@ -22,11 +22,11 @@ internal static class LoadingScreen
             if (!LoadingAnimation.IsNullOrDestroyed()) Object.Destroy(LoadingAnimation);
 
             LoadingAnimation = Object.Instantiate(ModManager.Instance.ModStamp);
-            LoadingAnimation.sprite = Utils.LoadSprite("EHR.Resources.Loading.png", 300f);
+            LoadingAnimation.sprite = Utils.LoadSprite("EHR.Resources.Images.LoadingIcon.png", 300f);
             LoadingAnimation.sortingOrder = 100;
 
             Vector3 basePos = LoadingAnimation.transform.position;
-            float x = basePos.x - 9.8f;
+            float x = basePos.x - (OperatingSystem.IsAndroid() ? 12.4f : 9.8f);
             float y = basePos.y - 4.5f;
             float z = basePos.z;
             LoadingAnimation.transform.position = new(x, y, z);
@@ -91,7 +91,7 @@ internal static class LoadingScreen
             {
                 Vector3 basePos = ModManager.Instance.ModStamp.transform.position;
 
-                float x = basePos.x - 9.8f;
+                float x = basePos.x - (OperatingSystem.IsAndroid() ? 12.4f : 9.8f);
                 float y = basePos.y - 4.5f;
                 float z = basePos.z;
 
