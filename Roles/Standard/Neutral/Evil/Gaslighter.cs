@@ -122,7 +122,7 @@ public class Gaslighter : RoleBase
 
                     PlayerControl gaslighter = instance.GaslighterId.GetPlayer();
 
-                    if (instance.CursedPlayers.Contains(pc.PlayerId) && gaslighter != null && gaslighter.IsAlive())
+                    if (instance.CursedPlayers.Contains(pc.PlayerId) && gaslighter && gaslighter.IsAlive())
                     {
                         pc.SetRealKiller(gaslighter);
                         curseDeathList.Add(pc.PlayerId);
@@ -138,6 +138,7 @@ public class Gaslighter : RoleBase
     public override void AfterMeetingTasks()
     {
         ShieldedPlayers.Clear();
+        Utils.SendRPC(CustomRPC.SyncRoleData, GaslighterId, 4);
         CursedPlayers.Clear();
         Utils.SendRPC(CustomRPC.SyncRoleData, GaslighterId, 2);
 
@@ -163,6 +164,8 @@ public class Gaslighter : RoleBase
         pc?.ResetKillCooldown();
         pc?.Notify(Translator.GetString($"Gaslighter.{CurrentRound}"));
 
+        Utils.SendRPC(CustomRPC.SyncRoleData, GaslighterId, 5, (int)CurrentRound);
+
         LateTask.New(() => pc?.SetKillCooldown(), 1.5f, log: false);
     }
 
@@ -174,7 +177,7 @@ public class Gaslighter : RoleBase
         {
             PlayerControl pc = instance.GaslighterId.GetPlayer();
 
-            if (pc == null || !pc.IsAlive())
+            if (!pc || !pc.IsAlive())
             {
                 instance.CursedPlayers.Clear();
                 Utils.SendRPC(CustomRPC.SyncRoleData, instance.GaslighterId, 2);
@@ -221,6 +224,7 @@ public class Gaslighter : RoleBase
                 killer.RPCPlayCustomSound("Shield");
                 target.RPCPlayCustomSound("Shield");
                 ShieldedPlayers.Add(target.PlayerId);
+                Utils.SendRPC(CustomRPC.SyncRoleData, GaslighterId, 3, target.PlayerId);
                 Utils.NotifyRoles(SpecifySeer: killer, SpecifyTarget: target);
                 Utils.NotifyRoles(SpecifySeer: target, SpecifyTarget: target);
                 killer.RpcRemoveAbilityUse();
@@ -281,10 +285,19 @@ public class Gaslighter : RoleBase
             case 2:
                 CursedPlayers.Clear();
                 break;
+            case 3:
+                ShieldedPlayers.Add(reader.ReadByte());
+                break;
+            case 4:
+                ShieldedPlayers.Clear();
+                break;
+            case 5:
+                CurrentRound = (Round)reader.ReadPackedInt32();
+                break;
         }
     }
 
-    private enum Round
+    public enum Round
     {
         Kill,
         Knight,
