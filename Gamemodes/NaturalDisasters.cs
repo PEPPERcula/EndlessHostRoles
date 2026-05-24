@@ -145,9 +145,7 @@ public static class NaturalDisasters
         
         RebuildSuffixText();
 
-        List<Vector2> rooms = Main.LIMap
-            ? ShipStatus.Instance.AllRooms.Select(x => new Vector2(x.transform.position.x, x.transform.position.y)).ToList()
-            : RandomSpawn.SpawnMap.GetSpawnMap().Positions?.Values.ToList();
+        List<Vector2> rooms = Main.LIMap ? ShipStatus.Instance.AllRooms.Select(x => new Vector2(x.transform.position.x, x.transform.position.y)).ToList() : RandomSpawn.SpawnMap.GetSpawnMap().Positions?.Values.ToList();
         
         if (rooms == null) return;
 
@@ -171,25 +169,21 @@ public static class NaturalDisasters
         {
             var allRooms = ShipStatus.Instance.AllRooms;
             var collapsedRooms = BuildingCollapse.CollapsedRooms;
-            string cb;
+            string buildingStatus;
 
             if (allRooms.Count / 2 <= collapsedRooms.Count)
             {
                 SystemTypes[] remainingRooms = allRooms.Select(x => x.RoomId).Where(x => x is not (SystemTypes.Hallway or SystemTypes.Outside or SystemTypes.Decontamination2 or SystemTypes.Decontamination3)).Except(collapsedRooms.ConvertAll(x => x.RoomId)).ToArray();
-                cb = string.Format(Translator.GetString("AvailableBuildings"), remainingRooms.Length > 0
-                    ? remainingRooms.Select(x => Translator.GetString($"{x}")).Distinct().Join()
-                    : $"<#ff0000>{Translator.GetString("None")}</color>");
+                buildingStatus = string.Format(Translator.GetString("AvailableBuildings"), remainingRooms.Length > 0 ? remainingRooms.Select(x => Translator.GetString($"{x}")).Distinct().Join() : $"<#ff0000>{Translator.GetString("None")}</color>");
             }
             else
-            {
-                cb = string.Format(Translator.GetString("CollapsedBuildings"), collapsedRooms.Count > 0
-                    ? collapsedRooms.Select(x => Translator.GetString($"{x.RoomId}")).Distinct().Join()
-                    : Translator.GetString("None"));
-            }
+                collapsedBuilding = string.Format(Translator.GetString("CollapsedBuildings"), collapsedRooms.Count > 0 ? collapsedRooms.Select(x => Translator.GetString($"{x.RoomId}")).Distinct().Join() : Translator.GetString("None"));
 
-            string ts = ActiveDisasters.Exists(x => x is Thunderstorm) ? $"\n{Translator.GetString("OngoingThunderstorm")}" : string.Empty;
-            string rp = string.Format(Translator.GetString("ND_RemainingPlayers"), Utils.ColorString(Utils.GetRoleColor(CustomRoles.NDPlayer), Main.AllAlivePlayerControlsCount.ToString()));
-            SuffixText = $"<size=70%>{cb}{ts}\n{rp}</size>";
+            string thunderstorm = ActiveDisasters.Exists(x => x is Thunderstorm) ? $"\n{Translator.GetString("OngoingThunderstorm")}" : string.Empty;
+            string remainingPlayers = string.Format(Translator.GetString("ND_RemainingPlayers"), Utils.ColorString(Utils.GetRoleColor(CustomRoles.NDPlayer), Main.AllAlivePlayerControlsCount.ToString()));
+            SuffixText = $"<size=70%>{buildingStatus}{thunderstorm}\n{remainingPlayers}</size>";
+
+            Utils.SendRPC(CustomRPC.NaturalDisastersSync, 2, SuffixText);
         }
         catch (Exception e) { Utils.ThrowException(e); }
     }
@@ -211,7 +205,7 @@ public static class NaturalDisasters
         Color color = DeathReasonColor(deathReason);
         message = Utils.ColorString(color, message);
         LateTask.New(() => pc.Notify(message, 20f), 1f, $"{pc.GetRealName()} died with the reason {deathReason}, survived for {SurvivalTime(pc.PlayerId)} seconds");
-        Utils.SendRPC(CustomRPC.NaturalDisastersSync, pc.PlayerId, SurvivalTimes[pc.PlayerId]);
+        Utils.SendRPC(CustomRPC.NaturalDisastersSync, 1, pc.PlayerId, SurvivalTimes[pc.PlayerId]);
 
         DeathMessageQueue.Add((pc.PlayerId, deathReason, now));
     }
@@ -336,9 +330,7 @@ public static class NaturalDisasters
                 PlainShipRoom[] nonCollapsedRooms = ShipStatus.Instance.AllRooms.Where(x => x.RoomId is not (SystemTypes.Hallway or SystemTypes.Outside or SystemTypes.Decontamination2 or SystemTypes.Decontamination3)).Except(BuildingCollapse.CollapsedRooms).ToArray();
 
                 if (nonCollapsedRooms.Length == 0)
-                {
                     pool.Remove("BuildingCollapse");
-                }
                 else
                 {
                     PlainShipRoom collapsingRoom = nonCollapsedRooms.RandomElement();
@@ -354,21 +346,17 @@ public static class NaturalDisasters
                 }
 
                 var aapc = Main.AllAlivePlayerControlsToList;
-                bool bc = disaster.Name == "BuildingCollapse";
-                bool spawnOnPlayer = !bc && aapc.Count > 0 && DisasterSpawnMode.GetValue() switch
+                bool buildingCollapse = disaster.Name == "BuildingCollapse";
+                bool spawnOnPlayer = !buildingCollapse && aapc.Count > 0 && DisasterSpawnMode.GetValue() switch
                 {
                     0 => true,
                     1 => false,
                     _ => IRandom.Instance.Next(2) == 0
                 };
                 
-                Vector2 position = bc
-                    ? buildingCollapseInfo.WarningPosition
-                    :  spawnOnPlayer
-                        ? aapc.RandomElement().Pos()
-                        : new(Random.Range(MapBounds.X.Left, MapBounds.X.Right), Random.Range(MapBounds.Y.Bottom, MapBounds.Y.Top));
+                Vector2 position = buildingCollapse ? buildingCollapseInfo.WarningPosition : spawnOnPlayer ? aapc.RandomElement().Pos() : new(Random.Range(MapBounds.X.Left, MapBounds.X.Right), Random.Range(MapBounds.Y.Bottom, MapBounds.Y.Top));
 
-                SystemTypes? room = bc ? buildingCollapseInfo.CollapsingRoom : null;
+                SystemTypes? room = buildingCollapse ? buildingCollapseInfo.CollapsingRoom : null;
                 AddPreparingDisaster(position, disaster.Name, room);
             }
 
