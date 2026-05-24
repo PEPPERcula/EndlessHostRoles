@@ -45,17 +45,14 @@ internal class Transporter : RoleBase
             AURoleOptions.ShapeshifterCooldown = AbilityCooldown.GetFloat();
             AURoleOptions.ShapeshifterDuration = 1f;
         }
-        catch (Exception e)
-        {
-            Utils.ThrowException(e);
-        }
+        catch (Exception e) { Utils.ThrowException(e); }
     }
 
     public override bool OnShapeshift(PlayerControl shapeshifter, PlayerControl target, bool shapeshifting)
     {
         if (!shapeshifting) return true;
 
-        if (shapeshifter == null || target == null || shapeshifter == target || !shapeshifter.IsAlive() || !target.IsAlive())
+        if (!shapeshifter || !target || shapeshifter == target || !shapeshifter.IsAlive() || !target.IsAlive())
             return false;
 
         if (shapeshifter.GetAbilityUseLimit() < 1f)
@@ -71,7 +68,7 @@ internal class Transporter : RoleBase
             
             PlayerControl firstTarget = firstTargetId.GetPlayer();
 
-            if (firstTarget == null || !firstTarget.IsAlive())
+            if (!firstTarget || !firstTarget.IsAlive())
             {
                 FirstSwapTarget.Remove(shapeshifter.PlayerId);
                 shapeshifter.Notify(CustomRoles.Impostor.ColoredTextByRole(Translator.GetString("ErrorTeleport")));
@@ -105,6 +102,10 @@ internal class Transporter : RoleBase
 
     public override void SetButtonTexts(HudManager hud, byte id)
     {
-        hud.AbilityButton?.OverrideText(Translator.GetString("BountyHunterChangeButtonText"));
+        PlayerControl pc = id.GetPlayer();
+        if (!pc) return;
+
+        if (pc.GetRoleTypes() == RoleTypes.Shapeshifter)
+            hud.AbilityButton?.OverrideText(Translator.GetString("BountyHunterChangeButtonText"));
     }
 }
