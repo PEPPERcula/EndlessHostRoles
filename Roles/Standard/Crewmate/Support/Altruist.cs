@@ -85,11 +85,11 @@ public class Altruist : RoleBase
 
             RevivedPlayers.Add(ReviveTarget);
 
-            if (killer != null && ReviveTargetsKillerGetsAlert.GetBool())
+            if (killer && ReviveTargetsKillerGetsAlert.GetBool())
             {
                 if (ReviveTargetsKillerGetsArrow.GetBool()) TargetArrow.Add(killer.PlayerId, ReviveTarget);
 
-                killer.KillFlash();
+                killer.ReactorFlash();
                 killer.Notify(Translator.GetString("AltruistKillerAlert"), 10f);
             }
 
@@ -109,6 +109,9 @@ public class Altruist : RoleBase
         PlayerState state = Main.PlayerStates[reporter.PlayerId];
         state.deathReason = PlayerState.DeathReason.Sacrifice;
         state.RealKiller = (DateTime.Now, target.PlayerId);
+        reporter.KillFlash();
+        if (Main.GM.Value && AmongUsClient.Instance.AmHost) PlayerControl.LocalPlayer.KillFlash();
+        ChatCommands.Spectators.ToValidPlayers().Do(x => x.KillFlash());
         state.SetDead();
         reporter.RpcExileV2();
         Utils.AfterPlayerDeathTasks(reporter);
@@ -143,6 +146,7 @@ public class Altruist : RoleBase
     public override void OnPet(PlayerControl pc)
     {
         RevivingMode = !RevivingMode;
+        Utils.SendRPC(CustomRPC.SyncRoleData, AlturistId, RevivingMode ? (byte)1 : (byte)0);
         Utils.NotifyRoles(SpecifySeer: pc, SpecifyTarget: pc);
     }
 
@@ -168,5 +172,12 @@ public class Altruist : RoleBase
     {
         keepGameGoing = ReviveTimer != null;
         countsAs = 1;
+    }
+
+    public void ReceiveRPC(MessageReader reader)
+    {
+        RevivingMode = reader.ReadByte() == 1;
+        PlayerControl altruist = AlturistId.GetPlayer();
+        if (altruist) Utils.NotifyRoles(SpecifySeer: altruist, SpecifyTarget: altruist);
     }
 }
