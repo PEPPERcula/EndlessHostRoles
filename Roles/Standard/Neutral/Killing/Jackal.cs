@@ -273,8 +273,5 @@ public class Sidekick : RoleBase
     public override void SetButtonTexts(HudManager __instance, byte id)
     {
         __instance.SabotageButton.ToggleVisible(Jackal.CanSabotageSK.GetBool());
-        __instance.KillButton?.OverrideText(GetString("KillButtonText"));
-        __instance.ImpostorVentButton?.OverrideText(GetString("ReportButtonText"));
-        __instance.SabotageButton?.OverrideText(GetString("SabotageButtonText"));
     }
 }
