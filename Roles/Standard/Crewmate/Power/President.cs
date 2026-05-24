@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
+using EHR.Modules;
 using EHR.Patches;
+using Hazel;
 
 namespace EHR.Roles;
 
@@ -147,15 +149,15 @@ public class President : RoleBase
 
         if (!Utils.GetPlayerById(president.PresidentId).IsAlive()) return;
 
-        if (!int.TryParse(message, out int num) || num is > 6 or < 1)
+        if (!int.TryParse(message, out int number) || number is > 6 or < 1)
         {
             Utils.SendMessage(GetHelpMessage(), pc.PlayerId);
             return;
         }
 
-        num--;
+        number--;
 
-        var decree = (Decree)num;
+        var decree = (Decree)number;
 
         if (!decree.IsEnabled() || president.UsedDecrees.Contains(decree))
         {
@@ -172,6 +174,8 @@ public class President : RoleBase
 
                 Utils.SendMessage(string.Format(Translator.GetString("President.UsedDecreeMessage.Everyone"), Translator.GetString($"President.Decree.{decree}")), importance: MessageImportance.High);
                 Utils.SendMessage(string.Format(Translator.GetString("President.UsedDecreeMessage.RevealMessage"), pc.PlayerId.ColoredPlayerName()), importance: MessageImportance.High);
+
+                Utils.SendRPC(CustomRPC.SyncRoleData, president.PresidentId);
                 break;
             case Decree.Finish:
                 MeetingHudRpcClosePatch.AllowClose = true;
@@ -246,6 +250,7 @@ public class President : RoleBase
 
         if (!target.Is(CustomRoleTypes.Crewmate) || target.IsConverted())
         {
+            RPC.PlaySoundRPC(voter.PlayerId, Sounds.SabotageSound);
             IsRecruiting = false;
             return true;
         }
@@ -256,6 +261,8 @@ public class President : RoleBase
         target.RpcChangeRoleBasis(role);
 
         Utils.SendMessage("\n", target.PlayerId, Translator.GetString("President.Recruit.TargetNotifyMessage"), importance: MessageImportance.High);
+        voter.RPCPlayCustomSound("Bet");
+        RPC.PlaySoundRPC(target.PlayerId, Sounds.TaskUpdateSound);
         Main.DontCancelVoteList.Add(voter.PlayerId);
         return true;
     }
@@ -263,5 +270,10 @@ public class President : RoleBase
     public override void OnMeetingShapeshift(PlayerControl shapeshifter, PlayerControl target)
     {
         OnVote(shapeshifter, target);
+    }
+
+    public void ReceiveRPC(MessageReader reader)
+    {
+        UsedDecrees.Add(Decree.Reveal);
     }
 }
