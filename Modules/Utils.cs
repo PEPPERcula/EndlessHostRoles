@@ -3000,7 +3000,7 @@ public static class Utils
                     case CustomGameMode.CaptureTheFlag:
                         AdditionalSuffixes.Add(CaptureTheFlag.GetSuffixText(seer, seer));
                         break;
-                    case CustomGameMode.NaturalDisasters:
+                    case CustomGameMode.NaturalDisasters when !seer.IsModdedClient():
                         AdditionalSuffixes.Add(NaturalDisasters.SuffixText);
                         break;
                     case CustomGameMode.RoomRush:
