@@ -65,6 +65,8 @@ internal class Vector : RoleBase
     public override void SetButtonTexts(HudManager hud, byte id)
     {
         hud.AbilityButton.buttonLabelText.text = Translator.GetString("VectorVentButtonText");
+        hud.AbilityButton.usesRemainingSprite.color = Utils.GetRoleColor(CustomRoles.Vector);
+        hud.AbilityButton?.SetUsesRemaining(Mathf.Max(0, VectorVentNumWin - VectorVentCount.GetValueOrDefault(id, 0)));
     }
 
     public override void OnEnterVent(PlayerControl pc, Vent vent) // called as non-host modded client too!
