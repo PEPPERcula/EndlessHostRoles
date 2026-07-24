@@ -25,6 +25,7 @@ internal static class AllMapIconsPatch
                     MapIcon = Utils.LoadSprite("EHR.Resources.Images.DleksBanner-Wordart.png", 160f)
                 });
             }
+
             if (SubmergedCompatibility.Loaded)
             {
                 if (__instance.AllMapIcons.TrueForAll((Predicate<MapIconByName>)(x => x.Name != (MapNames)6)))
@@ -39,6 +40,7 @@ internal static class AllMapIconsPatch
         }
         catch { }
     }
+
     [HarmonyPatch(nameof(GameStartManager.Start))]
     [HarmonyPostfix]
     public static void Postfix_AllMapIcons(GameStartManager __instance)
@@ -60,6 +62,7 @@ internal static class AllMapIconsPatch
         }
         catch (Exception e) { Utils.ThrowException(e); }
     }
+
     [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.UpdateMapImage))]
     [HarmonyPrefix]
     public static bool Prefix_UpdateMapImage(GameStartManager __instance)
@@ -69,6 +72,7 @@ internal static class AllMapIconsPatch
             __instance.MapImage.sprite = Utils.LoadSprite("EHR.Resources.Images.DleksBanner-Wordart.png", 160f);
             return false;
         }
+
         return true;
     }
 }
@@ -103,16 +107,16 @@ public static class CreateGameOptionsPatch
             __instance.SetCrewmateGraphic(__instance.capacityOption.Value - 1f);
             return false;
         }
+
         return !SubmergedCompatibility.Loaded || __instance.mapPicker.GetSelectedID() != 6;
     }
+
     [HarmonyPatch(typeof(CreateGameOptions), nameof(CreateGameOptions.Start))]
     [HarmonyPrefix]
     public static void SetupMapBackground(CreateGameOptions __instance)
     {
         if (__instance.currentCrewSprites == null)
-        {
             __instance.mapBanner.sprite = Utils.LoadSprite("EHR.Resources.Images.DleksBanner-Wordart.png", 100f);
-        }
         __instance.currentCrewSprites ??= __instance.skeldCrewSprites;
         __instance.mapTooltips[3] = StringNames.ToolTipSkeld;
     }
@@ -132,5 +136,63 @@ public static class MapSelectionGameSettingPatch
             list.Insert((int)MapNames.Dleks, StringNames.MapNameSkeld);
             __instance.Values = list.ToArray();
         }
+    }
+}
+
+// From: https://github.com/SubmergedAmongUs/Submerged/blob/19afc6c8f4d48ce08360a711448e09f28f9a57fa/Submerged/UI/Patches/MapSelectButtonPatches.cs#L28
+// Thanks: https://github.com/Tommy-XL/Unlock-dlekS-ehT/blob/main/Patches/FreeplayPopoverPatch.cs
+internal static class MapFreeplayPopoverPatch
+{
+    private static FreeplayPopover _lastInstance;
+
+    [HarmonyPatch(typeof(FreeplayPopover), nameof(FreeplayPopover.Show))]
+    [HarmonyPrefix]
+    [HarmonyPriority(Priority.Last)] // Load Submerged first
+    public static void Prefix_AdjustFreeplayMenu(FreeplayPopover __instance)
+    {
+        // Prevent double loaded
+        if (_lastInstance == __instance) return;
+        _lastInstance = __instance;
+
+        FreeplayPopoverButton skeldButton = __instance.buttons[0];
+        FreeplayPopoverButton cloneButton = __instance.buttons[4]; // Fungle
+        FreeplayPopoverButton dleksButton = Object.Instantiate(cloneButton, cloneButton.transform.parent);
+
+        dleksButton.name = "DleksButton";
+        dleksButton.map = MapNames.Dleks;
+        var dleksSpriteRenderer = dleksButton.GetComponent<SpriteRenderer>();
+        dleksSpriteRenderer.sprite = skeldButton.GetComponent<SpriteRenderer>().sprite;
+        dleksSpriteRenderer.flipX = true;
+        dleksButton.OnPressEvent = cloneButton.OnPressEvent;
+        cloneButton.transform.position = new(__instance.buttons[0].transform.position.x, cloneButton.transform.position.y, cloneButton.transform.position.z);
+        dleksButton.transform.position = new(__instance.buttons[1].transform.position.x, dleksButton.transform.position.y, dleksButton.transform.position.z);
+
+        SwapPositionsTroll(cloneButton, dleksButton);
+
+        __instance.buttons = new List<FreeplayPopoverButton>(__instance.buttons) { dleksButton }.ToArray();
+
+        // If Submerged is loaded
+        if (__instance.buttons.Count >= 7)
+        {
+            SwapPositionsTroll(__instance.buttons[6], __instance.buttons[3]); // Dleks swap Airship
+            SwapPositionsTroll(__instance.buttons[5], cloneButton); // Submerged swap Fungle
+
+            cloneButton.transform.localPosition = new(0f, -1.5f, cloneButton.transform.position.z); // Set new position for Fungle
+        }
+        else
+            SwapPositionsTroll(__instance.buttons[5], __instance.buttons[3]); // Dleks swap Airship
+    }
+
+    [HarmonyPatch(typeof(FreeplayPopover), nameof(FreeplayPopover.Show))]
+    [HarmonyPostfix]
+    public static void Postfix_AdjustFreeplayMenu(FreeplayPopover __instance)
+    {
+        foreach (var button in __instance.buttons)
+            Logger.Info($"{button.name}", "FreeplayPopover");
+    }
+
+    private static void SwapPositionsTroll(Component one, Component two)
+    {
+        (one.transform.position, two.transform.position) = (two.transform.position, one.transform.position);
     }
 }
