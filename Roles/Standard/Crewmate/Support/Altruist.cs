@@ -25,7 +25,7 @@ public class Altruist : RoleBase
     private byte ReviveTarget;
     private Vector2 ReviveTargetPos;
 
-    private bool RevivingMode;
+    public static bool RevivingMode;
 
     public override bool IsEnable => On;
 
@@ -109,6 +109,9 @@ public class Altruist : RoleBase
         PlayerState state = Main.PlayerStates[reporter.PlayerId];
         state.deathReason = PlayerState.DeathReason.Sacrifice;
         state.RealKiller = (DateTime.Now, target.PlayerId);
+        reporter.KillFlash();
+        if (Main.GM.Value && AmongUsClient.Instance.AmHost) PlayerControl.LocalPlayer.KillFlash();
+        ChatCommands.Spectators.ToValidPlayers().Do(x => x.KillFlash());
         state.SetDead();
         reporter.RpcExileV2();
         Utils.AfterPlayerDeathTasks(reporter);
@@ -143,6 +146,7 @@ public class Altruist : RoleBase
     public override void OnPet(PlayerControl pc)
     {
         RevivingMode = !RevivingMode;
+        Utils.SendRPC(CustomRPC.SyncRoleData, AlturistId, RevivingMode);
         Utils.NotifyRoles(SpecifySeer: pc, SpecifyTarget: pc);
     }
 
@@ -168,5 +172,16 @@ public class Altruist : RoleBase
     {
         keepGameGoing = ReviveTimer != null;
         countsAs = 1;
+    }
+
+    public static void ReceiveRPC(MessageReader reader)
+    {
+        RevivingMode = reader.ReadBoolean();
+    }
+    
+    public override void SetButtonTexts(HudManager hud, byte id)
+    {
+       if (RevivingMode) hud.ReportButton?.OverrideText(Translator.GetString("AltruistReviveMode"));
+       else hud.ReportButton?.OverrideText(Translator.GetString("AltruistReportMode"));
     }
 }
