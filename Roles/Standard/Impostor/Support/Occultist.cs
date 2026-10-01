@@ -1,4 +1,3 @@
-﻿using System.Collections.Generic;
 using EHR.Modules;
 using EHR.Modules.Extensions;
 
@@ -26,7 +25,7 @@ public class Occultist : RoleBase
     private static ActionSwitchModes ActionSwitchMode;
     private static Dictionary<byte, CountdownTimer> Revives = [];
 
-    private bool InRevivingMode;
+    public static bool InRevivingMode;
 
     private PlayerControl OccultistPC;
 
@@ -71,7 +70,7 @@ public class Occultist : RoleBase
     private void SwitchAction()
     {
         InRevivingMode = Main.AllAlivePlayerControlsCount >= 4 && !InRevivingMode;
-        Utils.SendRPC(CustomRPC.SyncRoleData, OccultistPC.PlayerId, 1, InRevivingMode);
+        Utils.SendRPC(CustomRPC.SyncRoleData, OccultistPC.PlayerId, InRevivingMode);
         Utils.NotifyRoles(SpecifySeer: OccultistPC, SpecifyTarget: OccultistPC);
     }
 
@@ -158,5 +157,16 @@ public class Occultist : RoleBase
         Vent,
         Pet,
         Vanish
+    }
+
+    public static void ReceiveRPC(MessageReader reader)
+    {
+        InRevivingMode = reader.ReadBoolean();
+    }
+
+    public override void SetButtonTexts(HudManager hud, byte id)
+    {
+        if (InRevivingMode) hud.ReportButton?.OverrideText(Translator.GetString("OccultistMode.Revive"));
+        else hud.ReportButton?.OverrideText(Translator.GetString("OccultistMode.Report"));
     }
 }
