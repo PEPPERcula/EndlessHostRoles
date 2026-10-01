@@ -23,7 +23,7 @@ internal static class LoadingScreen
             if (!LoadingAnimation.IsNullOrDestroyed()) Object.Destroy(LoadingAnimation);
 
             LoadingAnimation = Object.Instantiate(ModManager.Instance.ModStamp);
-            LoadingAnimation.sprite = Utils.LoadSprite("EHR.Resources.Loading.png", 300f);
+            LoadingAnimation.sprite = Utils.LoadSprite("EHR.Resources.Images.LoadingIcon.png", 300f);
             LoadingAnimation.sortingOrder = 100;
 
             Camera = HudManager.Instance.GetComponentInChildren<Camera>();
