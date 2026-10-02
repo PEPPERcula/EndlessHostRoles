@@ -162,9 +162,4 @@ public class Chronomancer : RoleBase
     {
         OnReportDeadBody();
     }
-
-    public override void SetButtonTexts(HudManager hud, byte id)
-    {
-        hud.AbilityButton?.ToggleVisible(false);
-    }
 }
