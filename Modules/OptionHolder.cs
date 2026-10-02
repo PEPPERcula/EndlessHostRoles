@@ -246,6 +246,16 @@ public static class Options
         "pet_Charles_Red",
         "pet_UFO",
         "pet_D2WormPet",
+        "pet_cosmic_cat",
+        "pet_parasite_Stressball",
+        "pet_stardew_junimo",
+        "pet_stardew_krobus",
+        "pet_racing_beanCar",
+        "pet_kamurocho_nancy",
+        "pet_kamurocho_car",
+        "pet_claws_spaceCat",
+        "pet_GoosePet",
+        "pet_HolidayHamPet",
         "pet_RANDOM_FOR_EVERYONE"
     ];
 
