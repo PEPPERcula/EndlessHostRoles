@@ -25,7 +25,7 @@ public static class ShouldHorseModeMainMenuPatch
 }
 
 [HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldClassicMainMenuMode))]
-public static class ShouldShowTogglePatch
+public static class ShouldClassicMainMenuModePatch
 {
     public static void Postfix(ref bool __result)
     {
