@@ -14,6 +14,16 @@ namespace EHR.Patches;
 //    }
 //}
 
+[HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldHorseModeMainMenu))]
+public static class ShouldHorseModeMainMenuPatch
+{
+    public static void Postfix(ref bool __result)
+    {
+        if (Main.HorseMode.Value || AprilFoolsMode.ShouldHorseAround())
+            __result = true;
+    }
+}
+
 [HarmonyPatch(typeof(AprilFoolsMode), nameof(AprilFoolsMode.ShouldClassicMainMenuMode))]
 public static class ShouldShowTogglePatch
 {
