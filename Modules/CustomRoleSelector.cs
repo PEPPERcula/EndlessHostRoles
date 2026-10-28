@@ -558,7 +558,7 @@ internal static class CustomRoleSelector
                 case CustomRoles.Mare or CustomRoles.Glow or CustomRoles.Sleep when Main.CurrentMap == MapNames.Fungle:
                 case CustomRoles.Madmate when Options.MadmateSpawnMode.GetInt() != 0:
                 case CustomRoles.Lovers or CustomRoles.LastImpostor or CustomRoles.Workhorse or CustomRoles.Undead or CustomRoles.Insane:
-                case CustomRoles.Nimble or CustomRoles.Physicist or CustomRoles.Bloodlust or CustomRoles.Finder or CustomRoles.Noisy or CustomRoles.Examiner or CustomRoles.Venom: // Assigned at a different function due to role base change
+                case CustomRoles.Nimble or CustomRoles.Physicist or CustomRoles.Bloodlust or CustomRoles.Finder or CustomRoles.Noisy or CustomRoles.Examiner or CustomRoles.Arbiter or CustomRoles.Venom: // Assigned at a different function due to role base change
                     continue;
             }
 
@@ -585,5 +585,4 @@ internal static class CustomRoleSelector
         public int AssignedCount { get; set; }
         public RoleOptionType OptionType { get; } = role.GetRoleOptionType();
     }
-
 }
