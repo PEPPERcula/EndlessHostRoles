@@ -1999,6 +1999,7 @@ internal static class CustomRolesHelper
             CustomRoles.Finder when !pc.IsCrewmate() || pc.GetCustomRole().IsDesyncRole() || pc.Is(CustomRoles.Survivor) => false,
             CustomRoles.Noisy when !pc.IsCrewmate() || pc.GetCustomRole().IsDesyncRole() || pc.Is(CustomRoles.Survivor) => false,
             CustomRoles.Examiner when !pc.IsCrewmate() || pc.GetCustomRole().IsDesyncRole() || pc.Is(CustomRoles.Survivor) => false,
+            CustomRoles.Arbiter when !pc.IsCrewmate() || pc.GetCustomRole().IsDesyncRole() || pc.Is(CustomRoles.Survivor) => false,
             CustomRoles.Venom when !pc.IsImpostor() => false,
             CustomRoles.Disregarded when pc.Is(CustomRoles.Bait) => false,
             CustomRoles.Oblivious when pc.Is(CustomRoles.Coroner) => false,
@@ -2068,6 +2069,7 @@ public enum CountTypes
     None,
     Crew,
     Impostor,
+    Coven,
     CustomTeam,
     Bloodlust,
     Jackal,
@@ -2141,10 +2143,5 @@ public enum CountTypes
     PlagueBearer,
     Glitch,
     Arsonist,
-    Cherokious,
-
-    Coven
+    Cherokious
 }
-
-
-
